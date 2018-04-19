@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout >
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:background="@color/background_dark">
+            <com.video.newqu.view.layout.ReboundScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <include layout="@layout/item_space_10"></include>
+                    <include layout="@layout/item_space_6"></include>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@color/white">
+                        <RelativeLayout
+                            android:id="@+id/re_follow_set"
+                            style="@style/SettingItem"
+                            android:background="?attr/selectableItemBackground">
+                            <TextView
+                                style="@style/SettingSubTitleStyle"
+                                android:text="只允许我关注的人评论我"/>
+                            <android.support.v7.widget.SwitchCompat
+                                android:id="@+id/sw_follow_se"
+                                style="@style/SettingSwitchCompatStyle"
+                                app:switchTextAppearance="@style/BrandedSwitch.text"
+                                app:theme="@style/BrandedSwitch.control"
+                                app:showText="false" />
+                        </RelativeLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.video.newqu.view.layout.ReboundScrollView>
+    </FrameLayout>
+</layout>

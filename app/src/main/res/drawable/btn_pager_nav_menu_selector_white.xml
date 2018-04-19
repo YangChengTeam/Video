@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true" android:drawable="@drawable/nav_pager_btn_menu_gray"></item>
+    <item android:state_pressed="false" android:drawable="@drawable/nav_pager_btn_menu_white"></item>
+    <item android:drawable="@drawable/nav_pager_btn_menu_white"></item>
+</selector>

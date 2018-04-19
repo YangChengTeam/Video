@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="tab_home_text">首页</string>
+    <string name="tab_mine_text">我的</string>
+    <string name="login_desp">登陆就表明已阅读并同意服务条款</string>
+    <string name="shared_to">分享到</string>
+    <string name="upload_notwifi_tips">您的设备未接入WIFI网络，已暂停了视频上传任务，将会在连接WIFI网络后自动开始上传</string>
+    <string name="upload_wifi_tips">设备已接入WIFI网络，上传任务自动开始\",\"视频上传开始通知</string>
+</resources>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/video_edit_backcolor_shape_ungratien">
+    <!--录制进度条-->
+    <com.video.newqu.camera.recordclip.RecordProgressView
+        android:id="@+id/record_progress"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"/>
+    <!--顶部控制器-->
+    <RelativeLayout
+        android:id="@+id/re_top_colltro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible">
+        <LinearLayout
+            android:id="@+id/ll_top_tab_controlle"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:visibility="visible">
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <!--关闭-->
+                <com.video.newqu.view.widget.EffectsButton
+                    android:id="@+id/btn_close"
+                    style="@style/RecordTopMenuStyle"
+                    android:layout_marginLeft="14dp"
+                    android:background="@drawable/iv_record_close"/>
+            </RelativeLayout>
+            <!--btn_close_selector-->
+
+            <!--延时拍摄-->
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <com.video.newqu.view.widget.EffectsButton
+                    android:id="@+id/btn_record_delayed"
+                    style="@style/RecordTopMenuStyle"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/iv_record_delayed_selector"/>
+            </RelativeLayout>
+
+            <!--btn_record_camera_fail_selector-->
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <!--闪光灯-->
+                <com.video.newqu.view.widget.EffectsButton
+                    android:id="@+id/btn_flash"
+                    style="@style/RecordTopMenuStyle"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/record_flash_selector"/>
+            </RelativeLayout>
+            <!--record_flash_selector-->
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <!--摄像头切换-->
+
+                <com.video.newqu.view.widget.EffectsButton
+                    android:id="@+id/btn_switch_cam"
+                    style="@style/RecordTopMenuStyle"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/iv_video_camera"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <!--曝光-->
+                <!--<com.video.newqu.view.widget.EffectsButton-->
+                    <!--android:id="@+id/btn_record_exposure"-->
+                    <!--style="@style/RecordTopMenuStyle"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_marginRight="15dp"-->
+                    <!--android:background="@drawable/iv_record_exposure"/>-->
+                <com.video.newqu.view.widget.EffectsButton
+                    android:id="@+id/btn_record_sound"
+                    style="@style/RecordTopMenuStyle"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/ic_btn_music_sound"/>
+
+                <!--android:background="@drawable/iv_record_exposure"-->
+            </RelativeLayout>
+        </LinearLayout>
+
+        <Chronometer
+            android:id="@+id/chronometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/record_text_color"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.1"
+            android:text=""
+            android:format="%s"
+            android:gravity="center"
+            android:visibility="invisible"/>
+    </RelativeLayout>
+</LinearLayout>

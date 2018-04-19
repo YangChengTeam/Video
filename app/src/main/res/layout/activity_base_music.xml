@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+        <!--标题栏和搜索框-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/white">
+            <include layout="@layout/activity_statrbar_height_layout"></include>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/top_title_bar_height">
+                <ImageView
+                    android:id="@+id/iv_back"
+                    style="@style/Com_nav_menubar_back_style"
+                    android:src="@drawable/ban_nav_menu_back_selector_gray"
+                    android:background="?attr/selectableItemBackground" />
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:textColor="@color/common_h1"
+                    android:textSize="18sp"
+                    android:text=""/>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_search"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@drawable/activity_music_search_bar_background_white">
+                <ImageView
+                    android:id="@+id/iv_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/iv_icon_search"/>
+                <TextView
+                    android:id="@+id/search_et_input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:textSize="13sp"
+                    android:imeOptions="actionSearch"
+                    android:hint="搜索歌曲名称"/>
+            </LinearLayout>
+        </LinearLayout>
+        <RelativeLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </RelativeLayout>
+    </LinearLayout>
+</layout>

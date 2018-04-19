@@ -1,0 +1,23 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="base_header_activity_slide_more">45dp</dimen>
+    <dimen name="home_header_size">230dp</dimen>
+    <dimen name="nav_bar_height">56dp</dimen>
+    <dimen name="nav_bar_height_more">58dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="statusbar_view_height">0dp</dimen>
+    <dimen name="config_text_size">14sp</dimen>
+    <dimen name="config_text_padding">5dp</dimen>
+    <dimen name="config_text_type_width">80dp</dimen>
+    <dimen name="config_text_width">60dp</dimen>
+    <dimen name="comment_title_height">44dp</dimen>
+    <dimen name="home_video_item_height">266dp</dimen>
+    <dimen name="home_video_min_item_height">170dp</dimen>
+    <dimen name="top_bar_menu_padding">12dp</dimen>
+    <dimen name="top_title_bar_height">45dp</dimen>
+</resources>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/guoup_app_bar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical">
+            <Space
+                android:id="@+id/view_state_bar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/statusbar_view_height"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/top_title_bar_height">
+                <ImageView
+                    android:id="@+id/group_btn_back"
+                    style="@style/Com_nav_menubar_back_style"
+                    android:src="@drawable/ban_nav_menu_back_selector_gray" />
+                <com.video.newqu.view.widget.MarqueeTextView
+                    android:id="@+id/group_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:ellipsize="marquee"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:singleLine="true"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginRight="60dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/common_h1"/>
+            </RelativeLayout>
+        </android.support.design.widget.AppBarLayout>
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background_dark">
+        </FrameLayout>
+    </LinearLayout>
+</layout>

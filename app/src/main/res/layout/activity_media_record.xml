@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+        <!--画面渲染-->
+        <android.opengl.GLSurfaceView
+            android:id="@+id/camera_preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <!--手动对焦-->
+        <com.video.newqu.camera.view.CameraHintView
+            android:id="@+id/camera_hint"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"/>
+
+        <com.video.newqu.view.layout.FiltrateRelativeLayout
+            android:id="@+id/filtra_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </com.video.newqu.view.layout.FiltrateRelativeLayout>
+        <TextView
+            android:id="@+id/tv_camera_time_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            android:shadowColor="#38000000"
+            android:shadowDx="6"
+            android:shadowDy="6"
+            android:shadowRadius="6"
+            android:text="3"
+            android:textSize="100sp"/>
+        <TextView
+            android:id="@+id/tv_filter_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="42sp"
+            android:shadowColor="#38000000"
+            android:shadowDx="6"
+            android:shadowDy="6"
+            android:shadowRadius="6"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="120dp"
+            android:visibility="gone"
+            android:text=""/>
+        <!--顶部控制器-->
+        <include
+            android:id="@+id/actionbar"
+            layout="@layout/record_title_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"/>
+        <!--底部控制器-->
+        <include
+            android:id="@+id/media_edit_bar_bottom"
+            layout="@layout/record_bottom_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
+</layout>
+

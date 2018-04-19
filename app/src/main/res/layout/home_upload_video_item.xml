@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content">
+    <RelativeLayout
+        android:id="@+id/re_upload_view"
+        android:layout_width="52dp"
+        android:layout_height="68dp"
+        android:visibility="visible">
+        <ImageView
+            android:id="@+id/iv_item_icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/iv_video_errror"
+            android:scaleType="centerCrop"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/translucent_33"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true">
+            <com.video.newqu.view.widget.CircleProgressView
+                android:id="@+id/circleProgressbar"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:visibility="visible"/>
+            <TextView
+                android:id="@+id/tv_item_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="11sp"
+                android:layout_marginTop="5dp"
+                android:text="上传中"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

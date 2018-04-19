@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:state_selected="true" android:drawable="@drawable/media_edit_round_gray_radius"></item>
+    <item android:state_selected="false" android:drawable="@drawable/media_edit_round_white_radius"></item>
+    <item android:drawable="@drawable/media_edit_round_white_radius"></item>
+</selector>

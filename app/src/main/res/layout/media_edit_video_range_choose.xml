@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/video_editback_color"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:clickable="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/btn_media_cat_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_record_close_selector_white"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="10dp"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/video_range_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/video_range_title_1"
+        android:paddingTop="10dp"
+        android:textColor="@color/view_bg"
+        android:textSize="15sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/range_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:textColor="@color/gray_qian"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/range"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/gray_qian"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/range_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:textColor="@color/gray_qian"
+                android:textSize="13sp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="114dp"
+            android:layout_alignParentBottom="true">
+
+            <com.video.newqu.camera.videorange.HorizontalListView
+                android:id="@+id/hlistview"
+                android:layout_width="match_parent"
+                android:layout_height="59dp"
+                android:requiresFadingEdge="horizontal"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"/>
+
+            <com.video.newqu.camera.videorange.VideoRangeSeekBar
+                xmlns:custom="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/videodurtion_change_seekbar"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:background="#00ffffff"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                custom:gradientWidth="12dp"
+                custom:indicatorWidth="4dp"
+                custom:thumbBandHeight="59dp"
+                custom:thumbWidth="12dp"/>
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>

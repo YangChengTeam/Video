@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/white">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.3dp"
+        android:background="@color/tab_line_color"/>
+
+    <RelativeLayout
+        android:id="@+id/re_item_more"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/tv_item_toptitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_centerVertical="true"
+            android:textColor="@color/text_black_selector"
+            android:layout_marginLeft="5dp"
+            android:text="--"/>
+        <ImageView
+            android:id="@+id/iv_more"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/iv_more"
+            />
+        <TextView
+            android:id="@+id/tv_verstion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="更多"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/iv_more"
+            android:textColor="@color/text_gray_selector"
+            android:textSize="12sp"
+            />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/re_item_icon"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:orientation="horizontal">
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="0.5dp"
+            android:layout_weight="1">
+            <ImageView
+                android:id="@+id/iv_item_icon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@color/image_bg"
+                android:scaleType="centerCrop"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginLeft="0.5dp">
+
+            <GridView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/grid_view"
+                android:numColumns="2"
+                android:stretchMode="columnWidth"
+                android:horizontalSpacing="1dp"
+                android:verticalSpacing="1dp"
+                android:fadeScrollbars="true"
+                android:fadingEdge="none"
+                android:scrollbars="none"/>
+        </RelativeLayout>
+    </LinearLayout>
+    <include layout="@layout/item_space_6"></include>
+</LinearLayout>

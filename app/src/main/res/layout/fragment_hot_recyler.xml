@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.video.newqu.view.refresh.SwipePullRefreshLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/swiperefresh_layout">
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/recyer_view">
+                </android.support.v7.widget.RecyclerView>
+            </com.video.newqu.view.refresh.SwipePullRefreshLayout>
+            <TextView
+                android:id="@+id/tv_tips_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="下拉刷新总会出现你想看的~"
+                android:textColor="@color/white"
+                android:drawableRight="@drawable/iv_tips_close"
+                android:background="@drawable/xinqu_com_help_pop2_center"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:drawablePadding="5dp"
+                android:textSize="13sp"
+                android:visibility="gone"/>
+        </RelativeLayout>
+    </LinearLayout>
+</layout>
+

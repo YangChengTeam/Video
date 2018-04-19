@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#FF212121">
+    <RelativeLayout
+        android:id="@+id/preview_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="#FF000000">
+        <android.opengl.GLSurfaceView
+            android:id="@+id/edit_preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <com.ksyun.media.shortvideo.sticker.KSYStickerView
+            android:id="@+id/sticker_panel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"/>
+        <com.video.newqu.camera.view.SectionSeekLayout
+            android:id="@+id/session_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="66dp"/>
+        <ImageView
+            android:id="@+id/iv_thbum_icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone"/>
+        <ImageView
+            android:id="@+id/btn_pause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/iv_play_state_selector"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+    <!--顶部控制器-->
+    <include
+        android:id="@+id/media_edit_right_menu_top_actionbar"
+        layout="@layout/medit_edit_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"/>
+
+    <!--所有功能模块的View-->
+    <include
+        layout="@layout/media_edit_bottom_function_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
+    <!--右边控制器-->
+    <include
+        android:id="@+id/media_edit_right_menu_actionbar"
+        layout="@layout/media_edit_right_menu_layout"
+        android:layout_marginTop="136dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"/>
+
+    <!--底部抽屉样式输入区-->
+    <include
+        android:id="@+id/media_edit_send_view"
+        layout="@layout/media_edit_sliding_drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="visible">
+</include>
+</RelativeLayout>

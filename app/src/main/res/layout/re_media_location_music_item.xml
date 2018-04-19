@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/white">
+    <RelativeLayout
+        android:id="@+id/re_item_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginRight="12dp"
+        android:background="?attr/selectableItemBackground">
+        <RelativeLayout
+            android:id="@+id/re_icon_item_view"
+            android:layout_width="65dp"
+            android:layout_height="65dp">
+            <com.xinqu.videoplayer.full.XinQuMusicPlayerStandard
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/music_player">
+            </com.xinqu.videoplayer.full.XinQuMusicPlayerStandard>
+        </RelativeLayout>
+
+        <!--          android:src="@drawable/ic_music_empty"-->
+        <LinearLayout
+            android:layout_toRightOf="@+id/re_icon_item_view"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical">
+
+                <com.video.newqu.view.widget.MarqueeTextView
+                    android:id="@+id/tv_item_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:ellipsize="marquee"
+                    android:focusableInTouchMode="true"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:singleLine="true"
+                    android:textColor="@color/coment_color"
+                    android:text="--"/>
+
+                <com.video.newqu.view.widget.MarqueeTextView
+                    android:id="@+id/tv_item_author"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_marginTop="5dp"
+                    android:ellipsize="marquee"
+                    android:focusableInTouchMode="true"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:singleLine="true"
+                    android:textColor="@color/colorTabText"
+                    android:text="--"/>
+
+                <TextView
+                    android:id="@+id/tv_item_drutaion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/common_empty1"
+                    android:textSize="12sp"
+                    android:layout_marginTop="3dp"
+                    android:text="--"/>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/re_item_make"
+                android:layout_width="66dp"
+                android:layout_height="36dp"
+                android:layout_weight="0"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/media_recored_bar_bg_shape"
+                android:visibility="gone">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:drawablePadding="3dp"
+                    android:gravity="center_vertical"
+                    android:padding="5dp"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:text="使用"
+                    android:drawableLeft="@drawable/meida_record_min"
+                    />
+            </RelativeLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.3dp"
+        android:background="@color/gray_qian"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
+</LinearLayout>

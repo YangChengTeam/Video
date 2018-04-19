@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:wheel="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <!--加载失败-->
+        <LinearLayout
+            android:id="@+id/ll_error_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/img_err"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/load_err" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="加载失败,点击重试"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <!--加载中..-->
+        <LinearLayout
+            android:id="@+id/ll_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <com.video.newqu.view.widget.ProgressWheel
+                    android:id="@+id/loading_view"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    wheel:matProg_barWidth="2dp"
+                    android:layout_gravity="center_horizontal"
+                    android:clickable="false"
+                    wheel:matProg_barColor="@color/app_style"
+                    android:visibility="visible"
+                    wheel:matProg_progressIndeterminate="true" />
+
+                <TextView
+                    android:layout_toRightOf="@+id/loading_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:text="加载中，请稍后..."
+                    android:textColor="@color/colorTabText"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="setting_dialog_sex_choice">
+        <item>女</item>
+        <item>男</item>
+        <item>未知</item>
+    </string-array>
+
+    <string-array name="setting_dialog_video_player_style_choice">
+        <item>列表样式</item>
+        <item>普通样式</item>
+    </string-array>
+
+    <string-array name="video_resolution">
+        <item>原宽高输出</item>
+        <item>360P</item>
+        <item>480P</item>
+        <item>540P</item>
+    </string-array>
+
+
+    <string-array name="indicator_colors">
+        <item>@color/app_red_style</item>
+        <item>@color/blue</item>
+        <item>@color/colorAccent</item>
+    </string-array>
+
+
+
+</resources>

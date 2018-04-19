@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:clickable="true"
+              android:background="@drawable/bg_record_menu_view_shape"
+              android:layout_gravity="bottom">
+
+    <ImageView
+        android:id="@+id/btn_record_sound_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:src="@drawable/btn_record_close_selector_white"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:layout_gravity="right"
+        android:padding="10dp"/>
+
+    <LinearLayout
+        android:id="@+id/record_bgm_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_marginBottom="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="原音音量"
+                android:textColor="@color/view_bg"
+                android:textSize="12sp" />
+
+            <android.support.v7.widget.AppCompatSeekBar
+                android:id="@+id/record_mic_audio_volume"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:progressBackgroundTint="#9b9b9b"
+                android:progressTint="@color/app_style"
+                android:progress="10"
+                android:thumbTint="@color/white" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="音乐音量"
+                android:textColor="@color/view_bg"
+                android:textSize="12sp"/>
+
+            <android.support.v7.widget.AppCompatSeekBar
+                android:id="@+id/record_music_audio_volume"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:progress="30"
+                android:progressBackgroundTint="#9b9b9b"
+                android:progressTint="@color/app_style"
+                android:thumbTint="@color/white"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+            <!--变声-->
+            <LinearLayout
+                android:id="@+id/ll_change_sound"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:background="?attr/selectableItemBackground">
+                <TextView
+                    android:id="@+id/tv_change_sound"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="变声"
+                    android:textColor="@color/text_white_selector2"/>
+
+                <View
+                    android:id="@+id/line_change_sound"
+                    android:layout_width="20dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="0"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/white"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:background="#FF666666">
+            </View>
+
+            <!--混响-->
+            <LinearLayout
+                android:id="@+id/ll_change_rever"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:background="?attr/selectableItemBackground">
+
+                <TextView
+                    android:id="@+id/tv_change_rever"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="混响"
+                    android:textColor="@color/text_white_selector2"/>
+
+                <View
+                    android:id="@+id/line_change_rever"
+                    android:layout_width="20dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="0"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/white"
+                    android:visibility="invisible"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="152dp">
+        <!--变声-->
+        <include
+            android:id="@+id/media_edit_sound_change"
+            layout="@layout/media_record_sound_change"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"/>
+        <!--混响-->
+        <include
+            android:id="@+id/media_edit_sound_reverb"
+            layout="@layout/media_record_reverberation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"/>
+    </RelativeLayout>
+</LinearLayout>

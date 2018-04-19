@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <!--录制-->
+            <LinearLayout
+                android:id="@+id/ll_record"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="-18dp">
+                <ImageView
+                    android:id="@+id/btn_record"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/iv_home_record"
+                    android:layout_centerInParent="true"/>
+                <TextView
+                    android:id="@+id/tv_record"
+                    android:layout_below="@+id/btn_upload"
+                    style="@style/HomeToolTextStyle"
+                    android:visibility="invisible"
+                    android:text="视频录制"/>
+            </LinearLayout>
+
+            <!--上传-->
+            <LinearLayout
+                android:id="@+id/ll_upload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="-18dp">
+                <ImageView
+                    android:id="@+id/btn_upload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/iv_home_upload"
+                    android:layout_centerInParent="true"/>
+                <TextView
+                    android:id="@+id/tv_upload"
+                    style="@style/HomeToolTextStyle"
+                    android:layout_below="@+id/btn_upload"
+                    android:visibility="invisible"
+                    android:text="本地上传"/>
+            </LinearLayout>
+
+
+            <!--底部控制键-->
+            <RelativeLayout
+                android:id="@+id/btn_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/iv_home_tab_bg_pre"
+                android:layout_marginBottom="5dp">
+                <ImageView
+                    android:id="@+id/iv_menu_amera"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/iv_home_tab_add"
+                    android:layout_centerInParent="true"/>
+            </RelativeLayout>
+        </RelativeLayout>
+</layout>

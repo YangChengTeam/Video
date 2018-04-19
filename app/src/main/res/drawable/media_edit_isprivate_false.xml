@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list android:id="@+id/loading_animation" android:oneshot="false"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:duration="@integer/media_private_interval" android:drawable="@drawable/is_private_teue_16" />
+    <item android:duration="@integer/media_private_interval" android:drawable="@drawable/is_private_teue_15" />
+    <item android:duration="@integer/media_private_interval" android:drawable="@drawable/is_private_teue_14" />
+    <item android:duration="@integer/media_private_interval" android:drawable="@drawable/is_private_teue_13" />
+    <item android:duration="@integer/media_private_interval" android:drawable="@drawable/is_private_teue_12" />
+    <item android:duration="@integer/media_private_interval" android:drawable="@drawable/is_private_teue_11" />
+    <item android:duration="@integer/media_private_interval" android:drawable="@drawable/is_private_teue_10" />
+    <item android:duration="@integer/media_private_interval" android:drawable="@drawable/is_private_teue_09" />
+    <item android:duration="@integer/media_private_interval" android:drawable="@drawable/is_private_teue_08" />
+    <item android:duration="@integer/media_private_interval" android:drawable="@drawable/is_private_teue_07" />
+    <item android:duration="@integer/media_private_interval" android:drawable="@drawable/is_private_teue_06" />
+    <item android:duration="@integer/media_private_interval" android:drawable="@drawable/is_private_teue_05" />
+    <item android:duration="@integer/media_private_interval" android:drawable="@drawable/is_private_teue_04" />
+    <item android:duration="@integer/media_private_interval" android:drawable="@drawable/is_private_teue_03" />
+    <item android:duration="@integer/media_private_interval" android:drawable="@drawable/is_private_teue_02" />
+    <item android:duration="@integer/media_private_interval" android:drawable="@drawable/is_private_teue_01" />
+</animation-list>

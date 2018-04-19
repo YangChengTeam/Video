@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="3dp"
+    app:cardElevation="0dp"
+    android:layout_marginLeft="0.9dp"
+    android:layout_marginRight="0.9dp"
+    android:layout_marginBottom="0.9dp"
+    android:layout_marginTop="0.9dp">
+
+    <RelativeLayout
+        android:id="@+id/re_item_video"
+        android:layout_width="match_parent"
+        android:layout_height="266dp">
+
+        <com.video.newqu.view.widget.TouchFilterImageView
+            android:id="@+id/iv_item_icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"/>
+        <!--image_bg-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true"
+            android:paddingTop="20dp"
+            android:background="@drawable/bg_black_shape_gratien">
+            <TextView
+                android:id="@+id/tv_item_desp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="6dp"
+                android:paddingBottom="3dp"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:maxLines="2"
+                android:textColor="@color/white"
+                android:shadowColor="#88000000"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="1"
+                android:text=""
+                android:textSize="14sp"
+                android:layout_above="@+id/ll_bottom_title"/>
+            <LinearLayout
+                android:id="@+id/ll_bottom_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="6dp">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginRight="5dp">
+                    <ImageView
+                        android:id="@+id/iv_item_author_icon"
+                        android:layout_width="19dp"
+                        android:layout_height="19dp"
+                        android:src="@drawable/iv_mine"/>
+                    <TextView
+                        android:id="@+id/tv_item_author_name"
+                        style="@style/video_find_title"
+                        android:layout_marginLeft="5dp"
+                        android:text="--"/>
+                </LinearLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:layout_gravity="center_vertical">
+                    <!--评论-->
+                    <LinearLayout
+                        android:id="@+id/ll_commend_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_mine_works_commend_icon"/>
+                        <TextView
+                            android:id="@+id/tv_item_commend_count"
+                            style="@style/video_find_title"
+                            android:layout_marginLeft="3dp"
+                            android:text="--"/>
+                    </LinearLayout>
+
+                    <!--收藏-->
+                    <LinearLayout
+                        android:id="@+id/ll_follow_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:visibility="visible">
+                        <ImageView
+                            android:id="@+id/iv_item_follow"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_follow_white"/>
+                        <TextView
+                            android:id="@+id/tv_item_follow_count"
+                            style="@style/video_find_title"
+                            android:layout_marginLeft="3dp"
+                            android:text="--"/>
+                    </LinearLayout>
+
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
+

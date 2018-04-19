@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout >
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <android.support.design.widget.AppBarLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:background="@color/media_edit_bg"
+            android:orientation="vertical">
+            <View
+                android:id="@+id/view_state_bar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/statusbar_view_height"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/top_title_bar_height">
+
+                <ImageView
+                    android:id="@+id/iv_back"
+                    style="@style/Com_nav_menubar_back_style"
+                    android:src="@drawable/ban_nav_menu_back_selector_white"/>
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:text=""/>
+
+                <ImageView
+                    android:id="@+id/iv_submit"
+                    style="@style/Com_nav_menubar_back_style"
+                    android:src="@drawable/ban_nav_menu_submit_selector_white"
+                    android:layout_alignParentRight="true"
+                    />
+            </RelativeLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/black">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="30dp">
+                <ImageView
+                    android:id="@+id/cover_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:id="@+id/cover_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:orientation="vertical"
+                android:padding="15dp"
+                android:gravity="center"
+                android:layout_marginBottom="10dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp">
+                    <ImageView
+                        android:id="@+id/iv_unseek_reset"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="0"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="5dp"
+                        android:src="@drawable/btn_nav_minus_selector_white"/>
+                    <TextView
+                        android:id="@+id/seek_hint"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="左右滑动拖杆预览封面"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="17sp"/>
+                    <ImageView
+                        android:id="@+id/iv_seek_reset"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/btn_nav_plus_selector_white"
+                        android:layout_weight="0"
+                        android:padding="5dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:layout_gravity="center_vertical"/>
+                </LinearLayout>
+
+                <android.support.v7.widget.AppCompatSeekBar
+                    android:id="@+id/cover_seekBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:progressBackgroundTint="#FFFFFF"
+                    android:progressTint="@color/record_text_color"
+                    android:layout_marginTop="15dp"
+                    android:thumbTint="@color/red"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</layout>
+

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <android.support.design.widget.AppBarLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <include layout="@layout/activity_statrbar_height_layout"></include>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/top_title_bar_height">
+                <!---->
+                <ImageView
+                    android:id="@+id/iv_back"
+                    style="@style/Com_nav_menubar_back_style"
+                    android:src="@drawable/ban_nav_menu_back_selector_gray"/>
+                <TextView
+                    android:id="@+id/titleText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="18sp"
+                    android:textColor="@color/common_h1"
+                    android:text="标题">
+                </TextView>
+                <ImageView
+                    android:id="@+id/iv_menu"
+                    android:layout_width="@dimen/comment_title_height"
+                    android:layout_height="@dimen/comment_title_height"
+                    android:padding="14dp"
+                    android:layout_alignParentRight="true"
+                    android:visibility="gone"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/iv_menu_selector_gray"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <WebView
+            android:id="@+id/webview_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbarSize="3dp"
+            android:scrollbarThumbVertical="@color/color_title_bar_bgk"
+            android:scrollbars="vertical"
+            />
+
+        <FrameLayout
+            android:id="@+id/video_fullView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:visibility="gone"/>
+
+        <ProgressBar
+            android:id="@+id/pb_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_alignParentTop="true"
+            android:max="1000"
+            android:progress="30"
+            android:progressDrawable="@drawable/process_bg"
+            android:visibility="visible"/>
+    </RelativeLayout>
+
+</LinearLayout>
+

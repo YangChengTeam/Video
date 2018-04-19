@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/app_bar_layout"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:background="@color/white"
+                android:orientation="vertical">
+                <include layout="@layout/activity_statrbar_height_layout"></include>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/top_title_bar_height"
+                    android:background="@color/white">
+                    <ImageView
+                        android:id="@+id/iv_back"
+                        style="@style/Com_nav_menubar_back_style"
+                        android:src="@drawable/ban_nav_menu_back_selector_gray"/>
+                    <TextView
+                        android:id="@+id/tv_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text=""
+                        android:textColor="@color/common_h1"
+                        android:textSize="18sp"/>
+                    <ImageView
+                        android:id="@+id/iv_submit"
+                        style="@style/Com_nav_menubar_back_style"
+                        android:src="@drawable/ban_nav_menu_submit_selector_gray"
+                        android:layout_alignParentRight="true"
+                        android:visibility="gone"
+                        />
+                </RelativeLayout>
+            </android.support.design.widget.AppBarLayout>
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/recyer_view">
+            </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+</layout>

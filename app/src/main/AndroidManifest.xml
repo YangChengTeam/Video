@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.video.newqu"
+          android:installLocation="preferExternal">
+    <permission
+        android:name="com.video.newqu.permission.JPUSH_MESSAGE"
+        android:protectionLevel="signature"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <!-- Required  一些系统要求的权限，如访问网络等 -->
+    <uses-permission android:name="com.video.newqu.permission.JPUSH_MESSAGE"/>
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT"/>
+    <uses-permission android:name="android.permission.MANAGE_LOCATION_POLICY"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <!-- Optional for location -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/> <!-- 用于开启 debug 版本的应用在6.0 系统上 层叠窗口权限 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <!-- 短信验证码必须 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_SINTERNETWIFI_STATE"/>
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-permission android:name="android.permission.READ_LOGS"/>
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true"/>
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false"/>
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true"/>
+    <!-- 图片缓存 -->
+    <meta-data
+        android:name="com.video.newqu.mode.GlideCache"
+        android:value="GlideModule"/>
+    <application
+        android:name=".VideoApplication"
+        android:alwaysRetainTaskState="true"
+        android:hardwareAccelerated="true"
+        android:anyDensity="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:normalScreens="true"
+        android:screenOrientation="portrait"
+        android:smallScreens="true"
+        android:supportsRtl="true"
+        android:persistent="true"
+        android:theme="@style/AppTheme">
+        <!-- 开屏 -->
+        <!--    android:hardwareAccelerated="true" 全局的2D渲染加速-->
+        <activity
+            android:name=".ui.activity.SplashActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <!-- 开屏引导页 -->
+        <activity
+            android:name=".ui.activity.GuideActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <!-- 主页 -->
+        <activity
+            android:name=".ui.activity.MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+
+            <intent-filter>
+                <data android:scheme="file"></data>
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+                <data android:mimeType="video/*" />
+            </intent-filter>
+        </activity>
+
+        <!--登录、注册、修改密码-->
+        <activity
+            android:name=".ui.activity.LoginGroupActivity"
+            android:screenOrientation="portrait"/>
+        <!--android:windowSoftInputMode="adjustResize|stateHidden"-->
+
+        <!--通用的参数接收界面-->
+        <activity
+            android:name=".ui.activity.H5ParamsActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <data android:scheme="xinqu"/>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+        </activity>
+
+        <!-- 用户中心 -->
+        <activity
+            android:name=".ui.activity.AuthorDetailsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <!-- 视频详情、单个视频播放界面 -->
+        <activity
+            android:name=".ui.activity.VideoDetailsActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait">
+        </activity>
+        <!--垂直的视频列表播放界面-->
+        <activity
+            android:name=".ui.activity.VerticalVideoPlayActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+            android:screenOrientation="portrait"/>
+        <!--垂直的历史记录列表播放界面-->
+        <activity
+            android:name=".ui.activity.VerticalHistoryVideoPlayActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+            android:screenOrientation="portrait"/>
+        <!-- 图片裁剪 -->
+        <activity
+            android:name=".ui.activity.ClipImageActivity"
+            android:screenOrientation="portrait"/>
+
+        <!-- 图片拍摄 -->
+        <activity
+            android:name=".ui.activity.MediaPictruePhotoActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
+        <!-- 粉丝与关注 -->
+        <activity
+            android:name=".ui.activity.ContentFragmentActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.xinqu.media.topic"/>    <!-- 自定义的action-->
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT" /><!--必须加上这个，否则下面无法直接使用自定的action-->
+                <category android:name="xinqu.topic.category"/>
+            </intent-filter>
+        </activity>
+        <!-- 搜索 -->
+        <activity
+            android:name=".ui.activity.SearchActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+            android:screenOrientation="portrait"/>
+        <!-- 关于 -->
+        <activity
+            android:name=".ui.activity.AppAboutActivity"
+            android:screenOrientation="portrait"/>
+
+        <!-- 国家区号的选择 -->
+        <activity
+            android:name=".ui.activity.CountryCodeSelectorActivity"
+            android:screenOrientation="portrait"/>
+
+        <!-- 话题下的视频列表 -->
+        <!-- WEB界面 -->
+        <activity
+            android:name=".ui.activity.WebViewActivity"
+            android:screenOrientation="portrait"/>
+        <!-- 本地视频列表 -->
+        <activity
+            android:name=".ui.activity.MediaLocationVideoListActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.xinqu.media.locationvideo"/>    <!-- 自定义的action-->
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT" /><!--必须加上这个，否则下面无法直接使用自定的action-->
+                <category android:name="xinqu.location.category" />
+            </intent-filter>
+        </activity>
+
+        <!--音乐选择列表-->
+        <activity
+            android:name=".ui.activity.MediaMusicActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
+        <!--android:theme="@style/ActivityDialogAnimation"-->
+
+        <!--音乐搜索-->
+        <activity
+            android:name=".ui.activity.MediaMusicSearchActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
+        <!--android:theme="@style/ActivityDialogAnimation"-->
+        <!--手机号码绑定-->
+        <activity
+            android:name=".ui.activity.PhoneChangedActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustResize"
+            android:launchMode="singleTask">
+        </activity>
+
+        <!-- 视频录制 -->
+        <activity
+            android:name=".ui.activity.MediaRecordActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.xinqu.media.recoed"/>    <!-- 自定义的action-->
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT" /><!--必须加上这个，否则下面无法直接使用自定的action-->
+                <category android:name="xinqu.record.category"/>
+            </intent-filter>
+        </activity>
+
+        <!-- 视频编辑 -->
+        <activity
+            android:name=".ui.activity.MediaEditActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|stateHidden"/>
+        <!-- 视频裁剪 -->
+        <activity
+            android:name=".ui.activity.MediaVideoCatActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|stateHidden">
+        </activity>
+<!--            android:configChanges="orientation|keyboardHidden|screenSize"-->
+        <!-- 封面选择 -->
+        <activity
+            android:name=".ui.activity.MediaScreenShortActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <!-- 单张大图片预览 -->
+        <activity
+            android:name=".ui.activity.MediaSingerImagePreviewActivity"
+            android:screenOrientation="portrait"/>
+        <!-- 大图片预览 -->
+        <activity
+            android:name=".ui.activity.MediaImagePreviewActivity"
+            android:screenOrientation="portrait"/>
+
+        <!-- 本地相册集合 -->
+        <activity
+            android:name=".ui.activity.MediaImageListActivity"
+            android:screenOrientation="portrait"/>
+
+        <!-- 静态网络监听 -->
+        <receiver
+            android:name=".service.NetWorkChangeReivcer"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter android:priority="1000">
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".service.DownLoadService"
+            android:exported="false"/>
+
+        <!--版本升级,适配6.0及以上-->
+        <provider
+            android:name=".mode.DownloadFileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:replace="name,authorities,exported,grantUriPermissions">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_path"
+                tools:replace="name,resource"/>
+        </provider>
+        <!--调用系统相机拍摄 适配6.0及以上-->
+        <provider
+            android:name=".mode.PickeFileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false"
+            tools:replace="name,authorities,exported,grantUriPermissions">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths"
+                tools:replace="name,resource"/>
+        </provider>
+        <!--腾讯版本更新,6.0及以上-->
+        <activity
+            android:name="com.tencent.bugly.beta.ui.BetaActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|locale"
+            android:theme="@android:style/Theme.Translucent" />
+        <!--腾讯 版本升级-->
+        <provider
+            android:name=".mode.BuglyFileProvider"
+            android:authorities="${applicationId}.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+        <!--发布的版本渠道的配置-->
+        <!--
+        固定的渠道号：默认0：
+        1：美女类型
+        2：极限运动类型
+        -->
+        <meta-data android:name="build_channel_type" android:value="0"/>
+        <!-- 友盟===统计、分享、登录 -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="592526c9717c193093000c61"/>
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="app_xinqu"/>
+        <!--微信-->
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+        </activity>
+        <!--新浪微博-->
+        <activity
+            android:name=".WBShareActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <!--QQ-->
+        <activity
+            android:name="com.umeng.qq.tencent.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <!--这里的scheme是qq分享要用的，100424468为自己申请的appid，真实项目中需要替换-->
+                <data android:scheme="tencent1106176094"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.umeng.qq.tencent.AssistActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <!--分享编辑页-->
+        <!--<activity-->
+            <!--android:name="com.umeng.socialize.editorpage.ShareActivity"-->
+            <!--android:excludeFromRecents="true"-->
+            <!--android:theme="@style/Theme.UMDefault"/>-->
+        <!--极光消息推送-->
+        <!--
+            ATTENTION: This was auto-generated to add Google Play services to your project for
+         App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
+
+        <!-- 激光推送 -->
+        <!-- Rich push 核心功能 since 2.0.6 -->
+        <activity
+            android:name="cn.jpush.android.ui.PopWinActivity"
+            android:exported="false"
+            android:theme="@style/MyDialogStyle">
+        </activity>
+
+        <!-- Required SDK核心功能 -->
+        <activity
+            android:name="cn.jpush.android.ui.PushActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="false"
+            android:theme="@android:style/Theme.NoTitleBar">
+            <intent-filter>
+                <action android:name="cn.jpush.android.ui.PushActivity"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="com.video.newqu"/>
+            </intent-filter>
+        </activity>
+
+        <!-- Required SDK 核心功能 -->
+        <!-- 可配置android:process参数将PushService放在其他进程中 -->
+        <service
+            android:name="cn.jpush.android.service.PushService"
+            android:exported="false"
+            android:process=":xinqu_process">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTER"/>
+                <action android:name="cn.jpush.android.intent.REPORT"/>
+                <action android:name="cn.jpush.android.intent.PushService"/>
+                <action android:name="cn.jpush.android.intent.PUSH_TIME"/>
+            </intent-filter>
+        </service>
+
+        <!-- Required SDK核心功能 -->
+        <receiver
+            android:name="cn.jpush.android.service.AlarmReceiver"
+            android:exported="false"/>
+
+        <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的JPush服务相互拉起的功能。 -->
+        <!-- 若不启用该功能可删除该组件，将不拉起其他应用也不能被其他应用拉起 -->
+        <service
+            android:name="cn.jpush.android.service.DaemonService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.DaemonService"/>
+                <category android:name="com.video.newqu"/>
+            </intent-filter>
+        </service>
+
+        <!-- Required SDK核心功能 -->
+        <receiver
+            android:name="cn.jpush.android.service.PushReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter android:priority="1000">
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY"/> <!-- Required  显示通知栏 -->
+                <category android:name="com.video.newqu"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+            <!-- Optional -->
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED"/>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
+
+        <!-- Required SDK核心功能 -->
+        <receiver
+            android:name="cn.jpush.android.service.AlarmReceiver"
+            android:exported="false"/>
+
+        <!-- User defined.  For test only  用户自定义的广播接收器 -->
+        <receiver
+            android:name=".service.NotifactionReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTRATION"/> <!-- Required  用户注册SDK的intent -->
+                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED"/> <!-- Required  用户接收SDK消息的intent -->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED"/> <!-- Required  用户接收SDK通知栏信息的intent -->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED"/> <!-- Required  用户打开自定义通知栏的intent -->
+                <action android:name="cn.jpush.android.intent.CONNECTION"/> <!-- 接收网络变化 连接/断开 since 1.6.3 -->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_CLICK_ACTION" />
+                <category android:name="com.video.newqu"/>
+            </intent-filter>
+        </receiver>
+
+
+        <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的JPush服务相互拉起的功能。 -->
+        <!-- 若不启用该功能可删除该组件，将不拉起其他应用也不能被其他应用拉起 -->
+        <service
+            android:name="cn.jpush.android.service.DaemonService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.DaemonService"/>
+
+                <category android:name="com.video.newqu"/>
+            </intent-filter>
+        </service>
+
+        <!-- Required SDK核心功能 -->
+        <receiver
+            android:name="cn.jpush.android.service.PushReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter android:priority="1000">
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY"/> <!-- Required  显示通知栏 -->
+                <category android:name="com.video.newqu"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+            <!-- Optional -->
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED"/>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
+
+        <!-- Required SDK核心功能 -->
+        <receiver
+            android:name="cn.jpush.android.service.AlarmReceiver"
+            android:exported="false"/>
+
+        <!-- User defined.  For test only  用户自定义接收消息器,3.0.7开始支持,目前新tag/alias接口设置结果会在该广播接收器对应的方法中回调 -->
+        <receiver android:name=".service.VideoJPushMessageReceiver">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE"/>
+
+                <category android:name="com.video.newqu"/>
+            </intent-filter>
+        </receiver>
+        <!-- Required  . Enable it you can get statistics data with channel -->
+        <meta-data
+            android:name="JPUSH_CHANNEL"
+            android:value="app_net"/>
+        <meta-data
+            android:name="JPUSH_APPKEY"
+            android:value="24dca46eb98b3f3d93667b20"/> <!-- </>值来自开发者平台取得的AppKey -->
+    </application>
+
+</manifest>

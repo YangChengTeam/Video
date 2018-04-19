@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
+        android:id="@+id/re_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/bg_white_dot"
+        android:layout_margin="20dp"
+        android:padding="7dp"
+        android:elevation="18dp"
+        android:visibility="gone">
+        <com.video.newqu.view.widget.ProgressWheel
+            android:id="@+id/progressWheel"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            app:matProg_barColor="@color/app_style"
+            app:matProg_barWidth="3dp"
+            app:matProg_progressIndeterminate="true" />
+    </RelativeLayout>
+</RelativeLayout>
