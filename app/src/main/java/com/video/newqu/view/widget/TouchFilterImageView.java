@@ -49,7 +49,6 @@ public class TouchFilterImageView extends android.support.v7.widget.AppCompatIma
         @Override
         public void onLongPress(MotionEvent e) {
             super.onLongPress(e);
-            Log.d(TAG,"onLongPress");
             TouchFilterImageView.this.clearColorFilter(); // 清除滤镜
         }
 

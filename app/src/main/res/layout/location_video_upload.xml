@@ -4,12 +4,16 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <com.video.newqu.view.widget.RealtimeBlurView
+            android:id="@+id/content_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </com.video.newqu.view.widget.RealtimeBlurView>
         <LinearLayout
             android:id="@+id/bottom_sheet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/bg_fillet_background_white">
+            android:orientation="vertical">
             <!--app:layout_behavior="@string/bottom_sheet_behavior"-->
             <!--login_activity_background_white_big-->
             <LinearLayout
@@ -26,7 +30,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/common_h1"
+                    android:textColor="@color/black"
                     android:layout_gravity="center_vertical"
                     android:textSize="15sp"
                     android:layout_marginLeft="6dp"
@@ -53,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:text="发现您的手机中有以上精彩视频，是否上传？"
                     android:textSize="14sp"
-                    android:textColor="@color/common_h2"
+                    android:textColor="@color/gray_55"
                     android:gravity="center"/>
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -146,7 +146,6 @@ public class GuideActivity extends AppCompatActivity {
         intent.setClass(GuideActivity.this,clazz);
         startActivity(intent);
         this.finish();
-        overridePendingTransition(R.anim.screen_zoom_in, R.anim.screen_zoom_out);
     }
 
 

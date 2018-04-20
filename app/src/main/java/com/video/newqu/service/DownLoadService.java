@@ -16,7 +16,6 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
-
 import com.video.newqu.util.ToastUtils;
 import java.io.File;
 

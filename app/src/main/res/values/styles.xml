@@ -343,18 +343,6 @@ colorAccent:主题色，如输入框，系统的自定义空间等
         <item name="android:paddingRight">14dip</item>
         <item name="android:paddingTop">10dip</item>
     </style>
-
-    <!--设置包裹-->
-    <style name="Setting_title_style">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/item_comment_bg</item>
-        <item name="android:paddingBottom">12dp</item>
-        <item name="android:paddingLeft">15dp</item>
-        <item name="android:paddingRight">15dp</item>
-        <item name="android:paddingTop">12dp</item>
-    </style>
-
     <!--设置文字-->
     <style name="Setting_title_text">
         <item name="android:layout_width">wrap_content</item>

@@ -1,7 +1,6 @@
 package com.video.newqu.bean;
 
 import com.video.newqu.comadapter.entity.MultiItemEntity;
-
 import java.io.Serializable;
 import java.util.List;
 

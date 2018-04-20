@@ -1,13 +1,14 @@
 package com.video.newqu.ui.dialog;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -33,12 +34,11 @@ import java.util.List;
  * 扫描本地视频文件上传至服务器弹窗
  */
 
-public class LocationVideoUploadDialog extends Dialog implements OnItemClickListener, View.OnClickListener {
+public class LocationVideoUploadDialog extends BottomSheetDialog implements OnItemClickListener, View.OnClickListener {
 
     private final Activity context;
     private RecyclerView mRecyer_view;
     private Button mBt_submit;
-
     private LocationVideoListAdapter mLoactionVideoListAdapter;
     private List<String> filePath=new ArrayList<>();
     private List<WeiXinVideo> mVideo_list;
@@ -46,6 +46,7 @@ public class LocationVideoUploadDialog extends Dialog implements OnItemClickList
 
     public LocationVideoUploadDialog(Activity context ) {
         super(context, R.style.SpinKitViewSaveFileDialogAnimation);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         setContentView(R.layout.location_video_upload);
         initLayoutParams();
         this.context=context;
@@ -59,6 +60,16 @@ public class LocationVideoUploadDialog extends Dialog implements OnItemClickList
      * 设置Dialog显示在屏幕底部
      */
     private void initLayoutParams() {
+        final LinearLayout llContent = (LinearLayout) findViewById(R.id.bottom_sheet);
+        ViewTreeObserver viewTreeObserver = llContent.getViewTreeObserver();
+        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener(){
+            @Override
+            public void onGlobalLayout() {
+                View view = findViewById(R.id.content_bg);
+                view.getLayoutParams().height=llContent.getHeight();
+                llContent.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
         Window window = getWindow();
         WindowManager.LayoutParams attributes = window.getAttributes();//得到布局管理者
         WindowManager systemService = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);//得到窗口管理者

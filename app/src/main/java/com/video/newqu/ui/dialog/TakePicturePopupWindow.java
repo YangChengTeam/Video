@@ -161,6 +161,11 @@ public class TakePicturePopupWindow extends BasePopupWindow<PopupwindownTakePict
                 bindingView.btnUpload.setClickable(true);
                 bindingView.tvUpload.setVisibility(View.VISIBLE);
             }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                super.onAnimationCancel(animation);
+            }
         });
 
         //第一个动画开始之后再开启第二个

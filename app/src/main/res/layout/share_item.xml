@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-                android:padding="10dp"
-                >
-    <ImageView
-        android:id="@+id/iv_item_icon"
-        android:layout_width="46dp"
-        android:layout_height="46dp"
-        android:src="@drawable/iv_share_qq"
-        android:layout_centerHorizontal="true"/>
-    <TextView
-        android:id="@+id/tv_item_title"
-        android:layout_below="@+id/iv_item_icon"
-        android:layout_marginTop="8dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/text_gray_selector"
-        android:layout_centerHorizontal="true"
-        android:textSize="13sp"
-        android:text="QQ空间"/>
-</RelativeLayout>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/item_comment_bg"
+    android:padding="10dp"
+    android:orientation="vertical"
+    android:gravity="center">
+        <ImageView
+            android:id="@+id/iv_item_icon"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:src="@drawable/iv_share_qq" />
+        <TextView
+            android:id="@+id/tv_item_title"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_black2_selector"
+            android:textSize="13sp"
+            android:text="QQ空间"/>
+</LinearLayout>

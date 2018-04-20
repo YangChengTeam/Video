@@ -224,6 +224,7 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
                 }
             }else{
                 checkedUploadVideoEvent();//检查上传任务
+
             }
         }else{
             //如果不是刚好一个礼拜，还原扫描状态为未扫描
@@ -428,7 +429,7 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
         if(null==VideoApplication.getInstance().getUserData()){
             setCureenIndex(0);
         }
-        //微信发现时回聘了且未弹过窗
+        //微信扫描结果有视频且未弹过窗
         if (null!=mListWeakReference&&null!=mListWeakReference.get()&&mListWeakReference.get().size()>0&&!MainActivity.this.isFinishing()) {
             LocationVideoUploadDialog locationVideoUploadDialog = new LocationVideoUploadDialog(MainActivity.this);
             locationVideoUploadDialog.setData(mListWeakReference.get());
@@ -483,7 +484,7 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
             });
             followWeiXnDialog.show();
         //最后去初始化评分
-        }else{
+        }else if(SharedPreferencesUtil.getInstance().getInt(Constant.GRADE_PLAYER_VIDEO_COUNT)>0){
             showGradDialog();
         }
     }
@@ -544,16 +545,11 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
         }
     }
 
+    @Override
+    public void showErrorView() {}
 
     @Override
-    public void showErrorView() {
-
-    }
-
-    @Override
-    public void complete() {
-
-    }
+    public void complete() {}
 
     /**
      * 结束APP
@@ -566,7 +562,6 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
 
     /**
      * 设置首页 "我的" 消息数量
-     *
      * @param count
      */
     public void setMessageCount(int count) {
@@ -594,7 +589,6 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
 
     /**
      * 拦截返回和菜单事件
-     *
      * @param keyCode
      * @param event
      * @return

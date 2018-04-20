@@ -20,7 +20,7 @@ import rx.functions.Action1;
 /**
  * TinyHung@outlook.com
  * 2017/6/1 15:00
- * 获取用户的上传的视频列表
+ * 搜索
  */
 public class SearchPresenter extends RxPresenter<SearchContract.View> implements SearchContract.Presenter<SearchContract.View> {
 

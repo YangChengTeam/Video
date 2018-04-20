@@ -37,7 +37,6 @@ public class VideoComentListAdapter extends BaseQuickAdapter<ComentList.DataBean
         this.mVideoComendClickListener=videoComendClickListener;
     }
 
-
     @Override
     protected void convert(BaseViewHolder helper,  ComentList.DataBean.CommentListBean item) {
         if(null==item) return;

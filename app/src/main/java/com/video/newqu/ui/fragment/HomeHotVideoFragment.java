@@ -27,7 +27,6 @@ import com.video.newqu.ui.activity.VerticalVideoPlayActivity;
 import com.video.newqu.ui.activity.VideoDetailsActivity;
 import com.video.newqu.ui.contract.HotVideoContract;
 import com.video.newqu.ui.presenter.HotVideoPresenter;
-import com.video.newqu.util.Logger;
 import com.video.newqu.util.SharedPreferencesUtil;
 import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
@@ -46,19 +45,16 @@ import java.util.Observer;
 
 public class HomeHotVideoFragment extends BaseLightWeightFragment<FragmentHotRecylerBinding,HotVideoPresenter> implements  HotVideoContract.View, Observer {
 
-    private static final String TAG = "HomeHotVideoFragment";
     private HomeVideoListAdapter mVideoListAdapter;
     private int mPage=0;//当前页数
     private GridLayoutManager mGridLayoutManager;
     private boolean isRefresh=true;//是否需要刷新
     private ReEmptyLayoutBinding mEmptyViewbindView;
 
-
     @Override
     public int getLayoutId() {
         return R.layout.fragment_hot_recyler;
     }
-
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -108,10 +104,8 @@ public class HomeHotVideoFragment extends BaseLightWeightFragment<FragmentHotRec
         super.onInvisible();
     }
 
-
     @Override
     protected void initViews() {
-
         bindingView.swiperefreshLayout.setOnRefreshListener(new SwipePullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -157,7 +151,6 @@ public class HomeHotVideoFragment extends BaseLightWeightFragment<FragmentHotRec
                 }
             }
         }, bindingView.recyerView);
-
         mEmptyViewbindView = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.re_empty_layout, (ViewGroup) bindingView.recyerView.getParent(),false);
         mEmptyViewbindView.emptyView.setOnRefreshListener(new DataChangeView.OnRefreshListener() {
             @Override
@@ -169,7 +162,6 @@ public class HomeHotVideoFragment extends BaseLightWeightFragment<FragmentHotRec
         });
         mEmptyViewbindView.emptyView.showLoadingView();
         mVideoListAdapter.setEmptyView(mEmptyViewbindView.getRoot());
-
         mVideoListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -212,7 +204,6 @@ public class HomeHotVideoFragment extends BaseLightWeightFragment<FragmentHotRec
                 }
             }
         });
-
         bindingView.recyerView.setAdapter(mVideoListAdapter);
     }
 
@@ -227,22 +218,17 @@ public class HomeHotVideoFragment extends BaseLightWeightFragment<FragmentHotRec
         }
     }
 
-
     /**
      * 其他加载错误
      */
     @Override
-    public void showErrorView() {
-
-    }
+    public void showErrorView() {}
 
     /**
      * 加载完成
      */
     @Override
-    public void complete() {
-
-    }
+    public void complete() {}
 
     /**
      * 视频列表加载成功
@@ -280,8 +266,6 @@ public class HomeHotVideoFragment extends BaseLightWeightFragment<FragmentHotRec
             }
         }
     }
-
-
 
     /**
      * 视频列表加载为空

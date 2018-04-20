@@ -3,18 +3,19 @@ package com.video.newqu.ui.dialog;
 import android.content.Context;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import com.video.newqu.R;
 import com.video.newqu.adapter.ShareAdapter;
 import com.video.newqu.bean.ShareMenuItemInfo;
+import com.video.newqu.comadapter.BaseQuickAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,6 @@ public class ShareDialog extends BottomSheetDialog {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         setContentView(R.layout.dialog_share);
         initLayoutParams();
-        GridView gridView = (GridView) findViewById(R.id.grid_view);
         List<ShareMenuItemInfo> homeItemInfos = new ArrayList<>();
         homeItemInfos.add(new ShareMenuItemInfo("微信",R.drawable.iv_share_weichat));
         homeItemInfos.add(new ShareMenuItemInfo("微博",R.drawable.iv_share_weibo));
@@ -38,18 +38,21 @@ public class ShareDialog extends BottomSheetDialog {
         homeItemInfos.add(new ShareMenuItemInfo("QQ空间",R.drawable.iv_share_qq_zone));
         homeItemInfos.add(new ShareMenuItemInfo("更多",R.drawable.iv_share_more));
         homeItemInfos.add(new ShareMenuItemInfo("复制链接",R.drawable.iv_share_copy));
-        ShareAdapter adapter = new ShareAdapter(context,homeItemInfos);
-        gridView.setAdapter(adapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyler_view);
+        recyclerView.setLayoutManager(new GridLayoutManager(context,4,GridLayoutManager.VERTICAL,false));
+        recyclerView.setHasFixedSize(true);
+        ShareAdapter adapter = new ShareAdapter(homeItemInfos);
+        recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if(null!=mOnShareItemClickListener){
                     ShareDialog.this.dismiss();
                     mOnShareItemClickListener.onItemClick(position);
                 }
             }
         });
-        ((TextView) findViewById(R.id.tv_canel)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.tv_canel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ShareDialog.this.dismiss();
@@ -61,6 +64,16 @@ public class ShareDialog extends BottomSheetDialog {
      * 设置Dialog显示在屏幕底部
      */
     private void initLayoutParams() {
+        final LinearLayout llContent = (LinearLayout) findViewById(R.id.bottom_sheet);
+        ViewTreeObserver viewTreeObserver = llContent.getViewTreeObserver();
+        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener(){
+            @Override
+            public void onGlobalLayout() {
+                View view = findViewById(R.id.content_bg);
+                view.getLayoutParams().height=llContent.getHeight();
+                llContent.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
         Window window = getWindow();
         WindowManager.LayoutParams attributes = window.getAttributes();//得到布局管理者
         WindowManager systemService = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);//得到窗口管理者
@@ -71,8 +84,6 @@ public class ShareDialog extends BottomSheetDialog {
         attributes.width= systemService.getDefaultDisplay().getWidth();
         attributes.gravity= Gravity.BOTTOM;
     }
-
-
     public interface OnShareItemClickListener{
         void onItemClick(int pistion);
     }

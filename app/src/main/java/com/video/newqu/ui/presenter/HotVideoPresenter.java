@@ -19,9 +19,9 @@ import rx.functions.Action1;
  * 2017/5/23 10:53
  * 检测用户登录
  */
+
 public class HotVideoPresenter extends RxPresenter<HotVideoContract.View> implements HotVideoContract.Presenter<HotVideoContract.View> {
 
-    private static final String TAG = "HotVideoPresenter";
     private final Context context;
 
     public boolean isLoading() {
@@ -33,7 +33,6 @@ public class HotVideoPresenter extends RxPresenter<HotVideoContract.View> implem
     public HotVideoPresenter(Context context){
         this.context=context;
     }
-
 
     @Override
     public void getHotVideoList(final String page, String uid ) {
@@ -59,7 +58,6 @@ public class HotVideoPresenter extends RxPresenter<HotVideoContract.View> implem
                 }
             }
         });
-
         addSubscrebe(subscribe);
     }
 }

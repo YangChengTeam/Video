@@ -9,7 +9,6 @@ import java.io.Serializable;
  */
 public class UserData implements Serializable{
 
-
     private int code;
     private DataBean data;
     private String msg;

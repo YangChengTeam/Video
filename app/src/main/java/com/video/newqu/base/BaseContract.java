@@ -11,7 +11,7 @@ public interface BaseContract {
         void detachView();
     }
 
-    public interface BaseView {
+    interface BaseView {
 
         void showErrorView();
 
