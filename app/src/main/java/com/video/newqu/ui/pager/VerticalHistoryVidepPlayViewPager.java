@@ -36,7 +36,6 @@ import com.video.newqu.manager.ApplicationManager;
 import com.video.newqu.ui.activity.AuthorDetailsActivity;
 import com.video.newqu.ui.activity.ContentFragmentActivity;
 import com.video.newqu.ui.activity.VerticalHistoryVideoPlayActivity;
-import com.video.newqu.ui.activity.VerticalVideoPlayActivity;
 import com.video.newqu.ui.contract.VideoDetailsContract;
 import com.video.newqu.ui.fragment.VerticalVideoPlayCommendFragment;
 import com.video.newqu.ui.presenter.VideoDetailsPresenter;
@@ -73,7 +72,6 @@ public class VerticalHistoryVidepPlayViewPager extends BasePager<PagerVideoPlaye
     private VideoDetailsPresenter mVideoDetailsPresenter;
     private ScaleAnimation mFollowScaleAnimation;
 
-
     /**
      * @param context
      * @param listsBean
@@ -85,7 +83,6 @@ public class VerticalHistoryVidepPlayViewPager extends BasePager<PagerVideoPlaye
         this.mVideoBean=listsBean;
         setContentView(R.layout.pager_video_player_layout);
     }
-
 
     @Override
     public void initViews() {
@@ -113,7 +110,6 @@ public class VerticalHistoryVidepPlayViewPager extends BasePager<PagerVideoPlaye
                 bindingView.bottomProgress.setSecondaryProgress(0);
             }
         });
-
 
         View.OnClickListener onClickListener=new View.OnClickListener() {
             @Override
@@ -237,9 +233,7 @@ public class VerticalHistoryVidepPlayViewPager extends BasePager<PagerVideoPlaye
             bindingView.tvShareCount.setText(TextUtils.isEmpty(mVideoBean.getVideoShareCount())?"0":mVideoBean.getVideoShareCount());
             bindingView.tvUserFans.setText(TextUtils.isEmpty(mVideoBean.getVideoPlayerCount())?"0次播放":Utils.formatW(Integer.parseInt(mVideoBean.getVideoPlayerCount()))+"次播放");
             bindingView.ivPrice.setImageResource(1==mVideoBean.getIs_interest()?R.drawable.iv_icon_follow_true:R.drawable.iv_follow_selector);
-
             setVideoRatio(Integer.parseInt(mVideoBean.getVideoType()),bindingView.videoPlayer);
-
             HttpProxyCacheServer proxy = VideoApplication.getProxy();
             String proxyUrl = proxy.getProxyUrl(mVideoBean.getVideoPath());
             bindingView.videoPlayer.setUp(proxyUrl, WindowVideoPlayer.SCREEN_WINDOW_LIST, ConfigSet.getInstance().isPalyerLoop(),mVideoBean.getVideoDesp());
@@ -329,8 +323,6 @@ public class VerticalHistoryVidepPlayViewPager extends BasePager<PagerVideoPlaye
         bindingView.reVideoGroup.setImageVisibility();
     }
 
-
-
     /**
      * 显示留言面板
      * @param flag
@@ -358,9 +350,6 @@ public class VerticalHistoryVidepPlayViewPager extends BasePager<PagerVideoPlaye
             }
         }
     }
-
-
-
 
     /**
      * 显示和隐藏控制器
@@ -394,7 +383,6 @@ public class VerticalHistoryVidepPlayViewPager extends BasePager<PagerVideoPlaye
             bindingView.reControllerView.startAnimation(translateAnimation);
         }
     }
-
 
     /**
      * 设置视频宽高
@@ -446,7 +434,6 @@ public class VerticalHistoryVidepPlayViewPager extends BasePager<PagerVideoPlaye
             showWorkControllerView();
         }
     }
-
 
     /**
      * 显示业务层ControllerView
@@ -682,8 +669,6 @@ public class VerticalHistoryVidepPlayViewPager extends BasePager<PagerVideoPlaye
     }
 
     //==========================================数据回调=============================================
-
-
     @Override
     public void showErrorView() {
         if(null!=mContext&&!mContext.isFinishing()){
@@ -797,8 +782,6 @@ public class VerticalHistoryVidepPlayViewPager extends BasePager<PagerVideoPlaye
         }
     }
 
-
-
     /**
      * 关注用户回调
      */
@@ -839,8 +822,6 @@ public class VerticalHistoryVidepPlayViewPager extends BasePager<PagerVideoPlaye
         }
     }
 
-
-
     @Override
     public void showVideoInfoResult(VideoInfo data) {
 
@@ -875,7 +856,6 @@ public class VerticalHistoryVidepPlayViewPager extends BasePager<PagerVideoPlaye
     public void showChangeVideoDownloadPermissionResult(String data) {
 
     }
-
 
     @Override
     public void showPostPlayCountResult(String data) {

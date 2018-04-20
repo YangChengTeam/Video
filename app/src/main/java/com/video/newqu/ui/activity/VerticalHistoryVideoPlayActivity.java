@@ -141,7 +141,7 @@ public class VerticalHistoryVideoPlayActivity extends BaseActivity<ActivityVideo
                 if(null!=mHandler){
                     mHandler.removeMessages(0);//创建新的任务前，取消所有的定时任务
                 }
-                waitPlayVideo(400,mVideoPoistion);
+                waitPlayVideo(300,mVideoPoistion);
             }
 
             @Override

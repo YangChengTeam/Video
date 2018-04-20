@@ -39,7 +39,8 @@
                 android:layout_marginBottom="8dp"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:background="@drawable/activity_music_search_bar_background_white">
+                android:background="@drawable/activity_music_search_bar_background_white"
+                android:transitionName="@string/transition_movie_img">
                 <ImageView
                     android:id="@+id/iv_search"
                     android:layout_width="wrap_content"

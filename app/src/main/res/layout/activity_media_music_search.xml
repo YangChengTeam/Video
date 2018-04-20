@@ -34,7 +34,8 @@
                         android:id="@+id/re_home_title_search"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/activity_search_bar_background_white">
+                        android:background="@drawable/activity_search_bar_background_white"
+                        android:transitionName="@string/transition_movie_img">
                         <ImageView
                             android:id="@+id/iv_search"
                             android:layout_width="wrap_content"

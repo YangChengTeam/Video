@@ -115,7 +115,6 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
         setContentView(R.layout.vertical_pager_video_play_layout);
     }
 
-
     @Override
     public void initViews() {
         bindingView.tvInputEditText.setText("点我发送弹幕~");
@@ -142,7 +141,6 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
                 bindingView.bottomProgress.setSecondaryProgress(0);
             }
         });
-
         View.OnClickListener onClickListener=new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -159,7 +157,6 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
                     case R.id.btn_menu:
                         showMenu();
                         break;
-
                     //关注用户
                     case R.id.tv_add_follow:
                         if(null!=VideoApplication.getInstance().getUserData()){
@@ -234,7 +231,6 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
         }
         mFollowScaleAnimation = AnimationUtil.followAnimation();
     }
-
 
     @Override
     public void initData() {
@@ -572,7 +568,6 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
         }
     };
 
-
     /**
      * 自动任务
      */
@@ -646,7 +641,6 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
         if (danmaku == null || bindingView.svDanmaku == null) {
             return;
         }
-
         danmaku.text = cs;
         danmaku.padding = 5;
         danmaku.priority = 1;  // 可能会被各种过滤器过滤并隐藏显示
@@ -732,7 +726,6 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
             mDanmakuHandler.sendEmptyMessageDelayed(WHAT_DISPLAY_SINGLE_DANMAKU,TIME_ADD);//
     }
 
-
     /**
      * 设置视频宽高
      * @param videoRatio
@@ -746,8 +739,9 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
     // TODO: 2018/1/16 处理审核不通过的视频
     /**
      * 提供给外界播放事件
+     * @param hasNetwork
      */
-    public void onPlaye() {
+    public void onPlaye(boolean hasNetwork) {
         if(null!=mVideoBean&&null!=bindingView){
             if("2".equals(mVideoBean.getStatus())){
                 bindingView.reInvalidView.setVisibility(View.VISIBLE);
@@ -760,14 +754,15 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
                 bindingView.icInvalid.setAlpha(0.96f);
                 return;
             }
-            showWorkControllerView();
+            showWorkControllerView(hasNetwork);
         }
     }
 
     /**
      * 显示业务层ControllerView
+     * @param hasNetwork
      */
-    private void showWorkControllerView() {
+    private void showWorkControllerView(final boolean hasNetwork) {
         if(null!=bindingView){
             if(bindingView.viewTopBar.getVisibility()==View.VISIBLE) return;
             TranslateAnimation topToBottom = AnimationUtil.moveToViewTopLocation5();
@@ -779,8 +774,10 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     //审核未通过的视频，直接禁止所有功能，显示不通过按钮,ViewStub这个布局只在需要用到的时候加载和渲染
-                    if(null!=bindingView) bindingView.videoPlayer.startVideo();
-                    saveLocationHistoryList();
+                    if(hasNetwork){
+                        if(null!=bindingView) bindingView.videoPlayer.startVideo();
+                        saveLocationHistoryList();
+                    }
                 }
 
                 @Override
@@ -808,8 +805,6 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
             bindingView.viewBottomBar.setVisibility(View.GONE);
         }
     }
-
-
 
     /**
      * 保存播放的历史记录
@@ -848,7 +843,6 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
 
         }
     }
-
 
     /**
      * 分享
@@ -1086,9 +1080,6 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
         }
     }
 
-
-
-
     /**
      * 删除视频提示
      */
@@ -1113,7 +1104,6 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
 
     }
 
-
     /**
      * 视频私密状态设置提示
      */
@@ -1136,8 +1126,6 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
                             }
                         }).setCancelable(false).show();
     }
-
-
 
     /**
      * 举报视频
@@ -1169,7 +1157,6 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
         }
     }
 
-
     /**
      * 点击了话题
      * @param topic
@@ -1191,7 +1178,6 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
 
     }
 
-
     /**
      * 根据Targe打开新的界面
      * @param title
@@ -1209,9 +1195,7 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
         }
     }
 
-
     //==========================================数据回调=============================================
-
     @Override
     public void showErrorView() {
         if(null!=mContext&&!mContext.isFinishing()){
@@ -1236,7 +1220,6 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
             initDanmaku();
         }
     }
-
 
     /**
      * 获取留言列表成功
@@ -1373,7 +1356,6 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
             e.printStackTrace();
         }
     }
-
 
     /**
      * 显示视频详细信息

@@ -67,7 +67,6 @@ public class VerticalVideoPlayFragment extends BaseLightWeightFragment<FragmentV
     private int CHANGE_ODE_PAUSE = 3;
     private int CHANGE_ODE_RELEASEDANMAKU = 4;
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -104,9 +103,7 @@ public class VerticalVideoPlayFragment extends BaseLightWeightFragment<FragmentV
     }
 
     @Override
-    protected void initViews() {
-
-    }
+    protected void initViews() {}
 
     @Override
     public int getLayoutId() {
@@ -140,7 +137,7 @@ public class VerticalVideoPlayFragment extends BaseLightWeightFragment<FragmentV
                             if(null!=mHandler){
                                 mHandler.removeMessages(0);//创建新的任务前，取消所有的定时任务
                             }
-                            waitPlayVideo(400,mItemPoistion);//创建延时播放任务
+                            waitPlayVideo(300,mItemPoistion);//创建延时播放任务
                             //实时定位到播放的位置
                             ChangingViewEvent changingViewEvent=new ChangingViewEvent();
                             changingViewEvent.setFragmentType(mRootViewType);
@@ -170,7 +167,6 @@ public class VerticalVideoPlayFragment extends BaseLightWeightFragment<FragmentV
             ToastUtils.showCenterToast("播放失败!");
         }
     }
-
 
     /**
      * 设置延缓任务
@@ -203,10 +199,12 @@ public class VerticalVideoPlayFragment extends BaseLightWeightFragment<FragmentV
             }
             //WIFI下自动播放
             if (1 == Utils.getNetworkType() && ConfigSet.getInstance().isWifiAuthPlayer()) {
-                playerVideo(waitPlayPoistin);
+                playerVideo(waitPlayPoistin,true);
             //用户允许了移动网络下自动播放
             } else if (2 == Utils.getNetworkType() && ConfigSet.getInstance().isMobilePlayer()) {
-                playerVideo(waitPlayPoistin);
+                playerVideo(waitPlayPoistin,true);
+            }else{
+                playerVideo(waitPlayPoistin,false);
             }
         }
     }
@@ -243,7 +241,6 @@ public class VerticalVideoPlayFragment extends BaseLightWeightFragment<FragmentV
         }
     }
 
-
     /**
      * 这个方法由最外面的Activity调用
      * @param flag true：onResume(); false:onPause();
@@ -255,10 +252,13 @@ public class VerticalVideoPlayFragment extends BaseLightWeightFragment<FragmentV
             onLifeChange(mItemPoistion,CHANGE_ODE_PAUSE);
         }
     }
+
     /**
      * 播放视频
+     * @param itemPoistion 要播放的PageItem
+     * @param hasNetwork 是否有网络
      */
-    private void playerVideo(int itemPoistion) {
+    private void playerVideo(int itemPoistion, boolean hasNetwork) {
         if(-1!=itemPoistion&&null!=playerViews&&playerViews.size()>0){
             Iterator<Map.Entry<Integer, VerticalVideoPlayeViewPager>> iterator = playerViews.entrySet().iterator();
             while (iterator.hasNext()) {
@@ -267,13 +267,12 @@ public class VerticalVideoPlayFragment extends BaseLightWeightFragment<FragmentV
                     VerticalVideoPlayeViewPager playerTempPager = next.getValue();
                     if(null!=playerTempPager){
                         SharedPreferencesUtil.getInstance().putInt(Constant.GRADE_PLAYER_VIDEO_COUNT,(SharedPreferencesUtil.getInstance().getInt(Constant.GRADE_PLAYER_VIDEO_COUNT)+1));
-                        playerTempPager.onPlaye();
+                        playerTempPager.onPlaye(hasNetwork);
                     }
                 }
             }
         }
     }
-
 
     /**
      * 及时发送消息给用户信息界面，更新用户ID，和还原所有数据位初始状态
@@ -403,7 +402,6 @@ public class VerticalVideoPlayFragment extends BaseLightWeightFragment<FragmentV
         onLifeChange(mItemPoistion,CHANGE_ODE_RESUME);
     }
 
-
     @Override
     public void onPause() {
         super.onPause();
@@ -415,14 +413,12 @@ public class VerticalVideoPlayFragment extends BaseLightWeightFragment<FragmentV
         }
     }
 
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         onLifeChange(mItemPoistion,CHANGE_ODE_DESTROY);
         updataGroupList(true);
     }
-
 
     @Override
     public void onDetach() {
@@ -478,7 +474,6 @@ public class VerticalVideoPlayFragment extends BaseLightWeightFragment<FragmentV
     }
 
     //==========================================加载更多回调=========================================
-
     @Override
     public void showErrorView() {
 

@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -904,6 +905,7 @@ public class VideoDetailsActivity extends BaseActivity<ActivityVideoDetailsBindi
             }else{
                 isVisibilityView(bindingView.llFollowView,1==mVideoInfo.getIs_follow()?false:true);
             }
+            bindingView.reItemVideo.setBackgroundColor(Color.parseColor("#FF212121"));
         }
     }
 
