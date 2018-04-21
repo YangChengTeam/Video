@@ -4,5 +4,5 @@
 </br>
 [所属组织](https://github.com/feiyouAndroidTeam)</br>
 
-![新趣小视频首页]("https://raw.githubusercontent.com/feiyouAndroidTeam/Video/master/screen/截屏_20180421_101310.jpg" "主页热门列表")
-![新趣小视频]("https://raw.githubusercontent.com/feiyouAndroidTeam/Video/master/screen/截屏_20180421_101356.jpg" "用户个人中心")</br>
+![新趣小视频首页](https://raw.githubusercontent.com/feiyouAndroidTeam/Video/master/screen/截屏_20180421_101310.jpg "主页热门列表")
+![新趣小视频](https://raw.githubusercontent.com/feiyouAndroidTeam/Video/master/screen/截屏_20180421_101356.jpg "用户个人中心")</br>
