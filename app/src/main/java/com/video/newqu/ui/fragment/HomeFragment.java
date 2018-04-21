@@ -93,8 +93,8 @@ public class HomeFragment extends BaseLightWeightFragment<FragmentHomeBinding,Ma
             }
         }
         bindingView.topEmptyView.getLayoutParams().height=minHeight;
-        initFragments();
         ApplicationManager.getInstance().addObserver(this);
+        initFragments();
         List<TopicList.DataBean> topList = (List<TopicList.DataBean>) ApplicationManager.getInstance().getCacheExample().getAsObject(Constant.CACHE_TOPIC_LIST);
         if(null!=topList&&topList.size()>0){
             String[] strings=new String[topList.size()];
@@ -117,6 +117,7 @@ public class HomeFragment extends BaseLightWeightFragment<FragmentHomeBinding,Ma
      */
     private void initFragments() {
         if(null==mFragmentList) mFragmentList=new ArrayList<>();
+        mFragmentList.clear();
         mFragmentList.add(new HomeFollowVideoFragment());
         mFragmentList.add(new HomeHotVideoFragment());
         mFragmentList.add(new HomeTopicFragment());
@@ -129,7 +130,6 @@ public class HomeFragment extends BaseLightWeightFragment<FragmentHomeBinding,Ma
         bindingView.homeViewPager.setOffscreenPageLimit(3);
         bindingView.tabLayout.setTabMode(TabLayout.MODE_FIXED);
         bindingView.tabLayout.setupWithViewPager(bindingView.homeViewPager);
-        bindingView.homeViewPager.setCurrentItem(1);
         bindingView.homeViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -151,6 +151,7 @@ public class HomeFragment extends BaseLightWeightFragment<FragmentHomeBinding,Ma
 
             }
         });
+        bindingView.homeViewPager.setCurrentItem(1);
     }
 
 

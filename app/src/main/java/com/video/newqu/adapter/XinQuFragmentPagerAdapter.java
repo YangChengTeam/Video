@@ -3,7 +3,6 @@ package com.video.newqu.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.ViewGroup;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +33,7 @@ public class XinQuFragmentPagerAdapter extends android.support.v4.app.FragmentPa
 
     @Override
     public Fragment getItem(int position) {
-        return null==mFragment?null:(Fragment) mFragment.get(position);
+        return null==mFragment?null:mFragment.size()>position?mFragment.get(position):null;
     }
 
     @Override
@@ -52,7 +51,7 @@ public class XinQuFragmentPagerAdapter extends android.support.v4.app.FragmentPa
      */
     @Override
     public CharSequence getPageTitle(int position) {
-        if (mTitleList != null&&mTitleList.size()>0) {
+        if (mTitleList != null&&mTitleList.size()>position) {
             return mTitleList.get(position);
         } else {
             return "";

@@ -117,7 +117,11 @@ public class VideoApplication extends Application {
                     int todayWeekSundy = DateParseUtil.getTodayWeekSundy();                    SharedPreferencesUtil.getInstance().putInt(Constant.SETTING_TODAY_WEEK_SUNDY,todayWeekSundy);//保存第一次安装时候的星期日期
                 }
                 Fresco.initialize(mInstance);//动态贴纸解析必须
-                MobSDK.init(mInstance, "1ecf369922dc5", "aaf891da7ce90d40d52de6bedf5bf89c");
+                try {
+                    MobSDK.init(mInstance, "1ecf369922dc5", "aaf891da7ce90d40d52de6bedf5bf89c");
+                }catch (Exception e){
+
+                }
                 //初始化全局异常拦截
                 //CrashHanlder.getInstance().init(VideoApplication.this);
                 //LeakCanary.install(VideoApplication.this);//内存泄漏检测

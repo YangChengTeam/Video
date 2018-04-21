@@ -38,6 +38,7 @@ import org.greenrobot.eventbus.EventBus;
  * 2017/6/1 11:59
  * 多个Fragment界面通用的父Activity
  */
+
 public class ContentFragmentActivity extends BaseActivity<ActivityContentFragmentBinding>{
 
     private String mTitle;

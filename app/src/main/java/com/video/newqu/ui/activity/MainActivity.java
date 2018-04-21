@@ -280,7 +280,6 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
         if (requestCode == REQUEST_PERMISSION_LOCATION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // We now have permission to use the location
-                ToastUtils.showCenterToast("权限检查:GPS授权成功");
                 if (null!=mMainPresenter&&!mMainPresenter.isResqust()) {
                     mMainPresenter.registerApp(false);
                 }
