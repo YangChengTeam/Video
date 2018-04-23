@@ -51,7 +51,7 @@ public class XinQuFragmentPagerAdapter extends android.support.v4.app.FragmentPa
      */
     @Override
     public CharSequence getPageTitle(int position) {
-        if (mTitleList != null&&mTitleList.size()>position) {
+        if (null!=mTitleList&&mTitleList.size()>position) {
             return mTitleList.get(position);
         } else {
             return "";

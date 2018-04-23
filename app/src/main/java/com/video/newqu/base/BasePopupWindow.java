@@ -1,8 +1,8 @@
 package com.video.newqu.base;
 
+import android.app.Activity;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
@@ -14,10 +14,10 @@ import android.widget.PopupWindow;
  */
 public abstract class BasePopupWindow<DV extends ViewDataBinding> extends PopupWindow{
 
-    protected AppCompatActivity context;
+    protected Activity context;
     protected DV bindingView;
 
-    public BasePopupWindow(AppCompatActivity context){
+    public BasePopupWindow(Activity context){
         bindingView = DataBindingUtil.inflate(context.getLayoutInflater(), setLayoutID(), null, false);
         setContentView(bindingView.getRoot());
         this.context= context;

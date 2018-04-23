@@ -69,7 +69,7 @@ public class AppAboutActivity extends BaseActivity<ActivityAboutBinding> {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
         showToolBar(false);
-        mImageURL = Cheeses.BG_IMAGE[Utils.getRandomNum(0, 29)];
+        mImageURL=new Cheeses().createAboveBGS()[Utils.getRandomNum(0, 29)];
         initSlideShapeTheme(mImageURL,bindingView.imgItemBg);
         setHeaderImage();
     }
@@ -259,7 +259,6 @@ public class AppAboutActivity extends BaseActivity<ActivityAboutBinding> {
     private void setImgHeaderBg(Object imgUrl) {
         // 高斯模糊背景 原来 参数：12,5  23,4
         Glide.with(this).load(imgUrl)
-                .error(R.drawable.bg_live_transit)
                 .bitmapTransform(new BlurTransformation(this, 23, 4)).listener(new RequestListener<Object, GlideDrawable>() {
             @Override
             public boolean onException(Exception e, Object model, Target<GlideDrawable> target, boolean isFirstResource) {

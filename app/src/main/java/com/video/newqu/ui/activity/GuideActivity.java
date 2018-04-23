@@ -29,22 +29,18 @@ import com.video.newqu.util.SharedPreferencesUtil;
 public class GuideActivity extends AppCompatActivity {
 
     private ActivityGuideBinding bindingView;
+    private int[] mImages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         bindingView = DataBindingUtil.setContentView(GuideActivity.this, R.layout.activity_guide);
-        initViews();
-    }
-
-
-    private void initViews() {
-        bindingView.vpGank.setAdapter(mPageAdapter);
+        mImages = new Cheeses().createGUIDE_IMAGE();
+        bindingView.vpGank.setAdapter(new GuidePageAdapter());
         bindingView.vpGank.fixScrollSpeed(800);
         bindingView.vpGank.addOnPageChangeListener(mPageListener);
         bindingView.liDost.removeAllViews();
-
         addDots();
         mPageListener.onPageSelected(0);
         View.OnClickListener onClickListener=new View.OnClickListener() {
@@ -62,15 +58,13 @@ public class GuideActivity extends AppCompatActivity {
         bindingView.btSkip.setOnClickListener(onClickListener);
     }
 
-
-
     /**
      * 过场动画适配器
      */
-    private PagerAdapter mPageAdapter = new PagerAdapter() {
+    private class GuidePageAdapter extends PagerAdapter {
         @Override
         public int getCount() {
-            return Cheeses.GUIDE_IMAGE.length;
+            return null==mImages?0:mImages.length;
         }
 
         @Override
@@ -81,11 +75,14 @@ public class GuideActivity extends AppCompatActivity {
         // 预加载页面用到的方法
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            ImageView imageView = new ImageView(container.getContext());
-            imageView.setImageResource(Cheeses.GUIDE_IMAGE[position]);
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            container.addView(imageView);
-            return  imageView;
+            if(null!=mImages&&mImages.length>position){
+                ImageView imageView = new ImageView(container.getContext());
+                imageView.setImageResource(mImages[position]);
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                container.addView(imageView);
+                return  imageView;
+            }
+         return null;
         }
 
         // 销毁页面用到的方法
@@ -101,15 +98,17 @@ public class GuideActivity extends AppCompatActivity {
     private ViewPager.OnPageChangeListener mPageListener =new ViewPager.SimpleOnPageChangeListener(){
         @Override
         public void onPageSelected(int position) {
-            //切换显示状态
-            for (int i = 0; i < mPageAdapter.getCount(); i++) {
-                bindingView.liDost.getChildAt(i).setEnabled(i != position);
-            }
-            switchButtomState(position==mPageAdapter.getCount() -1);
-            if(position==Cheeses.GUIDE_IMAGE.length-1){
-                bindingView.btnCanel.setVisibility(View.INVISIBLE);
-            }else{
-                bindingView.btnCanel.setVisibility(View.VISIBLE);
+            if(null!=mImages&&mImages.length>0){
+                //切换显示状态
+                for (int i = 0; i < mImages.length; i++) {
+                    bindingView.liDost.getChildAt(i).setEnabled(i != position);
+                }
+                switchButtomState(position==mImages.length -1);
+                if(position==mImages.length-1){
+                    bindingView.btnCanel.setVisibility(View.INVISIBLE);
+                }else{
+                    bindingView.btnCanel.setVisibility(View.VISIBLE);
+                }
             }
         }
     };
@@ -153,30 +152,33 @@ public class GuideActivity extends AppCompatActivity {
      * 添加小圆点
      */
     private void addDots() {
-        int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
-        for (int i = 0; i < Cheeses.GUIDE_IMAGE.length; i++) {
-            View dot = new View(this);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(margin, margin);
-            lp.setMargins(margin, margin, margin, margin);
-            lp.width= ScreenUtils.dpToPxInt(6);
-            lp.height= ScreenUtils.dpToPxInt(6);
-            dot.setLayoutParams(lp);
-            dot.setBackgroundResource(R.drawable.arl_orgin_dot_selector);
-            bindingView.liDost.addView(dot);
-            dot.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int child = bindingView.liDost.indexOfChild(v);
-                    bindingView.vpGank.setCurrentItem(child);
-                }
-            });
+        if(null!=mImages&&mImages.length>0){
+            int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
+            for (int i = 0; i < mImages.length; i++) {
+                View dot = new View(this);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(margin, margin);
+                lp.setMargins(margin, margin, margin, margin);
+                lp.width= ScreenUtils.dpToPxInt(6);
+                lp.height= ScreenUtils.dpToPxInt(6);
+                dot.setLayoutParams(lp);
+                dot.setBackgroundResource(R.drawable.arl_orgin_dot_selector);
+                bindingView.liDost.addView(dot);
+                dot.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int child = bindingView.liDost.indexOfChild(v);
+                        bindingView.vpGank.setCurrentItem(child);
+                    }
+                });
+            }
+            bindingView.liDost.setVisibility(View.VISIBLE);
         }
-        bindingView.liDost.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mImages=null;
         Runtime.getRuntime().gc();
     }
 }

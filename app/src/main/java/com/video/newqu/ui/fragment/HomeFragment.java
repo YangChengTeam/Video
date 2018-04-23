@@ -1,25 +1,24 @@
 package com.video.newqu.ui.fragment;
 
 import android.content.DialogInterface;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.AdapterView;
-import com.bumptech.glide.Glide;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.sina.helper.MD5;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
-import com.video.newqu.adapter.HomeShareAdapter;
 import com.video.newqu.adapter.HomeUploadVideoListAdapter;
 import com.video.newqu.adapter.XinQuFragmentPagerAdapter;
 import com.video.newqu.base.BaseLightWeightFragment;
@@ -33,25 +32,24 @@ import com.video.newqu.contants.ConfigSet;
 import com.video.newqu.contants.Constant;
 import com.video.newqu.databinding.FragmentHomeBinding;
 import com.video.newqu.model.HomeHorzontalSpacesItemDecoration;
-import com.video.newqu.ui.activity.MainActivity;
 import com.video.newqu.ui.activity.SearchActivity;
+import com.video.newqu.ui.dialog.HomeSharePopupWindow;
 import com.video.newqu.ui.presenter.MainPresenter;
 import com.video.newqu.upload.bean.UploadDeteleTaskInfo;
 import com.video.newqu.upload.listener.VideoUploadListener;
 import com.video.newqu.upload.manager.VideoUploadTaskManager;
 import com.video.newqu.util.ImageCache;
 import com.video.newqu.util.ScreenUtils;
+import com.video.newqu.util.ShareUtils;
 import com.video.newqu.util.SystemUtils;
 import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
 import com.video.newqu.util.VideoComposeProcessor;
-import com.video.newqu.view.widget.MultiDirectionSlidingDrawer;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -69,7 +67,6 @@ import java.util.TreeMap;
 public class HomeFragment extends BaseLightWeightFragment<FragmentHomeBinding,MainPresenter> implements VideoUploadListener, Observer {
 
     private List<Fragment> mFragmentList;
-    private UploadVideoInfo mUploadData;
 
     @Override
     public int getLayoutId() {
@@ -103,7 +100,7 @@ public class HomeFragment extends BaseLightWeightFragment<FragmentHomeBinding,Ma
             }
             bindingView.tvAutoText.setData(strings);
         }else{
-            bindingView.tvAutoText.setData(Cheeses.AUTO_SEARCH);
+            bindingView.tvAutoText.setData(new Cheeses().createAutKey());
         }
         //搜索热词
         bindingView.tvAutoText.setAutoDurtion(5*1000);//5秒钟轮播一次
@@ -126,8 +123,8 @@ public class HomeFragment extends BaseLightWeightFragment<FragmentHomeBinding,Ma
         titles.add(getResources().getString(R.string.home_fragment_hot_title));
         titles.add(getResources().getString(R.string.home_fragment_topic_title));
         XinQuFragmentPagerAdapter myXinQuFragmentPagerAdapter =new XinQuFragmentPagerAdapter(getChildFragmentManager(),mFragmentList,titles);
-        bindingView.homeViewPager.setAdapter(myXinQuFragmentPagerAdapter);
         bindingView.homeViewPager.setOffscreenPageLimit(3);
+        bindingView.homeViewPager.setAdapter(myXinQuFragmentPagerAdapter);
         bindingView.tabLayout.setTabMode(TabLayout.MODE_FIXED);
         bindingView.tabLayout.setupWithViewPager(bindingView.homeViewPager);
         bindingView.homeViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -173,62 +170,6 @@ public class HomeFragment extends BaseLightWeightFragment<FragmentHomeBinding,Ma
         };
         bindingView.reSearchBar.setOnClickListener(onClickListener);
         bindingView.btnHistroy.setOnClickListener(onClickListener);
-        //测绘抽屉子控件高度来确定抽屉高度
-        int width =View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
-        int height =View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
-        bindingView.content.measure(width,height);
-        bindingView.handle.measure(width,height);
-        //最终确定抽屉的高度
-        bindingView.slidingDrawer.getLayoutParams().height=(bindingView.content.getMeasuredHeight()+bindingView.handle.getMeasuredHeight());
-        //监听抽屉关闭状态
-        bindingView.slidingDrawer.setOnDrawerCloseListener(new MultiDirectionSlidingDrawer.OnDrawerCloseListener() {
-            @Override
-            public void onDrawerClosed() {
-                bindingView.shareListView.setAdapter(null);
-                if(null!=sHandler){
-                    sHandler.removeCallbacks(closeShareViewRunnable);
-                    sHandler=null;
-                }
-                mUploadData=null;
-                bindingView.slidingDrawer.setVisibility(View.GONE);
-                bindingView.ivShareVideoCover.setImageResource(0);
-            }
-        });
-        //监听抽屉打开状态
-        bindingView.slidingDrawer.setOnDrawerOpenListener(new MultiDirectionSlidingDrawer.OnDrawerOpenListener() {
-            @Override
-            public void onDrawerOpened() {
-                if(null!=mUploadData&&!TextUtils.isEmpty(mUploadData.getServiceVideoId())){
-                    initShareTab();
-                }else{
-                    if(null!=sHandler){
-                        sHandler.removeCallbacks(closeShareViewRunnable);
-                        sHandler=null;
-                    }
-                    bindingView.slidingDrawer.animateClose();
-                    bindingView.slidingDrawer.setVisibility(View.GONE);
-                }
-            }
-        });
-        bindingView.slidingDrawer.setOnDrawerScrollListener(new MultiDirectionSlidingDrawer.OnDrawerScrollListener() {
-            @Override
-            public void onScrollStarted() {
-
-            }
-
-            @Override
-            public void onScrollEnded() {
-
-            }
-
-            @Override
-            public void onTouch() {
-                if(null!=sHandler){
-                        sHandler.removeCallbacks(closeShareViewRunnable);
-                        sHandler=null;
-                }
-            }
-        });
     }
 
     @Override
@@ -751,7 +692,6 @@ public class HomeFragment extends BaseLightWeightFragment<FragmentHomeBinding,Ma
                 mUploadVideoListAdapter.notifyDataSetChanged();
             }
         }catch (Exception e){
-
         }
     }
 
@@ -773,8 +713,7 @@ public class HomeFragment extends BaseLightWeightFragment<FragmentHomeBinding,Ma
                     ApplicationManager.getInstance().observerUpdata(Constant.OBSERVABLE_ACTION_VIDEO_CHANGED);//通知观察者准备刷新
                     UploadVideoInfo data = (UploadVideoInfo) msg.obj;
                     if(null!=data&&!TextUtils.isEmpty(data.getServiceVideoId())){
-                        HomeFragment.this.mUploadData =data;
-                        showShareViewState(true);
+                        showShareViewState(data);
                     }
                 }
             //上传/合并 进度刷新
@@ -788,101 +727,55 @@ public class HomeFragment extends BaseLightWeightFragment<FragmentHomeBinding,Ma
         }
     };
 
-
     //==========================================上传成功=============================================
 
     /**
      * 切换分享面板的显示状态
-     * @param flag
+     * @param data
      */
-    private void showShareViewState(boolean flag) {
-        if(flag){
-            bindingView.slidingDrawer.setVisibility(View.VISIBLE);
-            bindingView.slidingDrawer.animateOpen();
-            if(null==sHandler){
-                sHandler=new Handler();
-                sHandler.postAtTime(closeShareViewRunnable, SystemClock.uptimeMillis()+10*1000);//8秒后执行Runnable中的Run方法
-            }
-            return;
-        }else{
-            if(null!=sHandler) sHandler.removeCallbacks(closeShareViewRunnable);
-            sHandler=null;
-            bindingView.slidingDrawer.animateClose();
-        }
-    }
-
-    private Handler sHandler=null;
-    private Runnable closeShareViewRunnable = new Runnable() {
-
-        @Override
-        public void run() {
-            showShareViewState(false);
-        }
-    };
-
-
-
-    /**
-     * 初始化分享面板
-     */
-    private void initShareTab() {
-        setVideoShareIcon();
-        List<ShareMenuItemInfo> shareMenuItemInfos=new ArrayList<>();
-        shareMenuItemInfos.add(new ShareMenuItemInfo("微信",R.drawable.ic_share_wechat_normal));
-        shareMenuItemInfos.add(new ShareMenuItemInfo("QQ",R.drawable.ic_share_qq_normal));
-        shareMenuItemInfos.add(new ShareMenuItemInfo("微博",R.drawable.ic_share_sina_normal));
-        shareMenuItemInfos.add(new ShareMenuItemInfo("朋友圈",R.drawable.ic_share_wxcircle_normal));
-        shareMenuItemInfos.add(new ShareMenuItemInfo("QQ空间",R.drawable.ic_share_qzone_normal));
-        shareMenuItemInfos.add(new ShareMenuItemInfo("其他",R.drawable.ic_home_share_other));
-        final HomeShareAdapter homeShareAdapter=new HomeShareAdapter(getActivity(),shareMenuItemInfos);
-        bindingView.shareListView.setAdapter(homeShareAdapter);
-        bindingView.shareListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int poistion, long l) {
-                if(null==mUploadData) return;
-                if(mUploadData.getIsPrivate()){
-                    ToastUtils.showCenterToast(getResources().getString(R.string.home_share_error_tips));
-                    return;
-                }
-                if(null!=sHandler){
-                    sHandler.removeCallbacks(closeShareViewRunnable);
-                    sHandler=null;
-                }
-                ShareInfo shareInfo=new ShareInfo();
-                String desp="";
-                if(!TextUtils.isEmpty(mUploadData.getVideoDesp())){
-                    try {
-                        desp=URLDecoder.decode(mUploadData.getVideoDesp(),"UTF-8");
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
+    private void showShareViewState(UploadVideoInfo data) {
+        if(null!=data){
+            HomeSharePopupWindow sharePopupWindow=new HomeSharePopupWindow(getActivity(),data);
+            sharePopupWindow.setOnItemClickListener(new HomeSharePopupWindow.OnItemClickListener() {
+                @Override
+                public void onItemClick(ShareMenuItemInfo shareMenuItemInfo, UploadVideoInfo uploadVideoInfo) {
+                    if(null!=shareMenuItemInfo&&null!=uploadVideoInfo){
+                        if(uploadVideoInfo.getIsPrivate()){
+                            ToastUtils.showCenterToast(getResources().getString(R.string.home_share_error_tips));
+                            return;
+                        }
+                        ShareInfo shareInfo=new ShareInfo();
+                        String desp="";
+                        if(!TextUtils.isEmpty(uploadVideoInfo.getVideoDesp())){
+                            try {
+                                desp=URLDecoder.decode(uploadVideoInfo.getVideoDesp(),"UTF-8");
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        shareInfo.setDesp(getResources().getString(R.string.share_home_tips)+(TextUtils.isEmpty(desp)?"":"["+desp+"]"));
+                        shareInfo.setTitle(VideoApplication.getInstance().getUserData().getNickname()+"@你，我的新趣视频更新啦");
+                        String url = "http://app.nq6.com/home/show/index?id=" + uploadVideoInfo.getServiceVideoId();
+                        String token = MD5.hexdigest(url + "xinqu_123456");
+                        shareInfo.setUrl(url+"&token=" + token);//+"&share_type="+"1"
+                        shareInfo.setVideoID(uploadVideoInfo.getServiceVideoId());
+                        shareInfo.setVideoPath(uploadVideoInfo.getFilePath());
+                        if(SHARE_MEDIA.MORE==shareMenuItemInfo.getPlatform()){
+                            Intent intent=new Intent(Intent.ACTION_SEND);
+                            intent.setType("text/plain");
+                            intent.putExtra(Intent.EXTRA_SUBJECT,shareInfo.getTitle());
+                            intent.putExtra(Intent.EXTRA_TEXT, shareInfo.getUrl());
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(Intent.createChooser(intent, getResources().getString(R.string.shared_to)));
+                        }else{
+                            ShareUtils.share(getActivity(),shareInfo,shareMenuItemInfo.getPlatform(),null);
+                        }
                     }
                 }
-                shareInfo.setDesp(getResources().getString(R.string.share_home_tips)+(TextUtils.isEmpty(desp)?"":"["+desp+"]"));
-                shareInfo.setTitle("新趣小视频分享");
-                shareInfo.setUrl("http://v.nq6.com");
-                shareInfo.setVideoID(mUploadData.getServiceVideoId());
-                shareInfo.setVideoPath(mUploadData.getFilePath());
-                if(null!=getActivity()&&!getActivity().isFinishing()){
-                    MainActivity mainActivity= (MainActivity) getActivity();
-                    mainActivity.shareIntent(shareInfo,poistion);
-                }
-            }
-        });
+            });
+            sharePopupWindow.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.TOP,0,0);
+        }
     }
-
-    private void setVideoShareIcon() {
-        if(null!=mUploadData) return;
-        File file = new File(mUploadData.getFilePath());
-        if(!file.exists()) return;
-        Glide
-            .with(getActivity())
-            .load(Uri.fromFile(file))
-            .error(R.drawable.iv_video_errror)
-            .animate(R.anim.item_alpha_in)
-            .skipMemoryCache(true)
-            .into(bindingView.ivShareVideoCover);
-    }
-
 
 
     /**

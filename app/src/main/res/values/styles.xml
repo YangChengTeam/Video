@@ -96,7 +96,6 @@ colorAccent:主题色，如输入框，系统的自定义空间等
     <style name="SpinKitViewSaveFileDialogAnimation" parent="android:style/Theme.Dialog">
         <!-- 是否有标题-->
         <item name="android:windowNoTitle">true</item>
-
         <!--背景颜色及透明程度-->
         <item name="android:windowBackground">@android:color/transparent</item>
         <!--是否浮现在activity之上-->
@@ -117,9 +116,7 @@ colorAccent:主题色，如输入框，系统的自定义空间等
         <item name="android:windowIsFloating">true</item>
         <!--是否模糊-->
         <item name="android:backgroundDimEnabled">false</item>
-
         <item name="android:windowCloseOnTouchOutside">true</item>
-
         <item name="android:windowAnimationStyle">@style/HomeItemPopupAnimation</item>
     </style>
 
@@ -136,24 +133,18 @@ colorAccent:主题色，如输入框，系统的自定义空间等
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
-
-
-
     <!--版本更新-->
     <style name="UpdataDialogAnimation" parent="android:style/Theme.Dialog">
         <!-- 是否有标题-->
         <item name="android:windowNoTitle">true</item>
-
         <!--背景颜色及透明程度-->
         <item name="android:windowBackground">@android:color/transparent</item>
         <!--是否浮现在activity之上-->
         <item name="android:windowIsFloating">true</item>
         <!--是否模糊-->
         <item name="android:backgroundDimEnabled">true</item>
-
         <item name="android:windowCloseOnTouchOutside">true</item>
-
-        <item name="android:windowAnimationStyle">@style/UpdataAnimation</item>
+        <item name="android:windowAnimationStyle">@style/HomeItemPopupAnimation</item>
     </style>
 
     <!--HomeItemPopupWindown动画-->
@@ -164,24 +155,13 @@ colorAccent:主题色，如输入框，系统的自定义空间等
         <item name="android:windowExitAnimation">@anim/menu_exit</item>
     </style>
 
-
-    <!--UpdataAnimation动画-->
-    <style name="UpdataAnimation">
+    <!--右上角工具菜单-->
+    <style name="PopupToolBarAnimation">
         <!-- 入场动画 -->
-        <item name="android:windowEnterAnimation">@anim/menu_enter</item>
+        <item name="android:windowEnterAnimation">@anim/popup_enter</item>
         <!-- 出厂动画 -->
-        <item name="android:windowExitAnimation">@anim/menu_exit</item>
-
+        <item name="android:windowExitAnimation">@anim/popup_exit</item>
     </style>
-
-
-    <style name="SharePopupAnimation">
-        <!-- 入场动画 -->
-        <item name="android:windowEnterAnimation">@anim/menu_enter</item>
-        <!-- 出厂动画 -->
-        <item name="android:windowExitAnimation">@anim/menu_exit</item>
-    </style>
-
 
     <!-- 加载中Dialog-->
     <style name="LoadingProgressDialogStyle" parent="android:style/Theme.Dialog">
@@ -194,9 +174,7 @@ colorAccent:主题色，如输入框，系统的自定义空间等
         <item name="android:windowIsFloating">true</item>
         <!--是否模糊-->
         <item name="android:backgroundDimEnabled">false</item>
-
         <item name="android:windowCloseOnTouchOutside">true</item>
-
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
     </style>
 
@@ -204,21 +182,17 @@ colorAccent:主题色，如输入框，系统的自定义空间等
     <style name="ActivityDialogAnimation" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <!-- 是否有标题-->
         <item name="android:windowNoTitle">true</item>
-
         <!--背景颜色及透明程度-->
         <item name="android:windowBackground">@android:color/transparent</item>
         <!--是否浮现在activity之上-->
         <item name="android:windowIsFloating">true</item>
         <!--是否模糊-->
         <item name="android:backgroundDimEnabled">true</item>
-
         <item name="android:windowCloseOnTouchOutside">false</item>
-
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
     </style>
     <!--视频详情菜单弹窗样式-->
     <style name="MenuDialog" parent="android:style/Theme.Dialog">
-
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowAnimationStyle">@style/MenuDialogAnimation</item>
         <item name="android:windowBackground">@android:color/transparent
@@ -312,8 +286,6 @@ colorAccent:主题色，如输入框，系统的自定义空间等
         <item name="android:layout_height">fill_parent</item>
         <item name="android:layout_weight">1.0</item>
     </style>
-
-
     <style name="title_style_center">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -351,8 +323,6 @@ colorAccent:主题色，如输入框，系统的自定义空间等
         <item name="android:layout_centerVertical">true</item>
         <item name="android:textColor">@color/common_h1</item>
     </style>
-
-
     <!--进度条样式-->
     <style name="ProgressBar" parent="@android:style/Widget.ProgressBar.Horizontal">
         <item name="android:indeterminateOnly">false</item>

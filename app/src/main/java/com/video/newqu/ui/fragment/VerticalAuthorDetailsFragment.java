@@ -339,7 +339,6 @@ public class VerticalAuthorDetailsFragment extends BaseLightWeightFragment<Activ
             }
         });
         mEmptyViewbindView.emptyView.showLoadingView();
-
         //九宫格Adapter
         mVideoListAdapter = new UserVideoListAdapter(null,3,null);
         mVideoListAdapter.setEmptyView(mEmptyViewbindView.getRoot());
@@ -382,7 +381,7 @@ public class VerticalAuthorDetailsFragment extends BaseLightWeightFragment<Activ
                                 if(!TextUtils.isEmpty(json)){
                                     getActivity().finish();
                                     Intent intent=new Intent(getActivity(),VerticalVideoPlayActivity.class);
-                                    intent.putExtra(Constant.KEY_FRAGMENT_TYPE,Constant.FRAGMENT_TYPE_WORKS);
+                                    intent.putExtra(Constant.KEY_FRAGMENT_TYPE,Constant.FRAGMENT_TYPE_AUTHOE_CORE);
                                     intent.putExtra(Constant.KEY_POISTION,position);
                                     intent.putExtra(Constant.KEY_PAGE,mPage);
                                     intent.putExtra(Constant.KEY_AUTHOE_ID,VideoApplication.getLoginUserID());
@@ -717,9 +716,10 @@ public class VerticalAuthorDetailsFragment extends BaseLightWeightFragment<Activ
                     }
                 }
             }
-            shareInfo.setDesp("我在新趣小视频安家啦！新奇好玩的新趣视频，期待你的加入！ "+(TextUtils.isEmpty(nikeName)?"":nikeName));
-            shareInfo.setTitle("快来加入新趣，我在新趣等你！");
+            shareInfo.setTitle("邀请你欣赏精彩视频");
+            shareInfo.setDesp("我正在["+nikeName+"]的主页观看视频，精彩不容错过！");
             shareInfo.setUserID(mAuthorID);
+            shareInfo.setImageLogo(mInfoBean.getLogo());
             shareInfo.setUrl("http://app.nq6.com/home/user/index?user_id="+shareInfo.getUserID());
             if(null!=mActivityWeakReference&&null!=mActivityWeakReference.get()){
                 mActivityWeakReference.get().shareMineHome(shareInfo);

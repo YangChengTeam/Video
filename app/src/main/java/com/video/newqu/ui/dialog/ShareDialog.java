@@ -12,6 +12,7 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.video.newqu.R;
 import com.video.newqu.adapter.ShareAdapter;
 import com.video.newqu.bean.ShareMenuItemInfo;
@@ -31,24 +32,26 @@ public class ShareDialog extends BottomSheetDialog {
         setContentView(R.layout.dialog_share);
         initLayoutParams();
         List<ShareMenuItemInfo> homeItemInfos = new ArrayList<>();
-        homeItemInfos.add(new ShareMenuItemInfo("微信",R.drawable.iv_share_weichat));
-        homeItemInfos.add(new ShareMenuItemInfo("微博",R.drawable.iv_share_weibo));
-        homeItemInfos.add(new ShareMenuItemInfo("QQ",R.drawable.iv_share_qq));
-        homeItemInfos.add(new ShareMenuItemInfo("朋友圈",R.drawable.iv_share_weichatfriend));
-        homeItemInfos.add(new ShareMenuItemInfo("QQ空间",R.drawable.iv_share_qq_zone));
-        homeItemInfos.add(new ShareMenuItemInfo("更多",R.drawable.iv_share_more));
-        homeItemInfos.add(new ShareMenuItemInfo("复制链接",R.drawable.iv_share_copy));
+        homeItemInfos.add(new ShareMenuItemInfo("微信",R.drawable.iv_share_weichat, SHARE_MEDIA.WEIXIN));
+        homeItemInfos.add(new ShareMenuItemInfo("微博",R.drawable.iv_share_weibo,SHARE_MEDIA.SINA));
+        homeItemInfos.add(new ShareMenuItemInfo("QQ",R.drawable.iv_share_qq,SHARE_MEDIA.QQ));
+        homeItemInfos.add(new ShareMenuItemInfo("朋友圈",R.drawable.iv_share_weichatfriend,SHARE_MEDIA.WEIXIN_CIRCLE));
+        homeItemInfos.add(new ShareMenuItemInfo("QQ空间",R.drawable.iv_share_qq_zone,SHARE_MEDIA.QZONE));
+        homeItemInfos.add(new ShareMenuItemInfo("更多",R.drawable.iv_share_more,SHARE_MEDIA.MORE));
+        homeItemInfos.add(new ShareMenuItemInfo("复制链接",R.drawable.iv_share_copy,null));
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(context,4,GridLayoutManager.VERTICAL,false));
         recyclerView.setHasFixedSize(true);
-        ShareAdapter adapter = new ShareAdapter(homeItemInfos);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        final ShareAdapter shareAdapter = new ShareAdapter(homeItemInfos);
+        recyclerView.setAdapter(shareAdapter);
+        shareAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if(null!=mOnShareItemClickListener){
                     ShareDialog.this.dismiss();
-                    mOnShareItemClickListener.onItemClick(position);
+                    List<ShareMenuItemInfo> data = shareAdapter.getData();
+                    ShareMenuItemInfo shareMenuItemInfo = data.get(position);
+                    mOnShareItemClickListener.onItemClick(shareMenuItemInfo);
                 }
             }
         });
@@ -85,7 +88,7 @@ public class ShareDialog extends BottomSheetDialog {
         attributes.gravity= Gravity.BOTTOM;
     }
     public interface OnShareItemClickListener{
-        void onItemClick(int pistion);
+        void onItemClick(ShareMenuItemInfo shareMenuItemInfo);
     }
 
     private OnShareItemClickListener mOnShareItemClickListener;

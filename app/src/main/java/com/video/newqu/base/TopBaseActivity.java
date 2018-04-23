@@ -16,9 +16,9 @@ import com.umeng.socialize.sina.helper.MD5;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.bean.ShareInfo;
+import com.video.newqu.bean.ShareMenuItemInfo;
 import com.video.newqu.contants.Constant;
 import com.video.newqu.listener.OnShareFinlishListener;
-import com.video.newqu.ui.activity.MediaEditActivity;
 import com.video.newqu.ui.activity.PhoneChangedActivity;
 import com.video.newqu.ui.dialog.ShareDialog;
 import com.video.newqu.listener.ShareFinlishListener;
@@ -58,15 +58,11 @@ public class TopBaseActivity extends AppCompatActivity implements ShareContract.
         }
         MobclickAgent.onResume(this);
     }
-
-
     @Override
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
     }
-
-
 
     @Override
     protected void onDestroy() {
@@ -89,9 +85,8 @@ public class TopBaseActivity extends AppCompatActivity implements ShareContract.
             return;
         }
         this.mShareInfo = shareInfo;
-        shareMineHomeIntent();
+        shareIntent();
     }
-
 
     /**
      * 分享视频
@@ -106,12 +101,16 @@ public class TopBaseActivity extends AppCompatActivity implements ShareContract.
         }
         this.mShareInfo = shareInfo;
         this.shareFinlishListener=shareFinlishListener;
+        if(!TextUtils.isEmpty(mShareInfo.getVideoID())){
+            String url = "http://app.nq6.com/home/show/index?id=" + mShareInfo.getVideoID();
+            String token = MD5.hexdigest(url + "xinqu_123456");
+            mShareInfo.setUrl(url+"&token=" + token);//+"&share_type="+"1"
+        }
         shareIntent();
     }
 
     /**
      * 分享视频
-     * 多参
      * @param shareInfo
      */
     public void onShare(final ShareInfo shareInfo) {
@@ -120,6 +119,11 @@ public class TopBaseActivity extends AppCompatActivity implements ShareContract.
             return;
         }
         this.mShareInfo = shareInfo;
+        if(!TextUtils.isEmpty(mShareInfo.getVideoID())){
+            String url = "http://app.nq6.com/home/show/index?id=" + mShareInfo.getVideoID();
+            String token = MD5.hexdigest(url + "xinqu_123456");
+            mShareInfo.setUrl(url+"&token=" + token);//+"&share_type="+"1"
+        }
         shareIntent();
     }
 
@@ -130,21 +134,27 @@ public class TopBaseActivity extends AppCompatActivity implements ShareContract.
         if(null== mShareInfo){
             return;
         }
-        if(!TextUtils.isEmpty(mShareInfo.getVideoID())){
-            String url = "http://app.nq6.com/home/show/index?id=" + mShareInfo.getVideoID();
-            String token = MD5.hexdigest(url + "xinqu_123456");
-            mShareInfo.setUrl(url+"&token=" + token);//+"&share_type="+"1"
-        }
         ShareDialog shareDialog = new ShareDialog(this);
         shareDialog.setOnItemClickListener(new ShareDialog.OnShareItemClickListener() {
             @Override
-            public void onItemClick(final int pistion) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        share(pistion);
-                    }
-                }, Constant.CLOSE_POPUPWINDOW_WAIT_TIME);
+            public void onItemClick(final ShareMenuItemInfo shareMenuItemInfo) {
+                if(null!=shareMenuItemInfo){
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(null!=shareMenuItemInfo.getPlatform()){
+                                if(SHARE_MEDIA.MORE==shareMenuItemInfo.getPlatform()){
+                                    shareOther(mShareInfo);
+                                    return;
+                                }
+                                ShareUtils.baseShare(TopBaseActivity.this,mShareInfo,shareMenuItemInfo.getPlatform(),TopBaseActivity.this);
+                            }else{
+                                Utils.copyString(mShareInfo.getUrl());
+                                showFinlishToast(null,null,"已复制到粘贴板");
+                            }
+                        }
+                    }, Constant.CLOSE_POPUPWINDOW_WAIT_TIME);
+                }
             }
         });
         shareDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -155,75 +165,9 @@ public class TopBaseActivity extends AppCompatActivity implements ShareContract.
         });
         shareDialog.show();
     }
-
-    /**
-     * 分享
-     */
-    private void shareMineHomeIntent() {
-        if(null== mShareInfo){
-            return;
-        }
-        ShareDialog shareDialog = new ShareDialog(this);
-        shareDialog.setOnItemClickListener(new ShareDialog.OnShareItemClickListener() {
-            @Override
-            public void onItemClick(final int pistion) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        share(pistion);
-                    }
-                }, Constant.CLOSE_POPUPWINDOW_WAIT_TIME);
-            }
-        });
-        shareDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                onShareDialogDismiss();
-            }
-        });
-        shareDialog.show();
-    }
-
-
 
     protected void onShareDialogDismiss(){
-
     }
-
-    /**
-     * 分享
-     */
-
-    protected void share(int pistion) {
-        if(null==mShareInfo) return;
-        switch (pistion) {
-            case 0:
-                ShareUtils.baseShare(TopBaseActivity.this,mShareInfo,SHARE_MEDIA.WEIXIN,this);
-                break;
-            case 1:
-                ShareUtils.baseShare(TopBaseActivity.this,mShareInfo,SHARE_MEDIA.SINA,this);
-                break;
-            case 2:
-                ShareUtils.baseShare(TopBaseActivity.this,mShareInfo,SHARE_MEDIA.QQ,this);
-                break;
-            case 3:
-                ShareUtils.baseShare(TopBaseActivity.this,mShareInfo,SHARE_MEDIA.WEIXIN_CIRCLE,this);
-                break;
-            case 4:
-                ShareUtils.baseShare(TopBaseActivity.this,mShareInfo,SHARE_MEDIA.QZONE,this);
-                break;
-            case 5:
-                shareOther(this.mShareInfo);
-                break;
-            case 6:
-                Utils.copyString(this.mShareInfo.getUrl());
-                showFinlishToast(null,null,"已复制到粘贴板");
-                break;
-            default:
-                shareOther(mShareInfo);
-        }
-    }
-
 
     /**
      * 分享到其他
@@ -233,7 +177,7 @@ public class TopBaseActivity extends AppCompatActivity implements ShareContract.
         Intent intent=new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT,shareInfo.getTitle());
-        intent.putExtra(Intent.EXTRA_TEXT, shareInfo.getDesp()+"连接地址:"+shareInfo.getUrl());
+        intent.putExtra(Intent.EXTRA_TEXT, shareInfo.getUrl());
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(Intent.createChooser(intent, getResources().getString(R.string.shared_to)));
     }

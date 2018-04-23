@@ -42,6 +42,7 @@ import com.video.newqu.bean.VideoDetailsMenu;
 import com.video.newqu.contants.Constant;
 import com.video.newqu.databinding.FragmentMineBinding;
 import com.video.newqu.event.MessageEvent;
+import com.video.newqu.listener.PerfectClickListener;
 import com.video.newqu.manager.ApplicationManager;
 import com.video.newqu.ui.activity.ClipImageActivity;
 import com.video.newqu.ui.activity.MainActivity;
@@ -147,43 +148,6 @@ public class MineFragment extends BaseLightWeightFragment<FragmentMineBinding,Us
                     case R.id.btn_setting:
                         startTargetActivity(Constant.KEY_FRAGMENT_TYPE_SETTINGS,"设置中心",null,0);
                         break;
-
-                    //头像，个人信息编辑
-                    case R.id.iv_user_icon:
-                        if(null==mUserInfo){
-                            ToastUtils.showCenterToast("用户信息过期，请重新登录!");
-                            return;
-                        }
-                        CompleteUserDataDialogFragment fragment = CompleteUserDataDialogFragment.newInstance(mUserInfo, "修改个人信息", Constant.MODE_USER_EDIT);
-                        fragment.setOnDismissListener(new CompleteUserDataDialogFragment.OnDismissListener() {
-                            @Override
-                            public void onDismiss(boolean change) {
-                                if(change){
-                                    isRefreshChild=false;
-                                    getUserData();
-                                }
-                            }
-                        });
-                        fragment.show(getChildFragmentManager(),"edit");
-                        break;
-                    //点击了更多，查看用户信息
-                    case R.id.re_user_data_view:
-                        if(null==mUserInfo){
-                            ToastUtils.showCenterToast("用户信息过期，请重新登录!");
-                            return;
-                        }
-                        CompleteUserDataDialogFragment editFragment = CompleteUserDataDialogFragment.newInstance(mUserInfo, "修改个人信息", Constant.MODE_USER_EDIT);
-                        editFragment.setOnDismissListener(new CompleteUserDataDialogFragment.OnDismissListener() {
-                            @Override
-                            public void onDismiss(boolean change) {
-                                if(change){
-                                    isRefreshChild=false;
-                                    getUserData();
-                                }
-                            }
-                        });
-                        editFragment.show(getChildFragmentManager(),"edit");
-                        break;
                     //我的粉丝
                     case R.id.tv_fans_count:
                         if(null==mUserInfo){
@@ -215,14 +179,19 @@ public class MineFragment extends BaseLightWeightFragment<FragmentMineBinding,Us
                             return;
                         }
                         if(null!=VideoApplication.getInstance().getUserData()){
-                            ShareInfo shareInfo=new ShareInfo();
-                            shareInfo.setDesp("我在新趣小视频安家啦！这是我的主页，快来围观我吧！");
-                            shareInfo.setTitle("快来加入新趣，我在新趣等你！");
-                            shareInfo.setUserID(VideoApplication.getInstance().getUserData().getId());
-                            shareInfo.setUrl("http://app.nq6.com/home/user/index?user_id="+shareInfo.getUserID());
-                            MainActivity activity = (MainActivity) getActivity();
-                            if(null!=activity&&!activity.isFinishing()){
-                                activity.shareMineHome(shareInfo);
+                            try {
+                                ShareInfo shareInfo=new ShareInfo();
+                                shareInfo.setDesp("我在新趣小视频安家啦！这是我的主页，快来围观我吧！");
+                                shareInfo.setTitle(VideoApplication.getInstance().getUserData().getNickname()+"@你，快来加入新趣，我在新趣等你！");
+                                shareInfo.setUserID(VideoApplication.getInstance().getUserData().getId());
+                                shareInfo.setUrl("http://app.nq6.com/home/user/index?user_id="+shareInfo.getUserID());
+                                shareInfo.setImageLogo(VideoApplication.getInstance().getUserData().getLogo());
+                                MainActivity activity = (MainActivity) getActivity();
+                                if(null!=activity&&!activity.isFinishing()){
+                                    activity.shareMineHome(shareInfo);
+                                }
+                            }catch (Exception e){
+
                             }
                         }
                         break;
@@ -235,13 +204,36 @@ public class MineFragment extends BaseLightWeightFragment<FragmentMineBinding,Us
             }
         };
         bindingView.btnSetting.setOnClickListener(onClickListener);
-        bindingView.ivUserIcon.setOnClickListener(onClickListener);
         bindingView.reUserDataView.setOnClickListener(onClickListener);
         bindingView.reUserBgCover.setOnClickListener(onClickListener);
         bindingView.tvFansCount.setOnClickListener(onClickListener);
         bindingView.tvFollowCount.setOnClickListener(onClickListener);
         bindingView.btnShare.setOnClickListener(onClickListener);
         bindingView.btnNotifaction.setOnClickListener(onClickListener);
+
+        PerfectClickListener clickListener = new PerfectClickListener() {
+            @Override
+            protected void onNoDoubleClick(View v) {
+                if (null == mUserInfo) {
+                    ToastUtils.showCenterToast("用户信息过期，请重新登录!");
+                    return;
+                }
+                CompleteUserDataDialogFragment fragment = CompleteUserDataDialogFragment.newInstance(mUserInfo, "修改个人信息", Constant.MODE_USER_EDIT);
+                fragment.setOnDismissListener(new CompleteUserDataDialogFragment.OnDismissListener() {
+                    @Override
+                    public void onDismiss(boolean change) {
+                        if (change) {
+                            isRefreshChild = false;
+                            getUserData();
+                        }
+                    }
+                });
+                fragment.show(getChildFragmentManager(), "edit");
+            }
+        };
+        bindingView.ivUserIcon.setOnClickListener(clickListener);//用户头像
+        bindingView.reUserDataView.setOnClickListener(clickListener);//用户资料
+
     }
 
     @Override

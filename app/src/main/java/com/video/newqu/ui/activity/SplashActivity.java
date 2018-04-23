@@ -60,11 +60,11 @@ public class SplashActivity extends AppCompatActivity{
     private void goToNextActivity() {
         //至少是第二次启动了
         if(VideoApplication.mToday ==SharedPreferencesUtil.getInstance().getInt(Constant.SETTING_SPLASH, 0)){
-            Class clazz=null;
+            Class clazz;
             if(SharedPreferencesUtil.getInstance().getBoolean(Constant.SETTING_FIRST_START)){
                 clazz=MainActivity.class;
             }else{
-                clazz=GuideActivity.class;
+                clazz=GuideActivity.class;//GuideActivity
             }
             Intent intent=new Intent(SplashActivity.this,clazz);
             startActivity(intent);
@@ -75,20 +75,14 @@ public class SplashActivity extends AppCompatActivity{
             animation.setDuration(2200);
             animation.setAnimationListener(new Animation.AnimationListener() {
                 @Override
-                public void onAnimationStart(Animation animation) {
-
-                }
-
+                public void onAnimationStart(Animation animation) {}
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     SharedPreferencesUtil.getInstance().putInt(Constant.SETTING_SPLASH,VideoApplication.mToday);
                     startNextActivity();
                 }
-
                 @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
+                public void onAnimationRepeat(Animation animation) {}
             });
             bindingView.splashRootviewRl.startAnimation(animation);
         }

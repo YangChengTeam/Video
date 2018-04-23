@@ -33,7 +33,6 @@ import com.video.newqu.ui.activity.VerticalVideoPlayActivity;
 import com.video.newqu.ui.activity.VideoDetailsActivity;
 import com.video.newqu.ui.contract.WorksContract;
 import com.video.newqu.ui.presenter.WorksPresenter;
-import com.video.newqu.util.Logger;
 import com.video.newqu.util.ScreenUtils;
 import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
@@ -63,11 +62,9 @@ public class HomeWorksFragment extends BaseLightWeightFragment<MineFragmentRecyl
     private boolean isRefresh=true;
     private GridLayoutManager mGridLayoutManager;
     private ReEmptyMarginLayoutBinding mEmptyViewbindView;
-
     public void setRefresh(boolean refresh) {
         this.isRefresh = refresh;
     }
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -77,7 +74,6 @@ public class HomeWorksFragment extends BaseLightWeightFragment<MineFragmentRecyl
         initAdapter();
         ApplicationManager.getInstance().addObserver(this);
     }
-
 
     @Override
     protected void onVisible() {
@@ -98,8 +94,6 @@ public class HomeWorksFragment extends BaseLightWeightFragment<MineFragmentRecyl
             },Constant.POST_DELAYED_ADD_DATA_TIME);
         }
     }
-
-
 
     @Override
     protected void initViews() {
@@ -163,7 +157,6 @@ public class HomeWorksFragment extends BaseLightWeightFragment<MineFragmentRecyl
                 mEmptyViewbindView.emptyView.showLoadingView();
                 loadVideoList();
             }
-
             @Override
             public void onClickView(View v) {
                 Intent intent = new Intent(getActivity(), MediaRecordActivity.class);
@@ -174,7 +167,6 @@ public class HomeWorksFragment extends BaseLightWeightFragment<MineFragmentRecyl
         mEmptyViewbindView.emptyView.setBtnText("开始制作");
         mEmptyViewbindView.emptyView.showLoadingView();
         mVideoListAdapter.setEmptyView(mEmptyViewbindView.getRoot());
-
         mVideoListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -218,7 +210,6 @@ public class HomeWorksFragment extends BaseLightWeightFragment<MineFragmentRecyl
         });
         bindingView.recyerView.setAdapter(mVideoListAdapter);
     }
-
 
     /**
      * 获取我的作品
@@ -304,9 +295,7 @@ public class HomeWorksFragment extends BaseLightWeightFragment<MineFragmentRecyl
     }
 
     @Override
-    public void complete() {
-
-    }
+    public void complete() {}
 
     /**
      * 用户删除视频回调

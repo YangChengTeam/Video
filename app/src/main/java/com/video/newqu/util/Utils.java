@@ -788,17 +788,6 @@ public class Utils {
         return stringExtra;
     }
 
-    /**
-     * 初始化轮播图
-     * @return
-     */
-    public static List<String> curenADImage() {
-        List<String> list=new ArrayList<>();
-        for (int i = 0; i < Cheeses.AUTO_IMAGE.length; i++) {
-            list.add(Cheeses.AUTO_IMAGE[i]);
-        }
-        return list;
-    }
 
     /**
      * 切割字符串
@@ -1169,15 +1158,6 @@ public class Utils {
         return Double.parseDouble(new java.text.DecimalFormat("#.00").format(number));
     }
 
-    public static boolean isContainKey(String topicID) {
-        if(TextUtils.isEmpty(topicID)) return false;
-        for (int i = 0; i < Cheeses.TOPIC_KEY.length; i++) {
-            if(TextUtils.equals(topicID,Cheeses.TOPIC_KEY[i])){
-                return true;
-            }
-        }
-        return false;
-    }
 
     /**
      * 去除最后一个“/”

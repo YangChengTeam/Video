@@ -12,9 +12,6 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.video.newqu.R;
@@ -55,7 +52,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import jp.wasabeef.glide.transformations.BlurTransformation;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
@@ -302,23 +298,6 @@ public class VerticalHistoryVidepPlayViewPager extends BasePager<PagerVideoPlaye
                     showControllerView(false);
                 }
             });
-            if("2".equals(mVideoBean.getStatus())){
-                // 高斯模糊背景 原来 参数：12,5  23,4
-                Glide.with(mContext).load(mVideoBean.getVideoCover())
-                        .error(R.drawable.bg_live_transit)
-                        .bitmapTransform(new BlurTransformation(mContext, 21, 9)).listener(new RequestListener<Object, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, Object model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, Object model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        return false;
-                    }
-
-                }).into(bindingView.icInvalid);
-            }
         }
         bindingView.reVideoGroup.setImageVisibility();
     }
@@ -422,13 +401,13 @@ public class VerticalHistoryVidepPlayViewPager extends BasePager<PagerVideoPlaye
         if(null!=mVideoBean&&null!=bindingView){
             if("2".equals(mVideoBean.getStatus())){
                 bindingView.reInvalidView.setVisibility(View.VISIBLE);
+                bindingView.ivInvalidView.setImageResource(R.drawable.ic_look_error_big);
                 bindingView.reInvalidView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ToastUtils.showCenterToast("您的视频审核不通过，无法播放和响应其他操作！");
                     }
                 });
-                bindingView.icInvalid.setAlpha(0.96f);
                 return;
             }
             showWorkControllerView();
@@ -484,6 +463,9 @@ public class VerticalHistoryVidepPlayViewPager extends BasePager<PagerVideoPlaye
     private void  hideWorkControllerView(){
         //还原播放器进度条和隐藏业务逻辑控制器
         if(null!=bindingView){
+            bindingView.ivInvalidView.setImageResource(0);
+            bindingView.reInvalidView.setOnClickListener(null);
+            bindingView.reInvalidView.setVisibility(View.GONE);//处理未通过审核的布局显示
             bindingView.bottomProgress.setProgress(0);
             bindingView.bottomProgress.setSecondaryProgress(0);
             bindingView.viewTopBar.setVisibility(View.GONE);

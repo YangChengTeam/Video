@@ -80,7 +80,7 @@ public class HomeHotVideoFragment extends BaseLightWeightFragment<FragmentHotRec
     @Override
     protected void onVisible() {
         super.onVisible();
-        if(isRefresh&&null!=bindingView&&null!= mVideoListAdapter &&null!= mPresenter &&!mPresenter.isLoading()){
+        if(isRefresh&&null!=bindingView&&null!= mVideoListAdapter &&null!=mPresenter &&!mPresenter.isLoading()){
             List<FollowVideoList.DataBean.ListsBean> data = mVideoListAdapter.getData();
             if(null==data||data.size()<=0){
                 mPage=0;

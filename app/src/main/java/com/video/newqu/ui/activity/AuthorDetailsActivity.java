@@ -269,9 +269,10 @@ public class AuthorDetailsActivity extends BaseActivity<ActivityAuthorDetailsBin
                     }
                 }
             }
-            shareInfo.setDesp("我在新趣小视频安家啦！新奇好玩的新趣视频，期待你的加入！ "+(TextUtils.isEmpty(nikeName)?"":nikeName));
-            shareInfo.setTitle("快来加入新趣，我在新趣等你！");
+            shareInfo.setTitle("邀请你欣赏精彩视频");
+            shareInfo.setDesp("我正在["+nikeName+"]的主页观看视频，精彩不容错过！");
             shareInfo.setUserID(mAuthorID);
+            shareInfo.setImageLogo(mInfoBean.getLogo());
             shareInfo.setUrl("http://app.nq6.com/home/user/index?user_id="+shareInfo.getUserID());
             shareMineHome(shareInfo);
         }
@@ -412,7 +413,7 @@ public class AuthorDetailsActivity extends BaseActivity<ActivityAuthorDetailsBin
                                 String json = JSONArray.toJSON(followVideoList).toString();
                                 if(!TextUtils.isEmpty(json)){
                                     Intent intent=new Intent(AuthorDetailsActivity.this,VerticalVideoPlayActivity.class);
-                                    intent.putExtra(Constant.KEY_FRAGMENT_TYPE,Constant.FRAGMENT_TYPE_WORKS);
+                                    intent.putExtra(Constant.KEY_FRAGMENT_TYPE,Constant.FRAGMENT_TYPE_USER_DETAILS);
                                     intent.putExtra(Constant.KEY_POISTION,position);
                                     intent.putExtra(Constant.KEY_PAGE,mPage);
                                     intent.putExtra(Constant.KEY_AUTHOE_ID,VideoApplication.getLoginUserID());

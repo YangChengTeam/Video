@@ -6,11 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -808,25 +804,13 @@ public class VideoDetailsActivity extends BaseActivity<ActivityVideoDetailsBindi
             //如果视频是审核未通过
             if("2".equals(mVideoInfo.getStatus())){
                 bindingView.reInvalidView.setVisibility(View.VISIBLE);
+                bindingView.ivInvalidView.setImageResource(R.drawable.ic_look_error_big);
                 bindingView.reInvalidView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ToastUtils.showCenterToast("您的视频审核不通过，无法播放!");
                     }
                 });
-                Glide.with(VideoDetailsActivity.this).load(mVideoInfo.getCover())
-                        .error(R.drawable.bg_live_transit)
-                        .bitmapTransform(new BlurTransformation(VideoDetailsActivity.this, 21, 9)).listener(new RequestListener<Object, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, Object model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, Object model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        return false;
-                    }
-                }).into(bindingView.icInvalid);
-                bindingView.icInvalid.setAlpha(0.96f);
                 return;
             }
             //如果是历史记录过来的，直接播放
@@ -1101,7 +1085,7 @@ public class VideoDetailsActivity extends BaseActivity<ActivityVideoDetailsBindi
                 try {
                     boolean isContrasts=ContentCheckKey.getInstance().contrastKey(wordsmMessage);
                     if(isContrasts){
-                        wordsmMessage= Cheeses.ALTERNATE_TEXT[Utils.getRandomNum(0,4)];
+                        wordsmMessage= new Cheeses().createALTERNATE_TEXT()[Utils.getRandomNum(0,4)];
                     }
                     String encode = URLEncoder.encode(wordsmMessage, "UTF-8");
                     if(null!=mVideoDetailsPresenter){

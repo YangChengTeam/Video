@@ -49,7 +49,6 @@ public class TakePicturePopupWindow extends BasePopupWindow<PopupwindownTakePict
                 return false;
             }
         });
-
         setFocusable(true);
         setOutsideTouchable(true);
         setTouchable(true);

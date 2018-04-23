@@ -9,7 +9,6 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
             <com.video.newqu.view.widget.ZoomScrollView
                 android:id="@+id/scrollview"
                 android:layout_width="match_parent"
@@ -31,7 +30,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/bg_live_transit"/>
+                            android:background="#FF212121"/>
                         <LinearLayout
                             android:id="@+id/ll_header_view"
                             android:layout_width="match_parent"

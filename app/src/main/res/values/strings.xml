@@ -141,7 +141,7 @@
     <string name="binding_phone_tips">根据《互联网跟帖评论服务管理规定》需要验证手机号才能发布内容</string>
     <string name="video_compose_canel_tips">取消该视频合并任务后该视频所有的编辑效果将丢失并且无法恢复，确定要放弃合并吗？</string>
     <string name="video_upload_canel_tips">取消上传任务后将不可恢复，上传成功可以分享给好友哦~ 确定要取消上传任务吗？</string>
-    <string name="share_home_tips">我刚刚用新趣小视频APP上传了一部视频，很精彩，快来围观吧！</string>
+    <string name="share_home_tips">我刚刚用新趣小视频APP上传了一部视频：</string>
     <string name="home_share_error_tips">您上传的视频已设置为他人不可见，无法分享，请前往 [个人中心-我的作品] 中修改作品权限!</string>
     <string name="grade_tips_content">感谢你使用新趣，看会视频让您的眼睛放松吧。您可以前往应用上吊给我们好评噢！</string>
     <string name="permissions_image_tips">保存图片失败！SD写入取权限被拒绝！要保存图片至你的设备，请务必授予我们SD卡写入权限！是否现在去设置？</string>

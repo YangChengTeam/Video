@@ -92,6 +92,7 @@ import com.video.newqu.camera.videorange.VideoThumbnailInfo;
 import com.video.newqu.camera.view.SectionSeekLayout;
 import com.video.newqu.comadapter.BaseQuickAdapter;
 import com.video.newqu.comadapter.listener.OnItemClickListener;
+import com.video.newqu.listener.PerfectClickListener;
 import com.video.newqu.manager.ApplicationManager;
 import com.video.newqu.contants.ConfigSet;
 import com.video.newqu.contants.Constant;
@@ -464,10 +465,6 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
                     case R.id.btn_pause:
                         onPauseClick();
                         break;
-                    //添加话题
-                    case R.id.btn_tv_addtopic:
-                        addTopic();
-                        break;
 //                    //添加表情
 //                    case R.id.btn_tv_addface:
 //                        showInputKeyBoardDialog(false,true);
@@ -513,8 +510,13 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
                 onBackoffClick();
             }
         });
-        TextView btn_tv_addtopic = (TextView) findViewById(R.id.btn_tv_addtopic);
-        btn_tv_addtopic.setOnClickListener(onInputEditClickListener);
+        TextView btnTvAddtopic = (TextView) findViewById(R.id.btn_tv_addtopic);
+        btnTvAddtopic.setOnClickListener(new PerfectClickListener() {
+            @Override
+            protected void onNoDoubleClick(View v) {
+                addTopic();
+            }
+        });
 
         mVideoDespContent = (TextView) findViewById(R.id.tv_video_desp_content);
         ((LinearLayout) findViewById(R.id.ll_download_permiss)).setOnClickListener(onInputEditClickListener);
@@ -526,7 +528,7 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
 
         LinearLayout ll_private = (LinearLayout) findViewById(R.id.ll_private);
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) ll_private.getLayoutParams();
-        layoutParams.height=btn_tv_addtopic.getLayoutParams().height;
+        layoutParams.height= btnTvAddtopic.getLayoutParams().height;
         ll_private.setLayoutParams(layoutParams);
         ll_private.setOnClickListener(onInputEditClickListener);
 
@@ -867,7 +869,6 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
                 setResultTopic(topics);
             }
         }).show(getSupportFragmentManager(),"topic");
-
     }
 
 

@@ -23,13 +23,10 @@ import com.ksyun.media.shortvideo.utils.AuthInfoManager;
 import com.tencent.bugly.Bugly;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.UMShareAPI;
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.sina.helper.MD5;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.XinQuFragmentPagerAdapter;
 import com.video.newqu.base.TopBaseActivity;
-import com.video.newqu.bean.ShareInfo;
 import com.video.newqu.bean.WeiChactVideoInfo;
 import com.video.newqu.bean.WeiXinVideo;
 import com.video.newqu.contants.ConfigSet;
@@ -44,6 +41,7 @@ import com.video.newqu.manager.ThreadManager;
 import com.video.newqu.ui.contract.MainContract;
 import com.video.newqu.ui.dialog.ExitAppDialog;
 import com.video.newqu.ui.dialog.FollowWeiXnDialog;
+import com.video.newqu.ui.dialog.HomeSharePopupWindow;
 import com.video.newqu.ui.dialog.LocationVideoUploadDialog;
 import com.video.newqu.ui.dialog.StoreGradeDialog;
 import com.video.newqu.ui.dialog.TakePicturePopupWindow;
@@ -54,7 +52,6 @@ import com.video.newqu.upload.manager.BatchFileUploadManager;
 import com.video.newqu.util.DateParseUtil;
 import com.video.newqu.util.KSYAuthorPermissionsUtil;
 import com.video.newqu.util.ScanWeixin;
-import com.video.newqu.util.ShareUtils;
 import com.video.newqu.util.SharedPreferencesUtil;
 import com.video.newqu.util.SystemUtils;
 import com.video.newqu.util.ToastUtils;
@@ -688,49 +685,6 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
         //申请位置权限处理
         }
         isLogin=false;//不管取消登录还是登录成功，重置
-    }
-
-    /**
-     * 分享
-     * @param shareInfo
-     * @param poistion
-     */
-    public void shareIntent(ShareInfo shareInfo, int poistion) {
-        if(null== shareInfo)return;
-        if(TextUtils.isEmpty(shareInfo.getVideoID())) return;
-        String url = "http://app.nq6.com/home/show/index?id=" + shareInfo.getVideoID();
-        String token = MD5.hexdigest(url + "xinqu_123456");
-        shareInfo.setUrl(url+"&token=" + token);//+"&share_type="+"1"
-        share(shareInfo,poistion);
-    }
-
-    /**
-     * 分享
-     */
-    protected void share(ShareInfo shareInfo,int pistion) {
-        if(null==shareInfo) return;
-        switch (pistion) {
-            case 0:
-                ShareUtils.share(MainActivity.this,shareInfo, SHARE_MEDIA.WEIXIN,this);
-                break;
-            case 1:
-                ShareUtils.share(MainActivity.this,shareInfo,SHARE_MEDIA.QQ,this);
-                break;
-            case 2:
-                ShareUtils.share(MainActivity.this,shareInfo,SHARE_MEDIA.SINA,this);
-                break;
-            case 3:
-                ShareUtils.share(MainActivity.this,shareInfo,SHARE_MEDIA.WEIXIN_CIRCLE,this);
-                break;
-            case 4:
-                ShareUtils.share(MainActivity.this,shareInfo,SHARE_MEDIA.QZONE,this);
-                break;
-            case 5:
-                shareOther(shareInfo);
-                break;
-            default:
-                shareOther(shareInfo);
-        }
     }
 
     /**
