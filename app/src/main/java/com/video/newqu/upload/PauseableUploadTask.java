@@ -16,7 +16,6 @@ import com.alibaba.sdk.android.oss.model.PartETag;
 import com.alibaba.sdk.android.oss.model.PartSummary;
 import com.alibaba.sdk.android.oss.model.UploadPartRequest;
 import com.alibaba.sdk.android.oss.model.UploadPartResult;
-import com.video.newqu.util.Logger;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
