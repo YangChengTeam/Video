@@ -2,7 +2,6 @@ package com.video.newqu.upload.listener;
 
 import com.video.newqu.bean.UploadVideoInfo;
 
-
 /**
  * TinyHung@Outlook.com
  * 2017/8/17.

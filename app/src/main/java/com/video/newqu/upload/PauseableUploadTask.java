@@ -36,7 +36,6 @@ public class PauseableUploadTask {
     private OSS oss;
     private PauseableUploadRequest request;
     private OSSCompletedCallback<PauseableUploadRequest, PauseableUploadResult> callback;
-
     private List<PartETag> partETags = new ArrayList<>();
 
     private long currentUploadLength = 0;
