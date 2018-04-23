@@ -1,5 +1,8 @@
+![image](https://raw.githubusercontent.com/feiyouAndroidTeam/Video/master/screen/logo.png)
 # **新趣小视频**
-#### `新趣小视频` 一款年轻人的记录平台一款集视频录制、编辑、上传、播放、下载、收藏、分享等于一身的短视频APP
+### `新趣小视频` 一款年轻人的记录社区平台。集视频录制、编辑、上传、播放、下载、收藏、分享等丰富功能于一身的短视频APP。
+[官方网站](http://v.nq6.com)
+
 [所属组织](https://github.com/feiyouAndroidTeam)
 ### `使用到的第三方SDK`：按照模块顺序排名
 * [友盟统计](https://developer.umeng.com/sdk/android)</br>
