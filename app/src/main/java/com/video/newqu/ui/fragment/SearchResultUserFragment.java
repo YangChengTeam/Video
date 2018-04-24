@@ -9,7 +9,7 @@ import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.HistorySearchAdapter;
 import com.video.newqu.adapter.SearchResultUserAdapter;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.SearchAutoResult;
 import com.video.newqu.bean.SearchParams;
 import com.video.newqu.bean.SearchResultInfo;
@@ -30,7 +30,7 @@ import java.util.List;
  * 搜索结果展示，全部
  */
 
-public class SearchResultUserFragment extends BaseLightWeightFragment<FragmentSearchLayoutBinding,SearchUserPresenter> implements BaseQuickAdapter.RequestLoadMoreListener, SearchUserContract.View
+public class SearchResultUserFragment extends BaseFragment<FragmentSearchLayoutBinding,SearchUserPresenter> implements BaseQuickAdapter.RequestLoadMoreListener, SearchUserContract.View
             ,com.video.newqu.listener.OnItemClickListener{
 
     private List<SearchAutoResult> mSearchHistoeyList;

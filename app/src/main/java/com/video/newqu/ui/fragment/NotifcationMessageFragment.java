@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.LocationMessageListAdapter;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.NotifactionMessageInfo;
 import com.video.newqu.comadapter.BaseQuickAdapter;
 import com.video.newqu.comadapter.listener.OnItemChildLongClickListener;
@@ -35,7 +35,7 @@ import java.util.List;
  * 通知消息
  */
 
-public class NotifcationMessageFragment extends BaseLightWeightFragment<FragmentRecylerBinding,MessageLocationPresenter> implements MessageLocationContract.View , com.video.newqu.listener.OnItemClickListener{
+public class NotifcationMessageFragment extends BaseFragment<FragmentRecylerBinding,MessageLocationPresenter> implements MessageLocationContract.View , com.video.newqu.listener.OnItemClickListener{
 
     private LocationMessageListAdapter mAdapter;
 

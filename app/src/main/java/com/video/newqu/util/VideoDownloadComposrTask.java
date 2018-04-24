@@ -23,11 +23,11 @@ import java.io.File;
 public class VideoDownloadComposrTask {
 
     private DownloadProgressDialog mUploadProgressView;
-    private final Context mContext;
+    private final Activity mContext;
     private final String mFileNetPath;
     private boolean isKSYPermission=true;//是否获得金山云授权
 
-    public VideoDownloadComposrTask(Context context, String fileNetPath) {
+    public VideoDownloadComposrTask(Activity context, String fileNetPath) {
         if(context instanceof Activity){
             this.mContext=context;
             this.mFileNetPath=fileNetPath;

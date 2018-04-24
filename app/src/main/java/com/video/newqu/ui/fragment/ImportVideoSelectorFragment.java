@@ -1,6 +1,5 @@
 package com.video.newqu.ui.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -21,16 +20,15 @@ import com.video.newqu.adapter.MoivesListAdapter;
 import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.WeiXinVideo;
 import com.video.newqu.comadapter.BaseQuickAdapter;
-import com.video.newqu.comadapter.listener.OnItemClickListener;
 import com.video.newqu.comadapter.listener.OnItemLongClickListener;
 import com.video.newqu.contants.Constant;
 import com.video.newqu.databinding.FragmentImportVideoSelectorBinding;
-import com.video.newqu.databinding.RecylerViewEmptyLayoutBinding;
+import com.video.newqu.databinding.ReEmptyLayoutBinding;
 import com.video.newqu.event.ScanMessageEvent;
 import com.video.newqu.manager.ThreadManager;
 import com.video.newqu.model.GridSpaceItemDecorationComent;
 import com.video.newqu.ui.activity.MediaEditActivity;
-import com.video.newqu.ui.activity.MediaLocationVideoListActivity;
+import com.video.newqu.ui.presenter.MainPresenter;
 import com.video.newqu.util.FileUtils;
 import com.video.newqu.util.MediaStoreUtil;
 import com.video.newqu.util.ScanWeixin;
@@ -48,19 +46,13 @@ import java.util.List;
  * 本地视频列表选择
  */
 
-public class ImportVideoSelectorFragment extends BaseFragment<FragmentImportVideoSelectorBinding> implements BaseQuickAdapter.RequestLoadMoreListener {
+public class ImportVideoSelectorFragment extends BaseFragment<FragmentImportVideoSelectorBinding,MainPresenter> {
 
     private String mVideo_folder_path;//读取置顶文件夹下的视频封面
-    private MediaLocationVideoListActivity mActivity;
-    private MoivesListAdapter mMoivesListAdapter;
+    private MoivesListAdapter mVideoListAdapter;
     private ScanWeixin mScanWeiXin;
     private List<WeiXinVideo> mWeiXinVideos;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mActivity = (MediaLocationVideoListActivity) context;
-    }
+    private ReEmptyLayoutBinding mEmptyViewbindView;
 
     @Override
     protected void initViews() {
@@ -126,9 +118,9 @@ public class ImportVideoSelectorFragment extends BaseFragment<FragmentImportVide
         super.onResume();
 
         if(!TextUtils.isEmpty(mVideo_folder_path)&&new File(mVideo_folder_path).exists()&&null==mWeiXinVideos){
-            if(null!=mMoivesListAdapter){
-                mMoivesListAdapter.setNewData(null);
-                showLoadingView("加载视频中...");
+            if(null!= mVideoListAdapter){
+                mVideoListAdapter.setNewData(null);
+                if(null!=mEmptyViewbindView) mEmptyViewbindView.emptyView.showLoadingView("加载视频中...",R.drawable.loading_anim);
                 loadVideo();
             }
         }
@@ -148,14 +140,18 @@ public class ImportVideoSelectorFragment extends BaseFragment<FragmentImportVide
     private void initAdapter() {
         bindingView.recyerView.setLayoutManager(new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false));
         bindingView.recyerView.addItemDecoration(new GridSpaceItemDecorationComent(ScreenUtils.dpToPxInt(1.5f)));
-        mMoivesListAdapter = new MoivesListAdapter(null);
-        RecylerViewEmptyLayoutBinding emptyViewbindView= DataBindingUtil.inflate(getActivity().getLayoutInflater(),R.layout.recyler_view_empty_layout, (ViewGroup) bindingView.recyerView.getParent(),false);
-        mMoivesListAdapter.setEmptyView(emptyViewbindView.getRoot());
-        mMoivesListAdapter.setOnLoadMoreListener(this);
-        emptyViewbindView.ivItemIcon.setImageResource(R.drawable.iv_work_video_empty);
-        emptyViewbindView.tvItemName.setText("该文件夹下未找到视频文件~");
-        mMoivesListAdapter.setOnLoadMoreListener(this);
-        bindingView.recyerView.setAdapter(mMoivesListAdapter);
+        mVideoListAdapter = new MoivesListAdapter(null);
+        //设置空视图
+        mEmptyViewbindView = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.re_empty_layout, (ViewGroup) bindingView.recyerView.getParent(),false);
+        mEmptyViewbindView.emptyView.showLoadingView("加载视频中...",R.drawable.loading_anim);
+        mVideoListAdapter.setEmptyView(mEmptyViewbindView.getRoot());
+        mVideoListAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
+            @Override
+            public void onLoadMoreRequested() {
+
+            }
+        }, bindingView.recyerView);
+        bindingView.recyerView.setAdapter(mVideoListAdapter);
 
         //长按
         bindingView.recyerView.addOnItemTouchListener(new OnItemLongClickListener() {
@@ -165,11 +161,10 @@ public class ImportVideoSelectorFragment extends BaseFragment<FragmentImportVide
             }
         });
         //点击
-        bindingView.recyerView.addOnItemTouchListener(new OnItemClickListener() {
+        mVideoListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
-            public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
-
-                List<WeiXinVideo> data = mMoivesListAdapter.getData();
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                List<WeiXinVideo> data = mVideoListAdapter.getData();
                 if(null!=data&&data.size()>0){
                     WeiXinVideo item = data.get(position);
                     if(null!=item&&null!=item.getVideoPath()&&new File(item.getVideoPath()).isFile()){
@@ -201,8 +196,8 @@ public class ImportVideoSelectorFragment extends BaseFragment<FragmentImportVide
      * 显示删除菜单
      */
     private void showActionMenu(View view, final int position) {
-        if(null!= mMoivesListAdapter){
-            List<WeiXinVideo> data = mMoivesListAdapter.getData();
+        if(null!= mVideoListAdapter){
+            List<WeiXinVideo> data = mVideoListAdapter.getData();
             if(null!=data&&data.size()>0){
                 final WeiXinVideo weiXinVideo = data.get(position);
                 if(null!=weiXinVideo){
@@ -214,8 +209,8 @@ public class ImportVideoSelectorFragment extends BaseFragment<FragmentImportVide
                             if(item.getItemId()==R.id.menu_detele){
                                 try {
                                     boolean flag = FileUtils.deleteFile(weiXinVideo.getVideoPath());
-                                    if(flag&&null!=mMoivesListAdapter){
-                                        mMoivesListAdapter.remove(position);
+                                    if(flag&&null!= mVideoListAdapter){
+                                        mVideoListAdapter.remove(position);
                                     }else{
                                         ToastUtils.showCenterToast("删除失败!");
                                     }
@@ -275,21 +270,19 @@ public class ImportVideoSelectorFragment extends BaseFragment<FragmentImportVide
         public void handleMessage(Message msg) {
             //分段刷新
             if(10010==msg.what){
-                if(bindingView.getRoot().getVisibility()!=View.VISIBLE){
-                    showContentView();
-                }
+                if(null!=mEmptyViewbindView) mEmptyViewbindView.emptyView.showEmptyView("该文件夹下未找到视频文件~",R.drawable.ic_list_empty_icon,false);
                 List<WeiXinVideo> weiXinVideos= (List<WeiXinVideo>) msg.obj;
-                if(null!=mMoivesListAdapter){
-                    mMoivesListAdapter.addData(weiXinVideos);
+                if(null!= mVideoListAdapter){
+                    mVideoListAdapter.addData(weiXinVideos);
                 }
             //加载完毕了
             }else if(10011==msg.what){
-                showContentView();
-                if(null!=mMoivesListAdapter){
+                if(null!=mEmptyViewbindView) mEmptyViewbindView.emptyView.showEmptyView("该文件夹下未找到视频文件~",R.drawable.ic_list_empty_icon,false);
+                if(null!= mVideoListAdapter){
                     bindingView.recyerView.post(new Runnable() {
                         @Override
                         public void run() {
-                            mMoivesListAdapter.loadMoreEnd();//没有更多的数据了
+                            mVideoListAdapter.loadMoreEnd();//没有更多的数据了
                         }
                     });
                 }
@@ -297,11 +290,6 @@ public class ImportVideoSelectorFragment extends BaseFragment<FragmentImportVide
             super.handleMessage(msg);
         }
     };
-
-    @Override
-    public void onLoadMoreRequested() {
-
-    }
 
 
     /**
@@ -322,13 +310,6 @@ public class ImportVideoSelectorFragment extends BaseFragment<FragmentImportVide
         }
     }
 
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mActivity=null;
-    }
-
     @Override
     public void onDestroy() {
         closeProgressDialog();
@@ -340,6 +321,7 @@ public class ImportVideoSelectorFragment extends BaseFragment<FragmentImportVide
             mWeiXinVideos.clear();
             mWeiXinVideos=null;
         }
+        mEmptyViewbindView=null;
         super.onDestroy();
     }
 }

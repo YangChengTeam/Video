@@ -18,7 +18,7 @@ import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.HistorySearchAdapter;
 import com.video.newqu.adapter.SearchResultHorUserListAdapter;
 import com.video.newqu.adapter.SearchVideoListAdapter;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.ChangingViewEvent;
 import com.video.newqu.bean.FollowVideoList;
 import com.video.newqu.bean.SearchAutoResult;
@@ -60,7 +60,7 @@ import com.xinqu.videoplayer.full.WindowVideoPlayer;
  * 搜索结果展示，全部
  */
 
-public class SearchResultAllFragment extends BaseLightWeightFragment<FragmentSearchLayoutBinding,SearchVideoPresenter> implements BaseQuickAdapter.RequestLoadMoreListener, SearchVideoContract.View
+public class SearchResultAllFragment extends BaseFragment<FragmentSearchLayoutBinding,SearchVideoPresenter> implements BaseQuickAdapter.RequestLoadMoreListener, SearchVideoContract.View
         ,VideoComentClickListener {
 
     private HistorySearchAdapter mHistorySearchAdapter;

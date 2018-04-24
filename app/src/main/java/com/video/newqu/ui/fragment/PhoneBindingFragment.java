@@ -11,8 +11,7 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
-import com.video.newqu.base.BaseLightWeightFragment;
-import com.video.newqu.bean.StickerDataBean;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.UserData;
 import com.video.newqu.contants.Constant;
 import com.video.newqu.databinding.FragmentPhoneBindingBinding;
@@ -27,9 +26,6 @@ import com.video.newqu.util.Utils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import cn.smssdk.OnSendMessageHandler;
@@ -41,7 +37,7 @@ import cn.smssdk.SMSSDK;
  * 绑定手机号
  */
 
-public class PhoneBindingFragment extends BaseLightWeightFragment<FragmentPhoneBindingBinding,BindingPhonePresenter> implements BindingPhoneContract.View, Observer {
+public class PhoneBindingFragment extends BaseFragment<FragmentPhoneBindingBinding,BindingPhonePresenter> implements BindingPhoneContract.View, Observer {
 
     private static final String TAG = "PhoneBindingFragment";
     private String mContent;
@@ -61,7 +57,6 @@ public class PhoneBindingFragment extends BaseLightWeightFragment<FragmentPhoneB
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        setRetainInstance(true);
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         if(null!=arguments){

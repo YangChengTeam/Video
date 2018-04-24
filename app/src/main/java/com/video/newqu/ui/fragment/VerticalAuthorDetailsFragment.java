@@ -24,7 +24,7 @@ import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.GroupVideoListAdapter;
 import com.video.newqu.adapter.UserVideoListAdapter;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.FollowVideoList;
 import com.video.newqu.bean.MineUserInfo;
 import com.video.newqu.bean.ShareInfo;
@@ -71,7 +71,7 @@ import java.util.List;
  * 垂直的滑动列表用户中心界面
  */
 
-public class VerticalAuthorDetailsFragment extends BaseLightWeightFragment<ActivityAuthorDetailsBinding,AuthorDetailPresenter> implements AuthorDetailContract.View,OnUserVideoListener {
+public class VerticalAuthorDetailsFragment extends BaseFragment<ActivityAuthorDetailsBinding,AuthorDetailPresenter> implements AuthorDetailContract.View,OnUserVideoListener {
 
     private GroupVideoListAdapter mExpandedVideoListAdapter;
     private UserVideoListAdapter mVideoListAdapter;//九宫格
@@ -93,7 +93,6 @@ public class VerticalAuthorDetailsFragment extends BaseLightWeightFragment<Activ
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        setRetainInstance(true);
         super.onCreate(savedInstanceState);
     }
 
@@ -720,6 +719,7 @@ public class VerticalAuthorDetailsFragment extends BaseLightWeightFragment<Activ
             shareInfo.setDesp("我正在["+nikeName+"]的主页观看视频，精彩不容错过！");
             shareInfo.setUserID(mAuthorID);
             shareInfo.setImageLogo(mInfoBean.getLogo());
+            shareInfo.setShareTitle("分享用户主页至");
             shareInfo.setUrl("http://app.nq6.com/home/user/index?user_id="+shareInfo.getUserID());
             if(null!=mActivityWeakReference&&null!=mActivityWeakReference.get()){
                 mActivityWeakReference.get().shareMineHome(shareInfo);

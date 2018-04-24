@@ -1,12 +1,12 @@
 package com.video.newqu.ui.dialog;
 
-import android.app.Dialog;
-import android.content.Context;
+import android.app.Activity;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.widget.TextView;
 import com.video.newqu.R;
+import com.video.newqu.base.BaseDialog;
+import com.video.newqu.databinding.DialogExitLayoutBinding;
 
 /**
  * TinyHung@Outlook.com
@@ -14,44 +14,44 @@ import com.video.newqu.R;
  * 首页退出提示
  */
 
-public class ExitAppDialog extends Dialog {
+public class ExitAppDialog extends BaseDialog<DialogExitLayoutBinding> {
+
+    public ExitAppDialog(@NonNull Activity context) {
+        super(context,R.style.ComentEmptyDialogAnimation);
+        setContentView(R.layout.dialog_exit_layout);
+    }
+
+    @Override
+    public void initViews() {
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+            bindingView.tvMessage.setLetterSpacing(0.1f);
+        }
+        View.OnClickListener onClickListener=new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.tv_submit:
+                        ExitAppDialog.this.dismiss();
+                        if(null!=mOnDialogClickListener){
+                            mOnDialogClickListener.onExitApp();
+                        }
+                        break;
+                    case R.id.tv_cancel:
+                        ExitAppDialog.this.dismiss();
+                        break;
+                }
+            }
+        };
+        bindingView.tvSubmit.setOnClickListener(onClickListener);
+        bindingView.tvCancel.setOnClickListener(onClickListener);
+    }
 
     public interface OnDialogClickListener{
         void onExitApp();
     }
-
     private OnDialogClickListener mOnDialogClickListener;
 
     public void setOnDialogClickListener(OnDialogClickListener onDialogClickListener) {
         mOnDialogClickListener = onDialogClickListener;
-    }
-
-
-    public ExitAppDialog(@NonNull Context context) {
-        super(context,R.style.ComentEmptyDialogAnimation);
-        setContentView(R.layout.dialog_exit_layout);
-
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
-            ((TextView) findViewById(R.id.tv_message)).setLetterSpacing(0.1f);
-        }
-
-        TextView tv_submit = (TextView) findViewById(R.id.tv_submit);
-        tv_submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ExitAppDialog.this.dismiss();
-                if(null!=mOnDialogClickListener){
-                    mOnDialogClickListener.onExitApp();
-                }
-            }
-        });
-
-        TextView tv_cancel = (TextView) findViewById(R.id.tv_cancel);
-        tv_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ExitAppDialog.this.dismiss();
-            }
-        });
     }
 }

@@ -33,7 +33,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.XinQuFragmentPagerAdapter;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.MineTabInfo;
 import com.video.newqu.bean.MineUserInfo;
 import com.video.newqu.bean.NotifactionMessageInfo;
@@ -82,7 +82,7 @@ import rx.functions.Action1;
  * 2017/5/22 16:02
  * 首页-用户中心
  */
-public class MineFragment extends BaseLightWeightFragment<FragmentMineBinding,UserInfoPresenter> implements UserMineContract.View, Observer {
+public class MineFragment extends BaseFragment<FragmentMineBinding,UserInfoPresenter> implements UserMineContract.View, Observer {
 
     private  List<MineTabInfo> mMineTabInfos=null;
     private  ArrayList<Fragment> mFragmentList;
@@ -186,6 +186,7 @@ public class MineFragment extends BaseLightWeightFragment<FragmentMineBinding,Us
                                 shareInfo.setUserID(VideoApplication.getInstance().getUserData().getId());
                                 shareInfo.setUrl("http://app.nq6.com/home/user/index?user_id="+shareInfo.getUserID());
                                 shareInfo.setImageLogo(VideoApplication.getInstance().getUserData().getLogo());
+                                shareInfo.setShareTitle("分享用户主页至");
                                 MainActivity activity = (MainActivity) getActivity();
                                 if(null!=activity&&!activity.isFinishing()){
                                     activity.shareMineHome(shareInfo);

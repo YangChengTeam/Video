@@ -20,7 +20,7 @@ import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.ShareInfo;
 import com.video.newqu.bean.UpdataApkInfo;
 import com.video.newqu.bean.UserData;
@@ -54,7 +54,7 @@ import rx.functions.Action1;
  * 设置中心
  */
 
-public class SettingFragment extends BaseLightWeightFragment<FragmentSettingBinding,MainPresenter> {
+public class SettingFragment extends BaseFragment<FragmentSettingBinding,MainPresenter> {
 
     private double mFileOrFilesSize;
     private ContentFragmentActivity mFragmentActivity;
@@ -192,6 +192,7 @@ public class SettingFragment extends BaseLightWeightFragment<FragmentSettingBind
                             shareInfo.setTitle("新趣小视频");
                             shareInfo.setUrl("http://v.nq6.com");
                             shareInfo.setVideoID("");
+                            shareInfo.setShareTitle("分享新趣小视频至");
                             mFragmentActivity.onShare(shareInfo);
                         }
                         break;
@@ -385,7 +386,7 @@ public class SettingFragment extends BaseLightWeightFragment<FragmentSettingBind
                 closeProgressDialog();
                 final UpdataApkInfo.DataBean dataBean = updataApkInfo.getData();
                 if(null!=dataBean){
-                    BuildManagerDialog buildManagerDialog =new BuildManagerDialog(getActivity(), R.style.UpdataDialogAnimation);
+                    BuildManagerDialog buildManagerDialog =new BuildManagerDialog(getActivity());
                     buildManagerDialog.setUpdataData(dataBean);
                     buildManagerDialog.setOnUpdataListener(new BuildManagerDialog.OnUpdataListener() {
                         @Override

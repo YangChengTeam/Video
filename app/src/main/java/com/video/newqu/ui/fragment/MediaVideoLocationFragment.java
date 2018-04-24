@@ -19,14 +19,13 @@ import com.video.newqu.adapter.MoivesListAdapter;
 import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.WeiXinVideo;
 import com.video.newqu.comadapter.BaseQuickAdapter;
-import com.video.newqu.comadapter.listener.OnItemClickListener;
-import com.video.newqu.comadapter.listener.OnItemLongClickListener;
 import com.video.newqu.contants.Constant;
 import com.video.newqu.databinding.FragmentLocationVideoListBinding;
-import com.video.newqu.databinding.RecylerViewEmptyLayoutBinding;
+import com.video.newqu.databinding.ReEmptyLayoutBinding;
 import com.video.newqu.manager.ThreadManager;
 import com.video.newqu.model.RecyclerViewSpacesItem;
 import com.video.newqu.ui.activity.MediaEditActivity;
+import com.video.newqu.ui.presenter.MainPresenter;
 import com.video.newqu.util.FileUtils;
 import com.video.newqu.util.MediaStoreUtil;
 import com.video.newqu.util.ScreenUtils;
@@ -40,13 +39,13 @@ import java.util.List;
  * 本机视频列表
  */
 
-public class MediaVideoLocationFragment extends BaseFragment<FragmentLocationVideoListBinding> implements BaseQuickAdapter.RequestLoadMoreListener {
+public class MediaVideoLocationFragment extends BaseFragment<FragmentLocationVideoListBinding,MainPresenter> {
 
-    private MoivesListAdapter mMoivesListAdapter;
+    private MoivesListAdapter mVideoListAdapter;
+    private ReEmptyLayoutBinding mEmptyViewbindView;
 
     @Override
     protected void initViews() {
-
     }
 
     @Override
@@ -58,7 +57,6 @@ public class MediaVideoLocationFragment extends BaseFragment<FragmentLocationVid
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        showLoadingView("加载本机视频中...");
         initAdapter();
         loadVideo();
     }
@@ -70,26 +68,32 @@ public class MediaVideoLocationFragment extends BaseFragment<FragmentLocationVid
         if(null==bindingView) return;
         bindingView.recyerView.setLayoutManager(new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false));
         bindingView.recyerView.addItemDecoration(new RecyclerViewSpacesItem(ScreenUtils.dpToPxInt(1.5f)));
-        mMoivesListAdapter = new MoivesListAdapter(null);
-        RecylerViewEmptyLayoutBinding emptyViewbindView= DataBindingUtil.inflate(getActivity().getLayoutInflater(),R.layout.recyler_view_empty_layout, (ViewGroup) bindingView.recyerView.getParent(),false);
-        mMoivesListAdapter.setEmptyView(emptyViewbindView.getRoot());
-        mMoivesListAdapter.setOnLoadMoreListener(this);
-        emptyViewbindView.ivItemIcon.setImageResource(R.drawable.iv_work_video_empty);
-        emptyViewbindView.tvItemName.setText("在相册中未找到视频！试试右上角的相册列表吧~");
-        bindingView.recyerView.setAdapter(mMoivesListAdapter);
-        //长按
-        bindingView.recyerView.addOnItemTouchListener(new OnItemLongClickListener() {
+        mVideoListAdapter = new MoivesListAdapter(null);
+        //设置空视图
+        mEmptyViewbindView = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.re_empty_layout, (ViewGroup) bindingView.recyerView.getParent(),false);
+        mEmptyViewbindView.emptyView.showLoadingView("扫描视频中...",R.drawable.loading_anim);
+        mVideoListAdapter.setEmptyView(mEmptyViewbindView.getRoot());
+
+        mVideoListAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
             @Override
-            public void onSimpleItemLongClick(BaseQuickAdapter adapter, View view, int position) {
+            public void onLoadMoreRequested() {
+                mVideoListAdapter.setEnableLoadMore(true);
+            }
+        },bindingView.recyerView);
+
+        bindingView.recyerView.setAdapter(mVideoListAdapter);
+        //长按
+        mVideoListAdapter.setOnItemLongClickListener(new BaseQuickAdapter.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
                 showActionMenu(view,position);
+                return false;
             }
         });
-        //点击
-        bindingView.recyerView.addOnItemTouchListener(new OnItemClickListener() {
-            //点击
+        mVideoListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
-            public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
-                List<WeiXinVideo> data = mMoivesListAdapter.getData();
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                List<WeiXinVideo> data = mVideoListAdapter.getData();
                 if(null!=data&&data.size()>0){
                     WeiXinVideo item = data.get(position);
                     if(null!=item&&null!=item.getVideoPath()&&new File(item.getVideoPath()).isFile()){
@@ -114,14 +118,20 @@ public class MediaVideoLocationFragment extends BaseFragment<FragmentLocationVid
                 }
             }
         });
+//        bindingView.recyerView.addOnItemTouchListener(new OnItemLongClickListener() {
+//            @Override
+//            public void onSimpleItemLongClick(BaseQuickAdapter adapter, View view, int position) {
+//
+//            }
+//        });
     }
 
     /**
      * 显示删除菜单
      */
     private void showActionMenu(View view, final int position) {
-        if(null!= mMoivesListAdapter){
-            List<WeiXinVideo> data = mMoivesListAdapter.getData();
+        if(null!= mVideoListAdapter){
+            List<WeiXinVideo> data = mVideoListAdapter.getData();
             if(null!=data&&data.size()>0){
                 final WeiXinVideo weiXinVideo = data.get(position);
                 if(null!=weiXinVideo){
@@ -133,8 +143,8 @@ public class MediaVideoLocationFragment extends BaseFragment<FragmentLocationVid
                             if(item.getItemId()==R.id.menu_detele){
                                 try {
                                     boolean flag = FileUtils.deleteFile(weiXinVideo.getVideoPath());
-                                    if(flag&&null!=mMoivesListAdapter){
-                                        mMoivesListAdapter.remove(position);
+                                    if(flag&&null!= mVideoListAdapter){
+                                        mVideoListAdapter.remove(position);
                                     }else{
                                         ToastUtils.showCenterToast("删除失败!");
                                     }
@@ -155,11 +165,11 @@ public class MediaVideoLocationFragment extends BaseFragment<FragmentLocationVid
         @Override
         public void handleMessage(Message msg) {
            if(10011==msg.what){
-                showContentView();
+               if(null!=mEmptyViewbindView) mEmptyViewbindView.emptyView.showEmptyView("在相册中未找到视频！试试右上角的相册列表吧~",R.drawable.ic_list_empty_icon,false);
                 List<WeiXinVideo> videoInfo = (List<WeiXinVideo>) msg.obj;
-                if(null!=mMoivesListAdapter){
-                    mMoivesListAdapter.setNewData(videoInfo);
-                    mMoivesListAdapter.loadMoreEnd();
+                if(null!= mVideoListAdapter){
+                    mVideoListAdapter.setNewData(videoInfo);
+                    mVideoListAdapter.loadMoreEnd();
                 }
             }
             super.handleMessage(msg);
@@ -204,22 +214,22 @@ public class MediaVideoLocationFragment extends BaseFragment<FragmentLocationVid
         });
     }
 
-    @Override
-    public void onLoadMoreRequested() {
-        if(null!=mMoivesListAdapter){
-            mMoivesListAdapter.setEnableLoadMore(true);
-        }
-    }
 
     public void updataAdapter(List<WeiXinVideo> weiXinVideos) {
-        if(null!=mMoivesListAdapter){
-            mMoivesListAdapter.setNewData(weiXinVideos);
+        if(null!= mVideoListAdapter){
+            mVideoListAdapter.setNewData(weiXinVideos);
             bindingView.recyerView.post(new Runnable() {
                 @Override
                 public void run() {
-                    mMoivesListAdapter.loadMoreEnd();
+                    mVideoListAdapter.loadMoreEnd();
                 }
             });
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mEmptyViewbindView=null;
     }
 }

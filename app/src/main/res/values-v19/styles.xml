@@ -3,7 +3,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowTranslucentNavigation">false</item>
         <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowAnimationStyle">@style/NewQu.Animation</item>
+        <item name="android:windowAnimationStyle">@style/XinQu.Animation</item>
         <item name="colorPrimary">@color/gray_qian</item>
         <item name="colorPrimaryDark">@color/colorAccent</item>
         <item name="colorAccent">@color/colorAccent</item>

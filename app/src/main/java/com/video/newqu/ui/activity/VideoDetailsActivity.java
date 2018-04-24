@@ -935,6 +935,7 @@ public class VideoDetailsActivity extends BaseActivity<ActivityVideoDetailsBindi
         ShareInfo shareInfo=new ShareInfo();
         shareInfo.setDesp("新趣小视频:"+mVideoInfo.getDesp());
         shareInfo.setTitle("新趣小视频分享");
+        shareInfo.setShareTitle("分享视频至");
         shareInfo.setUrl(mVideoInfo.getPath());
         shareInfo.setVideoID(mVideoInfo.getVideo_id());
         shareInfo.setImageLogo(mVideoInfo.getCover());

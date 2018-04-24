@@ -1,48 +1,32 @@
 package com.video.newqu.ui.dialog;
 
-
-import android.app.Dialog;
-import android.content.Context;
+import android.app.Activity;
 import android.graphics.Color;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 import com.video.newqu.R;
+import com.video.newqu.base.BaseDialog;
 import com.video.newqu.bean.UpdataApkInfo;
+import com.video.newqu.databinding.DialogUpdataBinding;
 
 /**
  * TinyHung@outlook.com
  * 2017/6/19 15:27
  * 软件更新
  */
+public class BuildManagerDialog extends BaseDialog<DialogUpdataBinding> {
 
-public class BuildManagerDialog extends Dialog {
-
-
-    public interface  OnUpdataListener{
-        void onUpdata();
-    }
-
-    private  OnUpdataListener mOnUpdataListener;
-
-    public void setOnUpdataListener(OnUpdataListener onUpdataListener) {
-        mOnUpdataListener = onUpdataListener;
-    }
-
-
-    public BuildManagerDialog(Context context, int menuDialog) {
-        super(context, menuDialog);
+    public BuildManagerDialog(Activity context) {
+        super(context, R.style.UpdataDialogAnimation);
         setContentView(R.layout.dialog_updata);
-        setCancelable(false);
-        initViews();
     }
 
-    private void initViews() {
-
+    @Override
+    public void initViews() {
+        setCancelable(false);
         View.OnClickListener onClickListener=new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,10 +44,9 @@ public class BuildManagerDialog extends Dialog {
                 }
             }
         };
-        ((ImageView) findViewById(R.id.btn_close)).setOnClickListener(onClickListener);
-        ((TextView) findViewById(R.id.btn_upload)).setOnClickListener(onClickListener);
+        bindingView.btnClose.setOnClickListener(onClickListener);
+        bindingView.btnUpload.setOnClickListener(onClickListener);
     }
-
 
     /**
      * 设置更新内容
@@ -71,18 +54,15 @@ public class BuildManagerDialog extends Dialog {
      */
     public void setUpdataData(UpdataApkInfo.DataBean data) {
         if(null==data) return;
-        TextView tvVerstion = (TextView) findViewById(R.id.tv_verstion);
-        TextView tvContent = (TextView) findViewById(R.id.tv_content);
-        TextView tvSize = (TextView) findViewById(R.id.tv_size);
         SpannableString spannableString = new SpannableString("最新版本："+data.getVersion());
         spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#FFF84F39")), 5,spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tvVerstion.setText(spannableString);
+        bindingView.tvVerstion.setText(spannableString);
         if(TextUtils.isEmpty(data.getSize())){
             data.setSize("15.8");
         }
         SpannableString spannableSizeString = new SpannableString("版本大小："+data.getSize()+"M");
         spannableSizeString.setSpan(new ForegroundColorSpan(Color.parseColor("#FFF84F39")), 5,spannableSizeString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tvSize.setText(spannableSizeString);
+        bindingView.tvSize.setText(spannableSizeString);
         String desp = data.getUpdate_log();
         if(TextUtils.isEmpty(desp)){
             desp="优化性能，提升稳定性 程序员修复了一些已知的BUG";
@@ -98,9 +78,17 @@ public class BuildManagerDialog extends Dialog {
                     sb.append("\n"+i+"：").append(strings[i]);//第一条不需要下划线
                 }
             }
-            tvContent.setText(sb.toString());
+            bindingView.tvContent.setText(sb.toString());
         }else{
-            tvContent.setText(desp);
+            bindingView.tvContent.setText(desp);
         }
+    }
+
+    public interface  OnUpdataListener{
+        void onUpdata();
+    }
+    private  OnUpdataListener mOnUpdataListener;
+    public void setOnUpdataListener(OnUpdataListener onUpdataListener) {
+        mOnUpdataListener = onUpdataListener;
     }
 }

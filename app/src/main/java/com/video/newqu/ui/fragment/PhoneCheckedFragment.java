@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import com.video.newqu.R;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.contants.Constant;
 import com.video.newqu.databinding.FragmentPhoneCheckedBinding;
 import com.video.newqu.manager.ApplicationManager;
@@ -30,7 +30,7 @@ import cn.smssdk.SMSSDK;
  * 手机号码校验
  */
 
-public class PhoneCheckedFragment extends BaseLightWeightFragment<FragmentPhoneCheckedBinding,BindingPhonePresenter> implements Observer {
+public class PhoneCheckedFragment extends BaseFragment<FragmentPhoneCheckedBinding,BindingPhonePresenter> implements Observer {
 
     private static final String TAG = "PhoneCheckedFragment";
     private String mContent;
@@ -50,7 +50,6 @@ public class PhoneCheckedFragment extends BaseLightWeightFragment<FragmentPhoneC
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        setRetainInstance(true);
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         if(null!=arguments){

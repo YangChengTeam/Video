@@ -12,7 +12,7 @@ import com.danikula.videocache.HttpProxyCacheServer;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.MediaMusicRecommendAdapter;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.MediaMusicCategoryList;
 import com.video.newqu.bean.MusicInfo;
 import com.video.newqu.comadapter.BaseQuickAdapter;
@@ -48,7 +48,7 @@ import java.util.List;
  * 音乐分类下的列表
  */
 
-public class MediaMusicCategroyListFragment extends BaseLightWeightFragment<FragmentRecylerBinding,MediaMusicCategoryListPresenter> implements OnMediaMusicClickListener, MediaMusicCategoryListContract.View {
+public class MediaMusicCategroyListFragment extends BaseFragment<FragmentRecylerBinding,MediaMusicCategoryListPresenter> implements OnMediaMusicClickListener, MediaMusicCategoryListContract.View {
 
     private int mPage=0;
     private int mPageSize=10;

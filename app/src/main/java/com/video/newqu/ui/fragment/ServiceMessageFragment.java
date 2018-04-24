@@ -19,7 +19,7 @@ import android.widget.LinearLayout;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.PhotoItemAdapter;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.PhotoInfo;
 import com.video.newqu.comadapter.BaseQuickAdapter;
 import com.video.newqu.databinding.FragmentServiceMessageBinding;
@@ -42,7 +42,7 @@ import java.util.List;
  * 意见反馈
  */
 
-public class ServiceMessageFragment extends BaseLightWeightFragment<FragmentServiceMessageBinding,ServiceMessagePresenter> implements View.OnClickListener, ServiceMessageContract.View {
+public class ServiceMessageFragment extends BaseFragment<FragmentServiceMessageBinding,ServiceMessagePresenter> implements View.OnClickListener, ServiceMessageContract.View {
 
     private Animation mLoadAnimation;
     private PhotoItemAdapter mAdapter;

@@ -12,7 +12,7 @@ import com.google.gson.Gson;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.VerticalPagerAdapter;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.ChangingViewEvent;
 import com.video.newqu.bean.FollowVideoList;
 import com.video.newqu.bean.TopicVideoList;
@@ -47,7 +47,7 @@ import java.util.Map;
  * 视频播放竖直滑动列表
  */
 
-public class VerticalVideoPlayFragment extends BaseLightWeightFragment<FragmentVideoPlayListBinding,SlideVideoPlayerPresenter> implements SlideVideoPlayerContract.View {
+public class VerticalVideoPlayFragment extends BaseFragment<FragmentVideoPlayListBinding,SlideVideoPlayerPresenter> implements SlideVideoPlayerContract.View {
 
     private int mItemPoistion;
     private int mPage;
@@ -89,7 +89,6 @@ public class VerticalVideoPlayFragment extends BaseLightWeightFragment<FragmentV
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        setRetainInstance(true);
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         if(null!=arguments){
@@ -418,12 +417,6 @@ public class VerticalVideoPlayFragment extends BaseLightWeightFragment<FragmentV
         super.onDestroyView();
         onLifeChange(mItemPoistion,CHANGE_ODE_DESTROY);
         updataGroupList(true);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
         if(null!=mHandler){
             mHandler.removeMessages(0);
             mHandler=null;
@@ -434,6 +427,7 @@ public class VerticalVideoPlayFragment extends BaseLightWeightFragment<FragmentV
             playerViews=null;
         }
     }
+
 
     /**
      * 垂直列表适配器
@@ -457,8 +451,7 @@ public class VerticalVideoPlayFragment extends BaseLightWeightFragment<FragmentV
                 VerticalVideoPlayeViewPager videpPlayerViewPager = new VerticalVideoPlayeViewPager((VerticalVideoPlayActivity) getActivity(),listsBean,position, mRootViewType);
                 View view = videpPlayerViewPager.getView();
                 view.setId(position);
-
-                playerViews.put(position, videpPlayerViewPager);
+                if(null!=playerViews) playerViews.put(position, videpPlayerViewPager);
                 container.addView(view);
                 return view;
             }
@@ -467,9 +460,10 @@ public class VerticalVideoPlayFragment extends BaseLightWeightFragment<FragmentV
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView(container.findViewById(position));
-
-            playerViews.remove(position);
+            if(null!=container){
+                container.removeView(container.findViewById(position));
+                if(null!=playerViews) playerViews.remove(position);
+            }
         }
     }
 

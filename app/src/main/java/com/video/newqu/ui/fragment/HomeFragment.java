@@ -21,7 +21,7 @@ import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.HomeUploadVideoListAdapter;
 import com.video.newqu.adapter.XinQuFragmentPagerAdapter;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.ShareInfo;
 import com.video.newqu.bean.ShareMenuItemInfo;
 import com.video.newqu.bean.TopicList;
@@ -64,7 +64,7 @@ import java.util.TreeMap;
  * 首页
  */
 
-public class HomeFragment extends BaseLightWeightFragment<FragmentHomeBinding,MainPresenter> implements VideoUploadListener, Observer {
+public class HomeFragment extends BaseFragment<FragmentHomeBinding,MainPresenter> implements VideoUploadListener, Observer {
 
     private List<Fragment> mFragmentList;
 
@@ -123,8 +123,8 @@ public class HomeFragment extends BaseLightWeightFragment<FragmentHomeBinding,Ma
         titles.add(getResources().getString(R.string.home_fragment_hot_title));
         titles.add(getResources().getString(R.string.home_fragment_topic_title));
         XinQuFragmentPagerAdapter myXinQuFragmentPagerAdapter =new XinQuFragmentPagerAdapter(getChildFragmentManager(),mFragmentList,titles);
-        bindingView.homeViewPager.setOffscreenPageLimit(3);
         bindingView.homeViewPager.setAdapter(myXinQuFragmentPagerAdapter);
+        bindingView.homeViewPager.setOffscreenPageLimit(3);
         bindingView.tabLayout.setTabMode(TabLayout.MODE_FIXED);
         bindingView.tabLayout.setupWithViewPager(bindingView.homeViewPager);
         bindingView.homeViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -776,7 +776,6 @@ public class HomeFragment extends BaseLightWeightFragment<FragmentHomeBinding,Ma
             sharePopupWindow.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.TOP,0,0);
         }
     }
-
 
     /**
      * 来自首页的刷新

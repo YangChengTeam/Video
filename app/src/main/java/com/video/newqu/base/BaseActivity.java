@@ -67,7 +67,6 @@ public abstract  class BaseActivity<SV extends ViewDataBinding> extends TopBaseA
         }
     }
 
-
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
         mBaseBinding = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.activity_base, null, false);
@@ -148,16 +147,6 @@ public abstract  class BaseActivity<SV extends ViewDataBinding> extends TopBaseA
         getSupportFragmentManager().beginTransaction().replace(id, fragment).commitAllowingStateLoss();
     }
 
-
-    /**
-     * 设置进度框文字
-     * @param message
-     */
-    public void setProgressDialogMessage(String message){
-        if(null!=mLoadingProgressedView&&mLoadingProgressedView.isShowing()){
-            mLoadingProgressedView.setMessage(message);
-        }
-    }
 
     protected void setTitle(String title){
         if(null!=mBaseBinding) mBaseBinding.groupTitle.setText(title);

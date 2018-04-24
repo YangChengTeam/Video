@@ -27,19 +27,14 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-
-import com.tencent.open.utils.HttpUtils;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.bean.FollowVideoList;
 import com.video.newqu.bean.MediaMusicHomeMenu;
 import com.video.newqu.bean.SearchResultInfo;
-import com.video.newqu.bean.SubscribeInfo;
-import com.video.newqu.contants.Cheeses;
 import com.video.newqu.contants.Constant;
 import com.video.newqu.contants.NetContants;
 import com.xinqu.videoplayer.XinQuVideoPlayerStandard;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

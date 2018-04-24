@@ -5,7 +5,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-
 import com.bumptech.glide.Glide;
 import com.video.newqu.R;
 import com.video.newqu.bean.WeiXinVideo;
@@ -13,7 +12,6 @@ import com.video.newqu.comadapter.BaseQuickAdapter;
 import com.video.newqu.comadapter.BaseViewHolder;
 import com.video.newqu.util.DateUtil;
 import com.video.newqu.util.ScreenUtils;
-
 import java.io.File;
 import java.util.List;
 
@@ -39,13 +37,11 @@ public class LocationVideoListAdapter extends BaseQuickAdapter<WeiXinVideo,com.v
 
     @Override
     protected void convert(final BaseViewHolder helper, final WeiXinVideo item) {
-
         RelativeLayout re_item_icon = helper.getView(R.id.re_item_icon);
         RelativeLayout.LayoutParams linearParams = (RelativeLayout.LayoutParams) re_item_icon.getLayoutParams();
         linearParams.height = mItemHeight;
         linearParams.width= LinearLayout.LayoutParams.MATCH_PARENT;
         re_item_icon.setLayoutParams(linearParams);
-
         try {
             if(null!=item){
                 File file=new File(item.getVideoPath());
@@ -59,17 +55,12 @@ public class LocationVideoListAdapter extends BaseQuickAdapter<WeiXinVideo,com.v
 
                 helper.setText(R.id.tv_item_duration,DateUtil.getTimeLengthString(item.getVideoDortion()/1000));
                 helper.setImageResource(R.id.iv_is_selector,item.getIsSelector()?R.drawable.iv_video_selector_true:R.drawable.iv_video_selector);
-
                 helper.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(item.getIsSelector()){
-                            item.setIsSelector(false);
-                        }else{
-                            item.setIsSelector(true);
-                        }
+                        item.setIsSelector(!item.getIsSelector());
                         helper.setImageResource(R.id.iv_is_selector,item.getIsSelector()?R.drawable.iv_video_selector_true:R.drawable.iv_video_selector);
-                        onItemClickListener.OnItemClick(helper.getPosition());
+                        onItemClickListener.OnItemClick(helper.getAdapterPosition());
                     }
                 });
             }

@@ -13,7 +13,7 @@ import com.danikula.videocache.HttpProxyCacheServer;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.MediaMusicRecommendAdapter;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.MediaMusicCategoryList;
 import com.video.newqu.bean.MusicInfo;
 import com.video.newqu.comadapter.BaseQuickAdapter;
@@ -28,7 +28,6 @@ import com.video.newqu.ui.activity.MediaMusicActivity;
 import com.video.newqu.ui.contract.MediaMusicLikeContract;
 import com.video.newqu.ui.dialog.RecordProgressDialog;
 import com.video.newqu.ui.presenter.MediaMusicLikePresenter;
-import com.video.newqu.util.Logger;
 import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
 import com.video.newqu.view.layout.MineDataChangeMarginView;
@@ -51,7 +50,7 @@ import java.util.Observer;
  * 音乐选择-收藏列表
  */
 
-public class MediaMusicLikeFragment extends BaseLightWeightFragment<FragmentMediaMusicHomeBinding,MediaMusicLikePresenter> implements
+public class MediaMusicLikeFragment extends BaseFragment<FragmentMediaMusicHomeBinding,MediaMusicLikePresenter> implements
         OnMediaMusicClickListener, MediaMusicLikeContract.View, Observer {
 
     private MediaMusicActivity mMusicActivity;

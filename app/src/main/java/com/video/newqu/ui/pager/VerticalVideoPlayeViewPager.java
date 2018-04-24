@@ -16,9 +16,6 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.umeng.analytics.MobclickAgent;
@@ -47,7 +44,7 @@ import com.video.newqu.ui.activity.VerticalVideoPlayActivity;
 import com.video.newqu.ui.contract.VideoDetailsContract;
 import com.video.newqu.ui.dialog.CommonMenuDialog;
 import com.video.newqu.ui.dialog.FollowWeiXnDialog;
-import com.video.newqu.ui.fragment.VerticalVideoPlayCommendFragment;
+import com.video.newqu.ui.fragment.VerticalVideoCommentFragment;
 import com.video.newqu.ui.presenter.VideoDetailsPresenter;
 import com.video.newqu.util.AnimationUtil;
 import com.video.newqu.util.CommonUtils;
@@ -73,7 +70,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import cn.jpush.android.api.JPushInterface;
-import jp.wasabeef.glide.transformations.BlurTransformation;
 import master.flame.danmaku.danmaku.model.BaseDanmaku;
 import master.flame.danmaku.danmaku.model.DanmakuTimer;
 import master.flame.danmaku.danmaku.model.IDisplayer;
@@ -434,8 +430,8 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
      */
     private void showCommentView(boolean flag) {
         if(null!=mContext&&mContext instanceof VerticalVideoPlayActivity){
-            VerticalVideoPlayCommendFragment fragment = VerticalVideoPlayCommendFragment.newInstance(mVideoBean.getVideo_id(), TextUtils.isEmpty(mVideoBean.getComment_times()) ? "0" : mVideoBean.getComment_times(), TextUtils.isEmpty(mVideoBean.getAdd_time()) ? System.currentTimeMillis() + "" : mVideoBean.getAdd_time(),flag);
-            fragment.setOnDismissListener(new VerticalVideoPlayCommendFragment.OnFragmentDataChangeListener() {
+            VerticalVideoCommentFragment fragment = VerticalVideoCommentFragment.newInstance(mVideoBean.getVideo_id(), TextUtils.isEmpty(mVideoBean.getComment_times()) ? "0" : mVideoBean.getComment_times(), TextUtils.isEmpty(mVideoBean.getAdd_time()) ? System.currentTimeMillis() + "" : mVideoBean.getAdd_time(),flag);
+            fragment.setOnDismissListener(new VerticalVideoCommentFragment.OnFragmentDataChangeListener() {
                 @Override
                 public void onDismiss(int commentCount) {
                     WindowVideoPlayer.goOnPlayOnResume();
@@ -863,6 +859,7 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
         shareInfo.setDesp("新趣小视频:"+mVideoBean.getDesp());
         shareInfo.setTitle("新趣小视频分享");
         shareInfo.setVideoID(mVideoBean.getVideo_id());
+        shareInfo.setShareTitle("分享视频至");
         shareInfo.setImageLogo(mVideoBean.getCover());
         if(null!=mContext&&!mContext.isFinishing()){
             if(mContext instanceof VerticalVideoPlayActivity){

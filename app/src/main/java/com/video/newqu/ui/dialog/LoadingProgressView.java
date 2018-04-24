@@ -1,16 +1,15 @@
 package com.video.newqu.ui.dialog;
 
-import android.app.Dialog;
-import android.content.Context;
+import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 import com.video.newqu.R;
-import com.video.newqu.view.widget.FinlishView;
+import com.video.newqu.base.BaseDialog;
+import com.video.newqu.databinding.DialogProgressLayoutBinding;
+
 
 /**
  * TinyHung@outlook.com
@@ -18,28 +17,19 @@ import com.video.newqu.view.widget.FinlishView;
  * 加载进度条
  */
 
-public class LoadingProgressView extends Dialog {
+public class LoadingProgressView extends BaseDialog<DialogProgressLayoutBinding> {
 
-    private TextView mTextView;
     private boolean isBack=false;
-    private final FinlishView mPayfinlish_view;
-    private final AnimationDrawable mAnimationDrawable;
-    private final ImageView mIvProgressBar;
+    private  AnimationDrawable mAnimationDrawable;
 
-
-    public LoadingProgressView(Context context,boolean isShowProgress) {
+    public LoadingProgressView(Activity context, boolean isShowProgress) {
         super(context, R.style.LoadingProgressDialogStyle);
         setContentView(R.layout.dialog_progress_layout);
-        mTextView = ((TextView) findViewById(R.id.tv_loading_message));
-        mIvProgressBar = (ImageView) findViewById(R.id.iv_loading_icon);
-        mAnimationDrawable = (AnimationDrawable) mIvProgressBar.getDrawable();
-        mPayfinlish_view = (FinlishView) findViewById(R.id.payfinlish_view);
-        mPayfinlish_view.setMode(1);
         if(isShowProgress){
-            mIvProgressBar.setVisibility(View.VISIBLE);
+            bindingView.ivLoadingIcon.setVisibility(View.VISIBLE);
             if(null!=mAnimationDrawable&&!mAnimationDrawable.isRunning()) mAnimationDrawable.start();
         }else{
-            mIvProgressBar.setVisibility(View.GONE);
+            bindingView.ivLoadingIcon.setVisibility(View.GONE);
             if(null!=mAnimationDrawable&&mAnimationDrawable.isRunning()) mAnimationDrawable.stop();
         }
 //        setCancelable(false);
@@ -47,12 +37,27 @@ public class LoadingProgressView extends Dialog {
     }
 
     @Override
+    public void initViews() {
+        mAnimationDrawable= (AnimationDrawable) bindingView.ivLoadingIcon.getDrawable();
+        bindingView.finlishView.setMode(1);
+    }
+
+
+    @Override
     public void dismiss() {
         if(null!=mAnimationDrawable&&mAnimationDrawable.isRunning()) mAnimationDrawable.stop();
-        if(null!=mPayfinlish_view) mPayfinlish_view.setVisibility(View.GONE);
-        if(null!=mIvProgressBar) mIvProgressBar.setVisibility(View.VISIBLE);
-
+        if(null!=bindingView){
+            bindingView.finlishView.setVisibility(View.GONE);
+            bindingView.ivLoadingIcon.setVisibility(View.VISIBLE);
+        }
         super.dismiss();
+    }
+
+    @Override
+    public void show() {
+        super.show();
+        bindingView.ivLoadingIcon.setVisibility(View.VISIBLE);
+        if(null!=mAnimationDrawable&&!mAnimationDrawable.isRunning()) mAnimationDrawable.start();
     }
 
     public interface  OnDialogBackListener{
@@ -90,7 +95,7 @@ public class LoadingProgressView extends Dialog {
      * @param message
      */
     public void setMessage(String message){
-        mTextView.setText(message);
+        bindingView.tvLoadingMsg.setText(message);
     }
     private Handler mHandler=new Handler();
 
@@ -101,10 +106,10 @@ public class LoadingProgressView extends Dialog {
      * @param duration
      */
     public void setMessage(String message,boolean isFinlish,int duration) {
-        mTextView.setText(message);
+        bindingView.tvLoadingMsg.setText(message);
         if(isFinlish){
-            if(mIvProgressBar!=null){
-                mIvProgressBar.setVisibility(View.GONE);
+            if(bindingView!=null){
+                bindingView.ivLoadingIcon.setVisibility(View.GONE);
                 if(null!=mAnimationDrawable&&mAnimationDrawable.isRunning()) mAnimationDrawable.stop();
                 mHandler.postDelayed(new Runnable() {
                     @Override
@@ -135,22 +140,20 @@ public class LoadingProgressView extends Dialog {
      * 执行完成播放动画的动作
      */
     public void setResultsCompletes(String message,int textColor,boolean isFinlish,int duration){
-        mTextView.setText(message);
-        mTextView.setTextColor(Color.WHITE);
-        if(isFinlish){
-            if(mIvProgressBar!=null&&mPayfinlish_view!=null){
-                mIvProgressBar.setVisibility(View.GONE);
-                if(null!=mAnimationDrawable&&mAnimationDrawable.isRunning()) mAnimationDrawable.stop();
-                mPayfinlish_view.setVisibility(View.VISIBLE);
-                mPayfinlish_view.setmResultType(1);//完成的状态
-                mPayfinlish_view.initPath();
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        LoadingProgressView.this.dismiss();
-                    }
-                },duration);
-            }
+        bindingView.tvLoadingMsg.setText(message);
+        bindingView.tvLoadingMsg.setTextColor(Color.WHITE);
+        if(isFinlish&&null!=bindingView){
+            bindingView.ivLoadingIcon.setVisibility(View.GONE);
+            if(null!=mAnimationDrawable&&mAnimationDrawable.isRunning()) mAnimationDrawable.stop();
+            bindingView.finlishView.setVisibility(View.VISIBLE);
+            bindingView.finlishView.setmResultType(1);//完成的状态
+            bindingView.finlishView.initPath();
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    LoadingProgressView.this.dismiss();
+                }
+            },duration);
         }
     }
 }

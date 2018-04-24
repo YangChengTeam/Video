@@ -8,7 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
 import com.video.newqu.R;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.StickerDataBean;
 import com.video.newqu.camera.adapter.MediaEditNetStickerListAdapter;
 import com.video.newqu.contants.Constant;
@@ -29,7 +29,7 @@ import java.util.Observer;
  * 2017/9/12.
  * 用户用过的贴纸列表片段
  */
-public class MediaStickerUseFragment extends BaseLightWeightFragment<FragmentRecyclerviewLayoutBinding,MediaStickerPresenter> implements Observer {
+public class MediaStickerUseFragment extends BaseFragment<FragmentRecyclerviewLayoutBinding,MediaStickerPresenter> implements Observer {
 
     private static OnMediaStickerListener mOnMediaStickerListener;
     private MediaEditNetStickerListAdapter mMediaEditStickerAdapter;

@@ -9,7 +9,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.MineUserInfo;
 import com.video.newqu.bean.SMSEventMessage;
 import com.video.newqu.bean.UserData;
@@ -29,7 +29,7 @@ import org.greenrobot.eventbus.ThreadMode;
  * 用户账号密码登录
  */
 
-public class LoginFragment extends BaseLightWeightFragment<FragmentLoginBinding,LoginXinQuPresenter> implements LoginXinQuContract.View {
+public class LoginFragment extends BaseFragment<FragmentLoginBinding,LoginXinQuPresenter> implements LoginXinQuContract.View {
 
     private Animation mInputAnimation;
     private LoginGroupActivity mLoginGroupActivity;

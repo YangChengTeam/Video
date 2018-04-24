@@ -134,7 +134,7 @@ public class TopBaseActivity extends AppCompatActivity implements ShareContract.
         if(null== mShareInfo){
             return;
         }
-        ShareDialog shareDialog = new ShareDialog(this);
+        ShareDialog shareDialog = new ShareDialog(this,mShareInfo.getShareTitle());
         shareDialog.setOnItemClickListener(new ShareDialog.OnShareItemClickListener() {
             @Override
             public void onItemClick(final ShareMenuItemInfo shareMenuItemInfo) {

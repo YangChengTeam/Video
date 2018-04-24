@@ -2,9 +2,7 @@ package com.video.newqu.ui.dialog;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
@@ -15,14 +13,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import com.video.newqu.R;
 import com.video.newqu.adapter.LocationVideoListAdapter;
+import com.video.newqu.base.BaseDialog;
 import com.video.newqu.bean.VideoInfos;
 import com.video.newqu.bean.WeiChactVideoInfo;
 import com.video.newqu.bean.WeiXinVideo;
-import com.video.newqu.contants.Constant;
+import com.video.newqu.databinding.LocationVideoUploadBinding;
 import com.video.newqu.listener.OnItemClickListener;
 import com.video.newqu.manager.DBBatchVideoUploadManager;
 import com.video.newqu.util.FileUtils;
-import com.video.newqu.util.SharedPreferencesUtil;
 import com.video.newqu.util.VideoUtils;
 import java.io.File;
 import java.util.ArrayList;
@@ -34,27 +32,26 @@ import java.util.List;
  * 扫描本地视频文件上传至服务器弹窗
  */
 
-public class LocationVideoUploadDialog extends BottomSheetDialog implements OnItemClickListener, View.OnClickListener {
+public class LocationVideoUploadDialog extends BaseDialog<LocationVideoUploadBinding> implements OnItemClickListener, View.OnClickListener {
 
-    private final Activity context;
-    private RecyclerView mRecyer_view;
-    private Button mBt_submit;
     private LocationVideoListAdapter mLoactionVideoListAdapter;
     private List<String> filePath=new ArrayList<>();
     private List<WeiXinVideo> mVideo_list;
-
 
     public LocationVideoUploadDialog(Activity context ) {
         super(context, R.style.SpinKitViewSaveFileDialogAnimation);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         setContentView(R.layout.location_video_upload);
-        initLayoutParams();
-        this.context=context;
-        initViews();
-        initAdapter();
-        SharedPreferencesUtil.getInstance().putBoolean(Constant.SETTING_DAY,true);//标记为今天已扫描
+//        SharedPreferencesUtil.getInstance().putBoolean(Constant.SETTING_DAY,true);//标记为今天已扫描
     }
 
+    @Override
+    public void initViews() {
+        bindingView.btSubmit.setOnClickListener(this);
+        ((Button) findViewById(R.id.bt_canel)).setOnClickListener(this);
+        initLayoutParams();
+        initAdapter();
+    }
 
     /**
      * 设置Dialog显示在屏幕底部
@@ -81,19 +78,10 @@ public class LocationVideoUploadDialog extends BottomSheetDialog implements OnIt
         attributes.gravity= Gravity.BOTTOM;
     }
 
-
-
-    private void initViews() {
-        mRecyer_view = (RecyclerView) findViewById(R.id.recyer_view);
-        mBt_submit = (Button) findViewById(R.id.bt_submit);
-        mBt_submit.setOnClickListener(this);
-        ((Button) findViewById(R.id.bt_canel)).setOnClickListener(this);
-    }
-
     private void initAdapter() {
-        mRecyer_view.setLayoutManager(new GridLayoutManager(context,3));
+        bindingView.recyerView.setLayoutManager(new GridLayoutManager(getContext(),3));
         mLoactionVideoListAdapter = new LocationVideoListAdapter(mVideo_list,this);
-        mRecyer_view.setAdapter(mLoactionVideoListAdapter);
+        bindingView.recyerView.setAdapter(mLoactionVideoListAdapter);
     }
 
 
@@ -118,7 +106,6 @@ public class LocationVideoUploadDialog extends BottomSheetDialog implements OnIt
         if(null!=mVideo_list) mVideo_list.clear();mVideo_list=null;
         if(null!=filePath) filePath.clear(); filePath=null;
         mLoactionVideoListAdapter=null;
-        mRecyer_view=null;mBt_submit=null;
     }
     /**
      * 切换按钮状态
@@ -140,9 +127,9 @@ public class LocationVideoUploadDialog extends BottomSheetDialog implements OnIt
             }
         }
         if(null==filePath||filePath.size()==0){
-            mBt_submit.setText("关闭");
+            bindingView.btSubmit.setText("关闭");
         }else{
-            mBt_submit.setText("一键分享");
+            bindingView.btSubmit.setText("一键分享");
         }
     }
 
@@ -169,7 +156,7 @@ public class LocationVideoUploadDialog extends BottomSheetDialog implements OnIt
         if(null==filePath||filePath.size()==0){
             return;
         }
-        DBBatchVideoUploadManager DBBatchVideoUploadManager = new DBBatchVideoUploadManager(context);
+        DBBatchVideoUploadManager DBBatchVideoUploadManager = new DBBatchVideoUploadManager(getContext());
         //批量添加任务至上传队列
         for (String file : filePath) {
             final WeiChactVideoInfo weiChactVideoInfo = new WeiChactVideoInfo();

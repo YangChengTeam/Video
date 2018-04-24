@@ -14,7 +14,15 @@ public class ShareInfo {
     private String videoPath;
     private String userID;
     private String netUrl;
+    private String shareTitle;//分享弹窗标题
 
+    public String getShareTitle() {
+        return shareTitle;
+    }
+
+    public void setShareTitle(String shareTitle) {
+        this.shareTitle = shareTitle;
+    }
 
     public String getNetUrl() {
         return netUrl;

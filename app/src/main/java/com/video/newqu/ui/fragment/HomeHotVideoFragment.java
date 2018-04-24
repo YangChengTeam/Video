@@ -13,7 +13,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.HomeVideoListAdapter;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.ChangingViewEvent;
 import com.video.newqu.bean.FollowVideoList;
 import com.video.newqu.comadapter.BaseQuickAdapter;
@@ -27,6 +27,7 @@ import com.video.newqu.ui.activity.VerticalVideoPlayActivity;
 import com.video.newqu.ui.activity.VideoDetailsActivity;
 import com.video.newqu.ui.contract.HotVideoContract;
 import com.video.newqu.ui.presenter.HotVideoPresenter;
+import com.video.newqu.util.Logger;
 import com.video.newqu.util.SharedPreferencesUtil;
 import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
@@ -43,8 +44,9 @@ import java.util.Observer;
  * 热门视频，观察者模式更新实时的列表播放进度
  */
 
-public class HomeHotVideoFragment extends BaseLightWeightFragment<FragmentHotRecylerBinding,HotVideoPresenter> implements  HotVideoContract.View, Observer {
+public class HomeHotVideoFragment extends BaseFragment<FragmentHotRecylerBinding,HotVideoPresenter> implements  HotVideoContract.View, Observer {
 
+    private static final String TAG = "HomeHotVideoFragment";
     private HomeVideoListAdapter mVideoListAdapter;
     private int mPage=0;//当前页数
     private GridLayoutManager mGridLayoutManager;
@@ -80,13 +82,17 @@ public class HomeHotVideoFragment extends BaseLightWeightFragment<FragmentHotRec
     @Override
     protected void onVisible() {
         super.onVisible();
+        Logger.d(TAG,"onVisible1");
         if(isRefresh&&null!=bindingView&&null!= mVideoListAdapter &&null!=mPresenter &&!mPresenter.isLoading()){
+            Logger.d(TAG,"onVisible2");
             List<FollowVideoList.DataBean.ListsBean> data = mVideoListAdapter.getData();
             if(null==data||data.size()<=0){
+                Logger.d(TAG,"onVisible3");
                 mPage=0;
                 if(null!=mEmptyViewbindView) mEmptyViewbindView.emptyView.showLoadingView();
                 loadVideoList();
             }else{
+                Logger.d(TAG,"onVisible4");
                 bindingView.swiperefreshLayout.postDelayed(new Runnable() {
                     @Override
                     public void run() {

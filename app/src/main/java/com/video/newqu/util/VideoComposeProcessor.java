@@ -3,6 +3,8 @@ package com.video.newqu.util;
 import android.text.TextUtils;
 import com.ksyun.media.shortvideo.kit.KSYEditKit;
 import com.video.newqu.bean.UploadVideoInfo;
+import com.video.newqu.contants.Constant;
+import com.video.newqu.manager.ApplicationManager;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -35,12 +37,13 @@ public class VideoComposeProcessor {
      * 添加视频合成任务
      */
     public void addVideoComposeTask(UploadVideoInfo composeTaskInfo, KSYEditKit editKit){
-
+        if(null==editKit) return;
         if(null==composeTaskInfo) return;
         if(TextUtils.isEmpty(composeTaskInfo.getCompostOutFilePath())){
             ToastUtils.showCenterToast("必须传入输出路径！");
             return;
         }
+        ApplicationManager.getInstance().observerUpdata(Constant.OBSERVABLE_ACTION_ADD_VIDEO_TASK);//通知切换到HomeFragment界面
         VideoComposeTask videoComposeTask = new VideoComposeTask(composeTaskInfo, editKit);
         if(null!=cVideoComposeTaskMap){
             cVideoComposeTaskMap.put(composeTaskInfo.getId(),videoComposeTask);

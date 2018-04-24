@@ -13,7 +13,7 @@ import com.danikula.videocache.HttpProxyCacheServer;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.MediaMusicRecommendAdapter;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.MediaMusicCategoryList;
 import com.video.newqu.bean.MusicInfo;
 import com.video.newqu.comadapter.BaseQuickAdapter;
@@ -48,7 +48,7 @@ import java.util.List;
  * 音乐选择-推荐
  */
 
-public class MediaMusicRecommendFragment extends BaseLightWeightFragment<FragmentMediaMusicHomeBinding,MediaMusicRecommendPresenter> implements MediaMusicRecommendContract.View,OnMediaMusicClickListener{
+public class MediaMusicRecommendFragment extends BaseFragment<FragmentMediaMusicHomeBinding,MediaMusicRecommendPresenter> implements MediaMusicRecommendContract.View,OnMediaMusicClickListener{
 
     private MediaMusicActivity mMusicActivity;
     private MediaMusicRecommendAdapter mMusicAdapter;

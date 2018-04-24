@@ -1,6 +1,7 @@
 package com.video.newqu.ui.fragment;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -18,24 +19,26 @@ import com.video.newqu.bean.VideoFolder;
 import com.video.newqu.comadapter.BaseQuickAdapter;
 import com.video.newqu.contants.Constant;
 import com.video.newqu.databinding.FragmentVideoFolderBinding;
+import com.video.newqu.databinding.ReEmptyLayoutBinding;
 import com.video.newqu.ui.activity.MediaLocationVideoListActivity;
+import com.video.newqu.ui.presenter.MainPresenter;
 import com.video.newqu.util.ImageCache;
 import com.video.newqu.util.StringUtils;
 import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.VideoUtils;
+import com.video.newqu.view.layout.DataChangeView;
 import java.util.List;
-
 /**
  * TinyHung@outlook.com
  * 2017-06-30 20:26
  * 本地视频文件选择
  */
+public class ImportVideoFolderFragment extends BaseFragment<FragmentVideoFolderBinding,MainPresenter> {
 
-public class ImportVideoFolderFragment extends BaseFragment<FragmentVideoFolderBinding> implements BaseQuickAdapter.RequestLoadMoreListener {
-
-    private ImportVideoFolderAdapter mImportVideoFolderAdapter;
+    private ImportVideoFolderAdapter mVideoListAdapter;
     private MediaLocationVideoListActivity mActivity;
     private LinearLayoutManager mLinearLayoutManager;
+    private ReEmptyLayoutBinding mEmptyViewbindView;
 
     @Override
     public void onAttach(Context context) {
@@ -64,7 +67,6 @@ public class ImportVideoFolderFragment extends BaseFragment<FragmentVideoFolderB
             ToastUtils.showCenterToast("无法读取SD卡，请检查SD卡授予本软件的使用权限！");
             return;
         }
-        showLoadingView("加载相册列表中...");
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -89,15 +91,27 @@ public class ImportVideoFolderFragment extends BaseFragment<FragmentVideoFolderB
     private void initAdapter() {
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         bindingView.recyerView.setLayoutManager(mLinearLayoutManager);
-        mImportVideoFolderAdapter = new ImportVideoFolderAdapter(null,getActivity());
-        mImportVideoFolderAdapter.setOnLoadMoreListener(this);
-        //设置空视图
-        mImportVideoFolderAdapter.setEmptyView(R.layout.location_folder_file_empty_layout, (ViewGroup) bindingView.recyerView.getParent());
-        bindingView.recyerView.setAdapter(mImportVideoFolderAdapter);
-        //条目的点击事件
-        bindingView.recyerView.addOnItemTouchListener(new com.video.newqu.comadapter.listener.OnItemClickListener() {
+        mVideoListAdapter = new ImportVideoFolderAdapter(null,getActivity());
+        mVideoListAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
             @Override
-            public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
+            public void onLoadMoreRequested() {
+                mVideoListAdapter.loadMoreEnd();
+            }
+        }, bindingView.recyerView);
+        //设置空视图
+        mEmptyViewbindView = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.re_empty_layout, (ViewGroup) bindingView.recyerView.getParent(),false);
+        mEmptyViewbindView.emptyView.setOnRefreshListener(new DataChangeView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mEmptyViewbindView.emptyView.showLoadingView("加载相册列表中...",R.drawable.loading_anim);
+                createFolderList();
+            }
+        });
+        mEmptyViewbindView.emptyView.showLoadingView("加载相册列表中...",R.drawable.loading_anim);
+        mVideoListAdapter.setEmptyView(mEmptyViewbindView.getRoot());
+        mVideoListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 List<VideoFolder> folderlist= adapter.getData();
                 if(null!=folderlist&&folderlist.size()>0){
                     final VideoFolder item = folderlist.get(position);
@@ -109,6 +123,7 @@ public class ImportVideoFolderFragment extends BaseFragment<FragmentVideoFolderB
                 }
             }
         });
+        bindingView.recyerView.setAdapter(mVideoListAdapter);
     }
 
     private Handler mHandler=new Handler(){
@@ -116,13 +131,13 @@ public class ImportVideoFolderFragment extends BaseFragment<FragmentVideoFolderB
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if(7890==msg.what){
-                showContentView();
+                if(null!=mEmptyViewbindView) mEmptyViewbindView.emptyView.showEmptyView("没有视频，下拉刷新试试~",R.drawable.ic_list_empty_icon,false);
                 List<VideoFolder> videoFolders= (List<VideoFolder>) msg.obj;
-                if(null!=mImportVideoFolderAdapter){
-                    mImportVideoFolderAdapter.setNewData(videoFolders);
+                if(null!= mVideoListAdapter){
+                    mVideoListAdapter.setNewData(videoFolders);
                 }
             }else if(789==msg.what){
-                showContentView();
+                if(null!=mEmptyViewbindView) mEmptyViewbindView.emptyView.showErrorView();
             }
         }
     };
@@ -180,17 +195,6 @@ public class ImportVideoFolderFragment extends BaseFragment<FragmentVideoFolderB
     @Override
     public void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    public void onLoadMoreRequested() {
-        if(null!=mImportVideoFolderAdapter){
-            bindingView.recyerView.post(new Runnable() {
-                @Override
-                public void run() {
-                    mImportVideoFolderAdapter.loadMoreEnd();
-                }
-            });
-        }
+        mEmptyViewbindView=null;
     }
 }

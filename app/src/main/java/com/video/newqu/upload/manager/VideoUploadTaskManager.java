@@ -25,7 +25,6 @@ import com.video.newqu.upload.PauseableUploadTask;
 import com.video.newqu.upload.bean.UploadDeteleTaskInfo;
 import com.video.newqu.upload.bean.UploadParamsConfig;
 import com.video.newqu.upload.listener.VideoUploadListener;
-import com.video.newqu.util.Logger;
 import com.video.newqu.util.SystemUtils;
 import org.json.JSONException;
 import org.json.JSONObject;

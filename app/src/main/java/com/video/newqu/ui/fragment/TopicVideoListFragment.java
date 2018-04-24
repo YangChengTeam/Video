@@ -13,7 +13,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.TopicVideoListAdapter;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.ChangingViewEvent;
 import com.video.newqu.bean.FollowVideoList;
 import com.video.newqu.bean.TopicVideoList;
@@ -46,7 +46,7 @@ import java.util.List;
  * 话题列表视频
  */
 
-public class TopicVideoListFragment extends BaseLightWeightFragment<FragmentRecylerBinding,TopicVideoPresenter> implements  TopicVideoContract.View {
+public class TopicVideoListFragment extends BaseFragment<FragmentRecylerBinding,TopicVideoPresenter> implements  TopicVideoContract.View {
 
     private int mPage=0;
     private String mTopicID;

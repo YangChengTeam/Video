@@ -19,6 +19,11 @@ import rx.functions.Action1;
 public class TopicPresenter extends RxPresenter<TopicContract.View> implements TopicContract.Presenter<TopicContract.View> {
 
     private final Context context;
+    private boolean isLoading;
+
+    public boolean isLoading() {
+        return isLoading;
+    }
 
     public TopicPresenter(Context context){
         this.context=context;
@@ -26,9 +31,12 @@ public class TopicPresenter extends RxPresenter<TopicContract.View> implements T
 
     @Override
     public void getTopicList() {
+        if(isLoading) return;
+        isLoading=true;
         Subscription subscribe = HttpCoreEngin.get(context).rxpost(NetContants.BASE_HOST + "get_topic", TopicList.class, null,true,true,true).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<TopicList>() {
             @Override
             public void call(TopicList data) {
+                isLoading=false;
                 if(null!=data&&1==data.getCode()&&null!=data.getData()&&data.getData().size()>0){
                     if(null!=mView) mView.showTopicListFinlish(data);
                 }else if(null!=data&&1==data.getCode()&&null!=data.getData()&&data.getData().size()<=0){

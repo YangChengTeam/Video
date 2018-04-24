@@ -13,7 +13,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.HomeTopicAdapter;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.FindVideoListInfo;
 import com.video.newqu.bean.FollowVideoList;
 import com.video.newqu.bean.UserPlayerVideoHistoryList;
@@ -43,7 +43,7 @@ import java.util.List;
  * 话题
  */
 
-public class HomeTopicFragment extends BaseLightWeightFragment<FragmentRecylerBinding,HomeTopicPresenter> implements HomeTopicContract.View,HomeTopicItemClickListener {
+public class HomeTopicFragment extends BaseFragment<FragmentRecylerBinding,HomeTopicPresenter> implements HomeTopicContract.View,HomeTopicItemClickListener {
 
     private int mPage =0;
     private int pageSize=10;

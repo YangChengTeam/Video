@@ -256,7 +256,7 @@ public class VerticalHistoryVideoPlayActivity extends BaseActivity<ActivityVideo
                 VerticalHistoryVidepPlayViewPager videpPlayerViewPager = new VerticalHistoryVidepPlayViewPager(VerticalHistoryVideoPlayActivity.this,userPlayerVideoHistoryList,position);
                 View view = videpPlayerViewPager.getView();
                 view.setId(position);
-                playerViews.put(position, videpPlayerViewPager);
+                if(null!=playerViews) playerViews.put(position, videpPlayerViewPager);
                 container.addView(view);
                 return view;
             }
@@ -267,7 +267,7 @@ public class VerticalHistoryVideoPlayActivity extends BaseActivity<ActivityVideo
         public void destroyItem(ViewGroup container, int position, Object object) {
             if(null!=container){
                 container.removeView(container.findViewById(position));
-                playerViews.remove(position);
+                if(null!=playerViews) playerViews.remove(position);
             }
         }
     }

@@ -16,7 +16,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.UserVideoListAdapter;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.ChangingViewEvent;
 import com.video.newqu.bean.FollowVideoList;
 import com.video.newqu.comadapter.BaseQuickAdapter;
@@ -54,7 +54,7 @@ import java.util.Observer;
  * 用户发布的视频
  */
 
-public class HomeWorksFragment extends BaseLightWeightFragment<MineFragmentRecylerBinding,WorksPresenter> implements WorksContract.View,OnUserVideoListener, Observer {
+public class HomeWorksFragment extends BaseFragment<MineFragmentRecylerBinding,WorksPresenter> implements WorksContract.View,OnUserVideoListener, Observer {
 
     private int mPage=0;
     private int mPageSize=9;

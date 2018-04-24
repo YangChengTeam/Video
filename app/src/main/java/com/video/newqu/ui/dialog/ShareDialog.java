@@ -12,6 +12,7 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.video.newqu.R;
 import com.video.newqu.adapter.ShareAdapter;
@@ -20,17 +21,18 @@ import com.video.newqu.comadapter.BaseQuickAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
+ /**
  * @time 2016/10/26 15:41
  * @des $分享选择界面
  */
 public class ShareDialog extends BottomSheetDialog {
 
-    public ShareDialog(AppCompatActivity context) {
+    public ShareDialog(AppCompatActivity context,String title) {
         super(context, R.style.SpinKitViewSaveFileDialogAnimation);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         setContentView(R.layout.dialog_share);
         initLayoutParams();
+        ((TextView) findViewById(R.id.tv_title)).setText(null==title?"分享至":title);
         List<ShareMenuItemInfo> homeItemInfos = new ArrayList<>();
         homeItemInfos.add(new ShareMenuItemInfo("微信",R.drawable.iv_share_weichat, SHARE_MEDIA.WEIXIN));
         homeItemInfos.add(new ShareMenuItemInfo("微博",R.drawable.iv_share_weibo,SHARE_MEDIA.SINA));

@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,7 +27,6 @@ import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.XinQuFragmentPagerAdapter;
 import com.video.newqu.base.TopBaseActivity;
 import com.video.newqu.bean.WeiChactVideoInfo;
-import com.video.newqu.bean.WeiXinVideo;
 import com.video.newqu.contants.ConfigSet;
 import com.video.newqu.contants.Constant;
 import com.video.newqu.contants.NetContants;
@@ -36,13 +34,10 @@ import com.video.newqu.databinding.ActivityMainBinding;
 import com.video.newqu.event.MessageEvent;
 import com.video.newqu.manager.ActivityCollectorManager;
 import com.video.newqu.manager.ApplicationManager;
-import com.video.newqu.manager.DBScanWeiCacheManager;
 import com.video.newqu.manager.ThreadManager;
 import com.video.newqu.ui.contract.MainContract;
 import com.video.newqu.ui.dialog.ExitAppDialog;
 import com.video.newqu.ui.dialog.FollowWeiXnDialog;
-import com.video.newqu.ui.dialog.HomeSharePopupWindow;
-import com.video.newqu.ui.dialog.LocationVideoUploadDialog;
 import com.video.newqu.ui.dialog.StoreGradeDialog;
 import com.video.newqu.ui.dialog.TakePicturePopupWindow;
 import com.video.newqu.ui.fragment.HomeFragment;
@@ -51,7 +46,8 @@ import com.video.newqu.ui.presenter.MainPresenter;
 import com.video.newqu.upload.manager.BatchFileUploadManager;
 import com.video.newqu.util.DateParseUtil;
 import com.video.newqu.util.KSYAuthorPermissionsUtil;
-import com.video.newqu.util.ScanWeixin;
+import com.video.newqu.util.Logger;
+import com.video.newqu.util.ScanWeChatDirectoryTask;
 import com.video.newqu.util.SharedPreferencesUtil;
 import com.video.newqu.util.SystemUtils;
 import com.video.newqu.util.ToastUtils;
@@ -64,8 +60,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
@@ -81,11 +75,10 @@ import cn.jpush.android.api.JPushInterface;
 
 public class MainActivity extends TopBaseActivity implements MainContract.View, Observer {
 
+    private static final String TAG = "MainActivity";
     private List<Fragment> mFragments=null;
     private ActivityMainBinding bindingView;
     private boolean isLogin=false;//登录成功后是否显示我的界面
-    private ScanWeixin mScanWeixin;
-    private WeakReference<List<WeiXinVideo>> mListWeakReference=null;
     private WeakReference<BatchFileUploadManager> mUploadManagerWeakReference=null;
     private MainPresenter mMainPresenter;
     private static final int REQUEST_PERMISSION_LOCATION = 255; // int should be between 0 and 255
@@ -105,8 +98,8 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
         }
         EventBus.getDefault().register(this);
         mMainPresenter = new MainPresenter(this);
-        initWidgets();
         ApplicationManager.getInstance().addObserver(this);
+        initWidgets();
         //刷新提示，每次安装了新版本都提示
         if(SharedPreferencesUtil.getInstance().getInt(Constant.TIPS_START_DATE)!=Utils.getVersionCode()){
             if(bindingView.tvTipsMineMessage.getVisibility()!=View.VISIBLE){
@@ -138,9 +131,11 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
      */
     private void initWidgets() {
         if(null==mFragments) mFragments = new ArrayList<>();
+        mFragments.clear();
         mFragments.add(new HomeFragment());
         mFragments.add(new MineFragment());
         bindingView.vpView.setAdapter(new XinQuFragmentPagerAdapter(getSupportFragmentManager(), mFragments));
+        bindingView.vpView.setOffscreenPageLimit(2);
         bindingView.llBottomMenu.setDoubleRefresh(true);//启用双击刷新
         bindingView.llBottomMenu.setOnTabChangeListene(new HomeTabItem.OnTabChangeListene() {
             //界面切换
@@ -214,7 +209,7 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
                 File filePath = new File(NetContants.WEICHAT_VIDEO_PATH);
                 //如果微信聊天文件夹存在
                 if(filePath.exists()){
-                    new ScanWeChatDirectoryTask().execute(filePath.getAbsolutePath());
+                    new ScanWeChatDirectoryTask(MainActivity.this).execute(filePath.getAbsolutePath());
                     //不存在微信文件夹，检查更新
                 }else{
                     checkedUploadVideoEvent();//检查上传任务
@@ -301,122 +296,6 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
         }
     }
 
-    /**
-     * 扫描本地视频
-     */
-    private class ScanWeChatDirectoryTask extends AsyncTask<String,Void,List<WeiXinVideo>>{
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if(null==mScanWeixin) mScanWeixin = new ScanWeixin();
-        }
-
-        @Override
-        protected List<WeiXinVideo> doInBackground(String... params) {
-            try {
-                if(null!=params&&params.length>0){
-                    if(null!=mScanWeixin){
-                        mScanWeixin.setExts("mp4");
-                        mScanWeixin.setScanEvent(true);
-                        mScanWeixin.setEvent(false);
-                        mScanWeixin.setMinDurtion(3);
-                        mScanWeixin.setMaxDurtion(Constant.MEDIA_VIDEO_EDIT_MAX_DURTION);
-                        List<WeiXinVideo> weiXinVideos =mScanWeixin.scanFiles(params[0]);
-                        List<WeiXinVideo> newVideoList=null;
-                        if (null != weiXinVideos && weiXinVideos.size() > 0) {
-                            //对视频时间进行倒序排序
-                            Collections.sort(weiXinVideos, new Comparator<WeiXinVideo>() {
-                                @Override
-                                public int compare(WeiXinVideo o1, WeiXinVideo o2) {
-                                    return o2.getVideoCreazeTime().compareTo(o1.getVideoCreazeTime());
-                                }
-                            });
-                            DBScanWeiCacheManager DBScanWeiCacheManager = new DBScanWeiCacheManager(MainActivity.this);
-                            newVideoList = new ArrayList<>();
-                            //只保留9个最新视频,且与上次不能重复
-                            List<WeiXinVideo> locationVideoList = DBScanWeiCacheManager.getUploadVideoList();//之前扫描的所有记录
-                            if (null != locationVideoList && locationVideoList.size() > 0) {
-                                for (int i = 0; i < weiXinVideos.size(); i++) {
-                                    if (newVideoList.size() >= 9) {
-                                        break;
-                                    }
-                                    WeiXinVideo weiXinVideo = weiXinVideos.get(i);
-                                    boolean flag = false;
-                                    for (int j = 0; j < locationVideoList.size(); j++) {
-                                        WeiXinVideo locationVideo = locationVideoList.get(j);
-                                        if (TextUtils.equals(weiXinVideo.getFileName(), locationVideo.getFileName())) {
-                                            flag = true;
-                                            break;
-                                        }
-                                    }
-                                    if(!flag) {
-                                        newVideoList.add(weiXinVideo);
-                                    }
-                                }
-                            } else {
-                                for (int i = 0; i < weiXinVideos.size(); i++) {
-                                    if (newVideoList.size() >= 9) {
-                                        break;
-                                    }
-                                    newVideoList.add(weiXinVideos.get(i));
-                                }
-                            }
-                            if(null!=newVideoList&&newVideoList.size()>0){
-                                for (int i = 0; i < newVideoList.size(); i++) {
-                                    WeiXinVideo weiXinVideo = newVideoList.get(i);
-                                    DBScanWeiCacheManager.insertNewUploadVideoInfo(weiXinVideo);
-                                }
-                            }
-                            return newVideoList;
-                        } else {
-                            return null;
-                        }
-                    }
-                }
-            }catch (Exception e){
-
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(List<WeiXinVideo> weiXinVideos) {
-            super.onPostExecute(weiXinVideos);
-            if(null!=weiXinVideos&&weiXinVideos.size()>0){
-                try {
-                    //当前运行的是自己
-                    if(null!=SystemUtils.getTopActivity()){
-                        if(!MainActivity.this.isFinishing()&&TextUtils.equals("com.video.newqu.ui.activity.MainActivity", SystemUtils.getTopActivity())){
-                            LocationVideoUploadDialog locationVideoUploadDialog = new LocationVideoUploadDialog(MainActivity.this);
-                            locationVideoUploadDialog.setData(weiXinVideos);
-                            locationVideoUploadDialog.setOnDialogUploadListener(new LocationVideoUploadDialog.OnDialogUploadListener() {
-                                @Override
-                                public void onUploadVideo() {
-                                    checkedUploadVideoEvent();
-                                }
-                            });
-                            locationVideoUploadDialog.show();
-                        }else{
-                            mListWeakReference = new WeakReference<List<WeiXinVideo>>(weiXinVideos);
-                        }
-                    }else{
-                        LocationVideoUploadDialog locationVideoUploadDialog = new LocationVideoUploadDialog(MainActivity.this);
-                        locationVideoUploadDialog.setData(weiXinVideos);
-                        locationVideoUploadDialog.setOnDialogUploadListener(new LocationVideoUploadDialog.OnDialogUploadListener() {
-                            @Override
-                            public void onUploadVideo() {
-                                checkedUploadVideoEvent();
-                            }
-                        });
-                        locationVideoUploadDialog.show();
-                    }
-                }catch (Exception e){
-                    mListWeakReference = new WeakReference<List<WeiXinVideo>>(weiXinVideos);
-                }
-            }
-        }
-    }
     public void onResume() {
         super.onResume();
         if(JPushInterface.isPushStopped(MainActivity.this)){
@@ -425,23 +304,8 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
         if(null==VideoApplication.getInstance().getUserData()){
             setCureenIndex(0);
         }
-        //微信扫描结果有视频且未弹过窗
-        if (null!=mListWeakReference&&null!=mListWeakReference.get()&&mListWeakReference.get().size()>0&&!MainActivity.this.isFinishing()) {
-            LocationVideoUploadDialog locationVideoUploadDialog = new LocationVideoUploadDialog(MainActivity.this);
-            locationVideoUploadDialog.setData(mListWeakReference.get());
-            locationVideoUploadDialog.setOnDialogUploadListener(new LocationVideoUploadDialog.OnDialogUploadListener() {
-                @Override
-                public void onUploadVideo() {
-                    if(null!=mListWeakReference.get()){
-                        mListWeakReference.get().clear();
-                        mListWeakReference.clear();
-                    }
-                    checkedUploadVideoEvent();
-                }
-            });
-            locationVideoUploadDialog.show();
         //微信关注,用户未关注过、当天未弹窗、播放视频数量达到标准，弹出关注微信弹窗
-        }else if(!SharedPreferencesUtil.getInstance().getBoolean(Constant.FOLLOW_WEIXIN)&&SharedPreferencesUtil.getInstance().getInt(Constant.MAIN_FOLLOW_WEIXIN_TODAY, 0)!=VideoApplication.mToday&&SharedPreferencesUtil.getInstance().getInt(Constant.GRADE_PLAYER_VIDEO_COUNT)>=3){
+        if(!SharedPreferencesUtil.getInstance().getBoolean(Constant.FOLLOW_WEIXIN)&&SharedPreferencesUtil.getInstance().getInt(Constant.MAIN_FOLLOW_WEIXIN_TODAY, 0)!=VideoApplication.mToday&&SharedPreferencesUtil.getInstance().getInt(Constant.GRADE_PLAYER_VIDEO_COUNT)>=3){
             SharedPreferencesUtil.getInstance().putInt(Constant.MAIN_FOLLOW_WEIXIN_TODAY, VideoApplication.mToday);//今天已经提示过了
             FollowWeiXnDialog followWeiXnDialog=new FollowWeiXnDialog(MainActivity.this);
             followWeiXnDialog.setOnItemClickListener(new FollowWeiXnDialog.OnItemClickListener() {
@@ -619,10 +483,6 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //停止视频扫描，如果在扫描的话
-        if(null!=mScanWeixin){
-            mScanWeixin.setScanEvent(false);//停止扫描
-        }
         if (null!=mUploadManagerWeakReference&&null != mUploadManagerWeakReference.get()){
             mUploadManagerWeakReference.get().pause();
             mUploadManagerWeakReference.clear();
@@ -794,6 +654,11 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
                 //用户添加的视频任务
                 case Constant.OBSERVABLE_ACTION_ADD_VIDEO_TASK:
                     setCureenIndex(0);
+                    break;
+                //添加了批量上传任务
+                case Constant.OBSERVABLE_ACTION_ADD_UPLOAD_TAKS:
+                    Logger.d(TAG,"update:用户批量添加了上传任务");
+                    checkedUploadVideoEvent();
                     break;
             }
         }

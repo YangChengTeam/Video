@@ -15,7 +15,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.UserVideoListAdapter;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.ChangingViewEvent;
 import com.video.newqu.bean.FollowVideoList;
 import com.video.newqu.comadapter.BaseQuickAdapter;
@@ -32,7 +32,6 @@ import com.video.newqu.ui.activity.VerticalVideoPlayActivity;
 import com.video.newqu.ui.activity.VideoDetailsActivity;
 import com.video.newqu.ui.contract.FollowListContract;
 import com.video.newqu.ui.presenter.FollowListPresenter;
-import com.video.newqu.util.Logger;
 import com.video.newqu.util.ScreenUtils;
 import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
@@ -55,7 +54,7 @@ import java.util.Observer;
  * 用户收藏的视频
  */
 
-public class HomeLikeVideoFragment extends BaseLightWeightFragment<MineFragmentRecylerBinding,FollowListPresenter> implements FollowListContract.View,OnUserVideoListener, Observer {
+public class HomeLikeVideoFragment extends BaseFragment<MineFragmentRecylerBinding,FollowListPresenter> implements FollowListContract.View,OnUserVideoListener, Observer {
 
     private int mPage=0;
     private int mPageSize=9;

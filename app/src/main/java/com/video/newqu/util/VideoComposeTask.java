@@ -31,9 +31,6 @@ public class VideoComposeTask extends Thread {
     }
 
 
-
-
-
     public VideoComposeTask(UploadVideoInfo composeTaskInfo, KSYEditKit editKit) {
         this.mComposeTaskInfo=composeTaskInfo;
         mEditKtiWeakReference = new WeakReference<KSYEditKit>(editKit);
@@ -100,7 +97,6 @@ public class VideoComposeTask extends Thread {
      * 合并开始
      */
     public void composeStarted() {
-
         if(null!=mComposeTaskInfo){
             mComposeTaskInfo.setComposeState(Constant.VIDEO_COMPOSE_STARTED);
             mComposeTaskInfo.setUploadProgress(0);

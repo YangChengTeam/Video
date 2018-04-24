@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.FansListAdapter;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.FansInfo;
 import com.video.newqu.bean.FollowUserList;
 import com.video.newqu.bean.VideoDetailsMenu;
@@ -41,7 +41,7 @@ import java.util.List;
  * 粉丝列表  用户自己的，别人的
  */
 
-public class FansListFragment extends BaseLightWeightFragment<FragmentRecylerBinding,FansPresenter> implements FansContract.View,OnFansClickListener{
+public class FansListFragment extends BaseFragment<FragmentRecylerBinding,FansPresenter> implements FansContract.View,OnFansClickListener{
 
     private int mPage=0;
     private  int mPageSize=20;

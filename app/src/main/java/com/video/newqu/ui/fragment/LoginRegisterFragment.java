@@ -10,7 +10,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.SMSEventMessage;
 import com.video.newqu.databinding.FragmentRegisterBinding;
 import com.video.newqu.ui.activity.LoginGroupActivity;
@@ -31,7 +31,7 @@ import org.json.JSONObject;
  * 用户注册和填写密码
  */
 
-public class LoginRegisterFragment extends BaseLightWeightFragment<FragmentRegisterBinding,RegisterPresenter> implements RegisterContract.View {
+public class LoginRegisterFragment extends BaseFragment<FragmentRegisterBinding,RegisterPresenter> implements RegisterContract.View {
 
     private Animation mInputAnimation;
     private Handler mHandler;

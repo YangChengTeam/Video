@@ -65,10 +65,9 @@ import rx.functions.Action1;
  * 补全\修改 用户基本信息
  */
 
-public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentDialogCompleteUserdataBinding> implements UserEditContract.View {
+public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentDialogCompleteUserdataBinding,UserEditPresenter> implements UserEditContract.View {
 
     private MineUserInfo.DataBean.InfoBean mUserData;
-    private UserEditPresenter mUserEditPresenter;
     private File mFilePath=null;
     private String mTitle="补全用户资料";
     private int mAction_mode;
@@ -185,8 +184,8 @@ public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentD
         bindingView.btnUserId.setOnClickListener(onClickListener);
 //        bindingView.btnUserDate.setOnClickListener(onClickListener);
 //        bindingView.btnUserCity.setOnClickListener(onClickListener);
-        mUserEditPresenter = new UserEditPresenter(getActivity());
-        mUserEditPresenter.attachView(this);
+        mPresenter = new UserEditPresenter(getActivity());
+        mPresenter.attachView(this);
 //        bindingView.tvUserDate.setText(Html.fromHtml("<font color='#FF7044'>"+year+"</font>-<font color='#FF7044'>"+(month+1)+"</font>-<font color='#FF7044'>"+day+"</font>"));
 //        bindingView.tvUserCity.setText(Html.fromHtml("<font color='#FF7044'>"+province+"</font>-<font color='#FF7044'>"+city+"</font>-<font color='#FF7044'>"+district+"</font>"));
         bindingView.tvTitle.setText(mTitle);
@@ -289,14 +288,14 @@ public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentD
         if(TextUtils.isEmpty(nikeName)&&TextUtils.isEmpty(encodeDesp)&&TextUtils.equals(sex,mUserData.getGender())){
             if(null!=mFilePath&&mFilePath.exists()&&mFilePath.isFile()){
                 showProgressDialog("补全用户信息中，请稍后...",true);
-                mUserEditPresenter.onPostImagePhoto(mUserData.getId(),mFilePath.getAbsolutePath());
+                mPresenter.onPostImagePhoto(mUserData.getId(),mFilePath.getAbsolutePath());
             }else{
                 ToastUtils.showCenterToast("基本信息未作修改~!");
             }
             //有其他信息修改
         }else{
             showProgressDialog("补全用户信息中，请稍后...",true);
-            mUserEditPresenter.onPostUserData(mUserData.getId(),nikeName,sex,encodeDesp);
+            mPresenter.onPostUserData(mUserData.getId(),nikeName,sex,encodeDesp);
         }
     }
 
@@ -548,7 +547,7 @@ public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentD
                     //还需要上传头像
                     if(null!=mFilePath&&mFilePath.exists()&&mFilePath.isFile()){
                         setProgressDialogMessage("基本信息修改成功，正在上传头像中...");
-                        mUserEditPresenter.onPostImagePhoto(mUserData.getId(),mFilePath.getAbsolutePath());
+                        mPresenter.onPostImagePhoto(mUserData.getId(),mFilePath.getAbsolutePath());
                     }else{
                         closeProgressDialog();
                         ToastUtils.showCenterToast("修改个人信息成功！");
@@ -612,7 +611,8 @@ public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentD
             FileUtils.deleteFile(mFilePath);
             mFilePath=null;
         }
-        mUserData=null;mFilePath=null;mUserEditPresenter=null;
+        mUserData=null;mFilePath=null;
+        mPresenter =null;
     }
 
     /**
@@ -628,11 +628,4 @@ public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentD
         void onDismiss(boolean change);
     }
     private OnDismissListener mOnDismissListener;
-    @Override
-    public void onDestroy() {
-        if(null!=mUserEditPresenter){
-            mUserEditPresenter.detachView();
-        }
-        super.onDestroy();
-    }
 }

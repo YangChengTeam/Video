@@ -34,7 +34,7 @@ import com.video.newqu.ui.activity.AuthorDetailsActivity;
 import com.video.newqu.ui.activity.ContentFragmentActivity;
 import com.video.newqu.ui.activity.VerticalHistoryVideoPlayActivity;
 import com.video.newqu.ui.contract.VideoDetailsContract;
-import com.video.newqu.ui.fragment.VerticalVideoPlayCommendFragment;
+import com.video.newqu.ui.fragment.VerticalVideoCommentFragment;
 import com.video.newqu.ui.presenter.VideoDetailsPresenter;
 import com.video.newqu.util.AnimationUtil;
 import com.video.newqu.util.CommonUtils;
@@ -309,8 +309,8 @@ public class VerticalHistoryVidepPlayViewPager extends BasePager<PagerVideoPlaye
     private void showCommentView(boolean flag) {
         if(null!=mContext&&mContext instanceof VerticalHistoryVideoPlayActivity){
             if(null!=mContext&&!mContext.isFinishing()){
-                VerticalVideoPlayCommendFragment fragment = VerticalVideoPlayCommendFragment.newInstance(mVideoBean.getVideoId(), TextUtils.isEmpty(mVideoBean.getVideoCommendCount()) ? "0" : mVideoBean.getVideoCommendCount(),mVideoBean.getAddTime()+"",flag);
-                fragment.setOnDismissListener(new VerticalVideoPlayCommendFragment.OnFragmentDataChangeListener() {
+                VerticalVideoCommentFragment fragment = VerticalVideoCommentFragment.newInstance(mVideoBean.getVideoId(), TextUtils.isEmpty(mVideoBean.getVideoCommendCount()) ? "0" : mVideoBean.getVideoCommendCount(),mVideoBean.getAddTime()+"",flag);
+                fragment.setOnDismissListener(new VerticalVideoCommentFragment.OnFragmentDataChangeListener() {
                     @Override
                     public void onDismiss(int commentCount) {
                         WindowVideoPlayer.goOnPlayOnResume();
@@ -547,6 +547,7 @@ public class VerticalHistoryVidepPlayViewPager extends BasePager<PagerVideoPlaye
         shareInfo.setTitle("新趣小视频分享");
         shareInfo.setUrl(mVideoBean.getVideoPath());
         shareInfo.setVideoID(mVideoBean.getVideoId());
+        shareInfo.setShareTitle("分享视频至");
         shareInfo.setImageLogo(mVideoBean.getVideoCover());
         if(null!=mContext&&!mContext.isFinishing()){
             if(mContext instanceof VerticalHistoryVideoPlayActivity){

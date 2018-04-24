@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/gray_qian</item>
         <item name="colorPrimaryDark">@color/colorAccent</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowAnimationStyle">@style/XinQu.Animation</item>
     </style>
     <!--
 colorPrimaryDark:标题栏背景色
@@ -14,7 +15,7 @@ colorAccent:主题色，如输入框，系统的自定义空间等
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <!--BaseAnimation-->
-    <style name="NewQu.Animation" parent="@android:style/Animation.Activity">
+    <style name="XinQu.Animation" parent="@android:style/Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/screen_zoom_in</item>
         <item name="android:activityOpenExitAnimation">@anim/screen_zoom_out</item>
         <item name="android:activityCloseExitAnimation">@anim/screen_zoom_out</item>
@@ -27,7 +28,6 @@ colorAccent:主题色，如输入框，系统的自定义空间等
 
     <!-- Base application theme. -->
     <style name="LoginTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>

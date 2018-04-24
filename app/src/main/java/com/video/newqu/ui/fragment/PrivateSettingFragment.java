@@ -3,7 +3,7 @@ package com.video.newqu.ui.fragment;
 import android.view.View;
 import android.widget.CompoundButton;
 import com.video.newqu.R;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.databinding.FragmentPrivateSettingBinding;
 import com.video.newqu.ui.presenter.MainPresenter;
 
@@ -13,7 +13,7 @@ import com.video.newqu.ui.presenter.MainPresenter;
  * 隐私设置
  */
 
-public class PrivateSettingFragment extends BaseLightWeightFragment<FragmentPrivateSettingBinding,MainPresenter>{
+public class PrivateSettingFragment extends BaseFragment<FragmentPrivateSettingBinding,MainPresenter> {
 
     private boolean isChecked=false;
 

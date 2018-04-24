@@ -13,8 +13,7 @@ import android.view.ViewGroup;
 import com.umeng.analytics.MobclickAgent;
 import com.video.newqu.R;
 import com.video.newqu.adapter.MessageListAdapter;
-import com.video.newqu.base.BaseLightWeightFragment;
-import com.video.newqu.bean.FollowVideoList;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.NetMessageInfo;
 import com.video.newqu.comadapter.BaseQuickAdapter;
 import com.video.newqu.contants.Constant;
@@ -43,7 +42,7 @@ import java.util.List;
  * 我的消息,推送
  */
 
-public class HomeMessageFragment extends BaseLightWeightFragment<MineFragmentMessageRecylerBinding,MessagePresenter> implements  MessageContract.View {
+public class HomeMessageFragment extends BaseFragment<MineFragmentMessageRecylerBinding,MessagePresenter> implements  MessageContract.View {
 
     private MessageListAdapter mMessageListAdapter;
     private boolean isRefresh=true;//是否需要刷新

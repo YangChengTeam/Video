@@ -137,7 +137,6 @@ import java.util.TimerTask;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
-
 /**
  * TinyHung@outlook.com
  * 2017-08-21 10:38
@@ -146,6 +145,7 @@ import rx.functions.Action1;
 
 public class MediaEditActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, MediaEditContract.View,OnMediaStickerListener {
 
+    //onOutputConfirmClick 视频输出
     private  final int FILTER_DISABLE = 0;//默认的无滤镜
     //底部的六个功能区
     private  final int FAIR_LAYOUT_INDEX = 0;//美颜
@@ -736,7 +736,6 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
         inputKeyBoardDialog.show();
     }
 
-
     /**
      * 开始预览视频
      */
@@ -763,8 +762,6 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
             mOriginAudioVolumeSeekBar.setProgress((int) (mEditKit.getOriginAudioVolume() * 100));
         }
     }
-
-
 
     /**
      * 打开输入法键盘
@@ -804,7 +801,6 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
         inputKeyBoardDialog.show();
     }
 
-
     /**
      * 是否选中，播放动画
      */
@@ -838,13 +834,10 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
         drawable.start();
     }
 
-
-
     private void cleanMusic() {
         mMusicID="";
         mMusicPath="";
     }
-
 
     /**
      * 添加话题
@@ -1781,7 +1774,6 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
                         uploadVideoInfo.setSourceType(mSourceType);
                         uploadVideoInfo.setResoucePath(mVideoPath);
                         obiectIsRecyler=false;
-                        ApplicationManager.getInstance().observerUpdata(Constant.OBSERVABLE_ACTION_ADD_VIDEO_TASK);
                         VideoComposeProcessor.getInstance().addVideoComposeTask(uploadVideoInfo,mEditKit);//调整为添加至后台合成视频
                         ActivityCollectorManager.finlishAllActivity();
                     }else{

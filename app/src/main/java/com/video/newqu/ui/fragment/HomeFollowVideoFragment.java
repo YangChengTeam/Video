@@ -14,7 +14,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.HomeVideoListAdapter;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.ChangingViewEvent;
 import com.video.newqu.bean.FollowVideoList;
 import com.video.newqu.comadapter.BaseQuickAdapter;
@@ -50,7 +50,7 @@ import java.util.Observer;
  * 我的关注视频列表
  */
 
-public class HomeFollowVideoFragment extends BaseLightWeightFragment<FragmentVideoFollowBinding,FollowPresenter> implements FollowContract.View, Observer {
+public class HomeFollowVideoFragment extends BaseFragment<FragmentVideoFollowBinding,FollowPresenter> implements FollowContract.View, Observer {
 
     private int mPage=0;
     private int pageSize=10;

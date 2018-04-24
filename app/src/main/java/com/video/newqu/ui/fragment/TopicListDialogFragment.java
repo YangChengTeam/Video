@@ -3,7 +3,6 @@ package com.video.newqu.ui.fragment;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,14 +13,15 @@ import com.video.newqu.adapter.TopicListAdapter;
 import com.video.newqu.base.BaseDialogFragment;
 import com.video.newqu.bean.TopicList;
 import com.video.newqu.comadapter.BaseQuickAdapter;
+import com.video.newqu.databinding.VideoDetailsEmptyLayoutBinding;
 import com.video.newqu.manager.ApplicationManager;
 import com.video.newqu.contants.Constant;
 import com.video.newqu.databinding.FragmentTopicListBinding;
-import com.video.newqu.databinding.RecylerViewEmptyLayoutBinding;
 import com.video.newqu.model.StaggerSpacesItemDecoration;
 import com.video.newqu.ui.contract.TopicContract;
 import com.video.newqu.ui.presenter.TopicPresenter;
 import com.video.newqu.util.Utils;
+import com.video.newqu.view.layout.DataChangeMarginView;
 import com.video.newqu.view.refresh.SwipePullRefreshLayout;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,16 +33,13 @@ import java.util.List;
  * 话题选择列表
  */
 
-public class TopicListDialogFragment extends BaseDialogFragment<FragmentTopicListBinding> implements TopicContract.View, BaseQuickAdapter.RequestLoadMoreListener {
+public class TopicListDialogFragment extends BaseDialogFragment<FragmentTopicListBinding,TopicPresenter> implements TopicContract.View {
 
-
-    private List<TopicList.DataBean> topList;
     private TopicListAdapter mTopicListAdapter;
-    private TopicPresenter mTopicPresenter;
     private int mTopicMax;
     private static TopicListDialogFragment mInstance;
     private ArrayList<String> mTopicList;
-
+    private VideoDetailsEmptyLayoutBinding mEmptyBindingView;
 
     @Override
     public int getLayoutId() {
@@ -73,16 +70,10 @@ public class TopicListDialogFragment extends BaseDialogFragment<FragmentTopicLis
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mTopicPresenter = new TopicPresenter(getActivity());
         initAdapter();
-        mTopicPresenter.attachView(this);
-        topList= (List<TopicList.DataBean>) ApplicationManager.getInstance().getCacheExample().getAsObject(Constant.CACHE_TOPIC_LIST);
-        if(null!=topList&&topList.size()>0){
-            mTopicListAdapter.setNewData(topList);
-        }else{
-            showGroupLoadingView();
-        }
-        mTopicPresenter.getTopicList();
+        mPresenter = new TopicPresenter(getActivity());
+        mPresenter.attachView(this);
+        mPresenter.getTopicList();
     }
 
     @Override
@@ -105,17 +96,14 @@ public class TopicListDialogFragment extends BaseDialogFragment<FragmentTopicLis
         bindingView.tvTitle.setText("选择话题");
         bindingView.ivSubmit.setVisibility(View.VISIBLE);
         bindingView.ivSubmit.setOnClickListener(onClickListener);
-
         bindingView.swiperefreshLayout.setOnRefreshListener(new SwipePullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                bindingView.swiperefreshLayout.setRefreshing(true);
-                loadMoreTopicList();
+                bindingView.swiperefreshLayout.setRefreshing(false);
             }
         });
 
     }
-
 
     /**
      * 有结果的返回
@@ -143,42 +131,37 @@ public class TopicListDialogFragment extends BaseDialogFragment<FragmentTopicLis
     }
 
 
-    private void loadMoreTopicList() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                bindingView.swiperefreshLayout.setRefreshing(false);
-            }
-        },800);
-    }
-
-
-
-
-    @Override
-    protected void onRefresh() {
-        super.onRefresh();
-        showGroupLoadingView();
-        if(null!=mTopicPresenter){
-            mTopicPresenter.getTopicList();
-        }
-    }
 
     /**
      * 初始化适配器
      */
     private void initAdapter() {
+        List<TopicList.DataBean>  cacheList= (List<TopicList.DataBean>) ApplicationManager.getInstance().getCacheExample().getAsObject(Constant.CACHE_TOPIC_LIST);
         bindingView.recyerView.setLayoutManager(new GridLayoutManager(getActivity(),2, LinearLayoutManager.VERTICAL,false));//new FlowLayoutManager()
         bindingView.recyerView.addItemDecoration(new StaggerSpacesItemDecoration(Utils.dip2px(getActivity(),3)));
-        mTopicListAdapter = new TopicListAdapter(topList);
-        RecylerViewEmptyLayoutBinding emptyViewbindView= DataBindingUtil.inflate(getActivity().getLayoutInflater(),R.layout.recyler_view_empty_layout, (ViewGroup) bindingView.recyerView.getParent(),false);
-        mTopicListAdapter.setEmptyView(emptyViewbindView.getRoot());
-        emptyViewbindView.ivItemIcon.setImageResource(R.drawable.ic_list_empty_icon);
-        emptyViewbindView.tvItemName.setText("没有发现话题关键词~");
+        mTopicListAdapter = new TopicListAdapter(cacheList);
         mTopicListAdapter.setMaxTopicNum(mTopicMax);
-        mTopicListAdapter.setOnLoadMoreListener(this);
-        bindingView.recyerView.setAdapter(mTopicListAdapter);
-
+        //加载更多
+        mTopicListAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
+            @Override
+            public void onLoadMoreRequested() {
+                if(null!=mTopicListAdapter) mTopicListAdapter.loadMoreEnd();//加载为空
+            }
+        }, bindingView.recyerView);
+        //占位处理
+        mEmptyBindingView = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.video_details_empty_layout, (ViewGroup) bindingView.recyerView.getParent(),false);
+        mEmptyBindingView.emptyView.setOnRefreshListener(new DataChangeMarginView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mEmptyBindingView.emptyView.showLoadingView();
+                if(null!= mPresenter &&!mPresenter.isLoading()){
+                    mPresenter.getTopicList();
+                }
+            }
+        });
+        mEmptyBindingView.emptyView.showLoadingView();
+        mTopicListAdapter.setEmptyView(mEmptyBindingView.getRoot());
+        //点击事件
         mTopicListAdapter.setOnItemClickListener(new TopicListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick() {
@@ -193,6 +176,7 @@ public class TopicListDialogFragment extends BaseDialogFragment<FragmentTopicLis
                 }
             }
         });
+        bindingView.recyerView.setAdapter(mTopicListAdapter);
     }
 
 
@@ -203,26 +187,29 @@ public class TopicListDialogFragment extends BaseDialogFragment<FragmentTopicLis
      */
     @Override
     public void showTopicListFinlish(TopicList data) {
-        showGroupContentView();
-        if(null!=topList){
-            topList.clear();
+        if(null!= mEmptyBindingView) mEmptyBindingView.emptyView.showEmptyView("没有发现话题关键词~",R.drawable.iv_com_message_empty);
+        if(null!=mTopicListAdapter){
+            mTopicListAdapter.loadMoreComplete();
+            mTopicListAdapter.setNewData(data.getData());
+            ApplicationManager.getInstance().getCacheExample().remove(Constant.CACHE_TOPIC_LIST);
+            ApplicationManager.getInstance().getCacheExample().put(Constant.CACHE_TOPIC_LIST, (Serializable) data.getData());
         }
-        topList=data.getData();
-        ApplicationManager.getInstance().getCacheExample().remove(Constant.CACHE_TOPIC_LIST);
-        ApplicationManager.getInstance().getCacheExample().put(Constant.CACHE_TOPIC_LIST, (Serializable) topList);
-        if(null!=mTopicListAdapter) mTopicListAdapter.setNewData(topList);
     }
 
     @Override
     public void showTopicListEmpty(String data) {
-        showGroupContentView();
-        showErrorToast(null,null,data);
+        if(null!= mEmptyBindingView) mEmptyBindingView.emptyView.showEmptyView("没有发现话题关键词~",R.drawable.iv_com_message_empty);
+        if(null!=mTopicListAdapter){
+            mTopicListAdapter.loadMoreEnd();
+            mTopicListAdapter.setNewData(null);
+            ApplicationManager.getInstance().getCacheExample().remove(Constant.CACHE_TOPIC_LIST);
+        }
     }
 
     @Override
     public void showTopicListError(String data) {
-        showGroupLoadingErrorView();
-        showErrorToast(null,null,data);
+        mTopicListAdapter.loadMoreComplete();
+        if(null!= mEmptyBindingView) mEmptyBindingView.emptyView.showErrorView();
     }
 
     @Override
@@ -233,27 +220,6 @@ public class TopicListDialogFragment extends BaseDialogFragment<FragmentTopicLis
     @Override
     public void complete() {
 
-    }
-
-    @Override
-    public void onDestroy() {
-        if(null!=mTopicPresenter){
-            mTopicPresenter.detachView();
-        }
-        super.onDestroy();
-    }
-
-    @Override
-    public void onLoadMoreRequested() {
-
-        bindingView.swiperefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                if(null!=mTopicListAdapter){
-                    mTopicListAdapter.loadMoreEnd();//加载为空
-                }
-            }
-        });
     }
 
     @Override

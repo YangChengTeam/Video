@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.graphics.Color;
-import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -17,11 +16,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import com.video.newqu.R;
 import com.video.newqu.contants.Constant;
-import com.video.newqu.listener.PerfectClickListener;
 import com.video.newqu.listener.SnackBarListener;
 import com.video.newqu.ui.activity.ContentFragmentActivity;
 import com.video.newqu.ui.dialog.LoadingProgressView;
@@ -31,20 +27,20 @@ import com.video.newqu.util.ToastUtils;
 /**
  * TinyHung@outlook.com
  * 2017/3/17 15:46
- * 新特性下拉弹窗Fragment
+ * 替代Dialog的解决方案Fragment
  */
 
-public abstract class BaseDialogFragment<VS extends ViewDataBinding> extends DialogFragment {
+public abstract class BaseDialogFragment<VS extends ViewDataBinding,P extends RxPresenter> extends DialogFragment {
 
     // 子布局view
     protected VS bindingView;
+    protected P mPresenter;
     protected LoadingProgressView mLoadingProgressedView;
-    //数据加载失败界面
-    private LinearLayout mLl_error_view;
-    //数据加载中界面
-    private LinearLayout mLl_loading_view;
-    //加载中动画
-    private AnimationDrawable mAnimationDrawable;
+    private int fragmentMarginHeight=0;//距离顶部的距离，子类可定制决定
+
+    protected void setFragmentMarginHeight(int fragmentMarginHeight) {
+        this.fragmentMarginHeight = fragmentMarginHeight;
+    }
 
     @Nullable
     @Override
@@ -55,7 +51,7 @@ public abstract class BaseDialogFragment<VS extends ViewDataBinding> extends Dia
         window.setGravity(Gravity.BOTTOM);//((ViewGroup) window.findViewById(android.R.id.content))
         View ll = inflater.inflate(R.layout.fragment_base, (ViewGroup) window.findViewById(R.id.content),false);
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));//注意此处
-        window.setLayout(ScreenUtils.getScreenWidth(),ScreenUtils.getScreenHeight());//这2行,和上面的一样,注意顺序就行;
+        window.setLayout(ScreenUtils.getScreenWidth(),ScreenUtils.getScreenHeight()-ScreenUtils.dpToPxInt(fragmentMarginHeight));//这2行,和上面的一样,注意顺序就行;
         window.setWindowAnimations(R.style.HomeItemPopupAnimation);
         WindowManager.LayoutParams attributes = window.getAttributes();
         attributes.dimAmount=0.0f;
@@ -74,21 +70,10 @@ public abstract class BaseDialogFragment<VS extends ViewDataBinding> extends Dia
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews();
-        mLl_error_view = getView(R.id.ll_error_view);
-        mLl_loading_view = getView(R.id.ll_loading_view);
-        ImageView iv_loading_icon = getView(R.id.iv_loading_icon);
-        mAnimationDrawable = (AnimationDrawable) iv_loading_icon.getDrawable();
-        mLl_error_view.setOnClickListener(new PerfectClickListener() {
-            @Override
-            protected void onNoDoubleClick(View v) {
-                onRefresh();
-            }
-        });
     }
 
     protected abstract void initViews();
     public abstract int getLayoutId();
-
 
     /**
      * 根据Targe打开新的界面
@@ -103,7 +88,6 @@ public abstract class BaseDialogFragment<VS extends ViewDataBinding> extends Dia
         intent.putExtra(Constant.KEY_AUTHOR_TYPE,authorType);
         getActivity().startActivity(intent);
     }
-
 
     /**
      * 根据Targe打开新的界面
@@ -121,74 +105,6 @@ public abstract class BaseDialogFragment<VS extends ViewDataBinding> extends Dia
     }
 
     /**
-     * 显示加载中
-     */
-    protected void showGroupLoadingView(){
-        if(null==bindingView) return;
-        if(null!=bindingView.getRoot()&&bindingView.getRoot().getVisibility()!=View.GONE){
-            bindingView.getRoot().setVisibility(View.GONE);
-        }
-
-        if(null!=mLl_error_view&&mLl_error_view.getVisibility()!=View.GONE){
-            mLl_error_view.setVisibility(View.GONE);
-        }
-
-        if(null!=mLl_loading_view&&mLl_loading_view.getVisibility()!=View.VISIBLE){
-            mLl_loading_view.setVisibility(View.VISIBLE);
-        }
-
-        if(null!=mAnimationDrawable&&!getActivity().isFinishing()&&!mAnimationDrawable.isRunning()){
-            mAnimationDrawable.start();
-        }
-    }
-
-
-    /**
-     * 显示界面内容
-     */
-    protected void showGroupContentView() {
-        if(null==bindingView) return;
-        if(null!=mAnimationDrawable&&mAnimationDrawable.isRunning()){
-            mAnimationDrawable.stop();
-        }
-
-        if(null!=mLl_loading_view&&mLl_loading_view.getVisibility()!=View.GONE){
-            mLl_loading_view.setVisibility(View.GONE);
-        }
-
-        if(null!=mLl_error_view&&mLl_error_view.getVisibility()!=View.GONE){
-            mLl_error_view.setVisibility(View.GONE);
-        }
-        if(null!=bindingView&&null!=bindingView.getRoot()&&bindingView.getRoot().getVisibility()!=View.VISIBLE){
-            bindingView.getRoot().setVisibility(View.VISIBLE);
-        }
-    }
-
-
-    /**
-     * 显示加载失败
-     */
-    protected void showGroupLoadingErrorView() {
-        if(null==bindingView) return;
-        if(null!=mAnimationDrawable&&mAnimationDrawable.isRunning()){
-            mAnimationDrawable.stop();
-        }
-
-        if(null!=mLl_loading_view&&mLl_loading_view.getVisibility()!=View.GONE){
-            mLl_loading_view.setVisibility(View.GONE);
-        }
-
-        if(null!=bindingView&&null!=bindingView.getRoot()&&bindingView.getRoot().getVisibility()!=View.GONE){
-            bindingView.getRoot().setVisibility(View.GONE);
-        }
-
-        if(null!=mLl_error_view&&mLl_error_view.getVisibility()!=View.VISIBLE){
-            mLl_error_view.setVisibility(View.VISIBLE);
-        }
-    }
-
-
-    /**
      * 在这里实现Fragment数据的缓加载.
      */
     @Override
@@ -203,7 +119,7 @@ public abstract class BaseDialogFragment<VS extends ViewDataBinding> extends Dia
 
     protected void onInvisible() {}
     protected void onVisible() {}
-    protected void onRefresh() {}
+
     protected <T extends View> T getView(int id) {
         if(null==getView()) return null;
         return (T) getView().findViewById(id);
@@ -301,6 +217,7 @@ public abstract class BaseDialogFragment<VS extends ViewDataBinding> extends Dia
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if(null!=mPresenter) mPresenter.detachView();
         Runtime.getRuntime().gc();
     }
 }

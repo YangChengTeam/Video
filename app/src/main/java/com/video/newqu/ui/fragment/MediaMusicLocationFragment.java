@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.video.newqu.R;
 import com.video.newqu.adapter.MediaLocationMusicAdapter;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.MediaMusicCategoryList;
 import com.video.newqu.bean.MusicInfo;
 import com.video.newqu.comadapter.BaseQuickAdapter;
@@ -43,7 +43,7 @@ import com.xinqu.videoplayer.full.WindowVideoPlayer;
  * 本地音乐选择
  */
 
-public class MediaMusicLocationFragment extends BaseLightWeightFragment<FragmentLocationMusicBinding,MainPresenter> implements OnMediaMusicClickListener {
+public class MediaMusicLocationFragment extends BaseFragment<FragmentLocationMusicBinding,MainPresenter> implements OnMediaMusicClickListener {
 
     private MediaLocationMusicAdapter mMusicAdapter;
     private boolean isScanIng=false;//是否正在刷新

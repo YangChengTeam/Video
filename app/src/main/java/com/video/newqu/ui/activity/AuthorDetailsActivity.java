@@ -274,6 +274,7 @@ public class AuthorDetailsActivity extends BaseActivity<ActivityAuthorDetailsBin
             shareInfo.setUserID(mAuthorID);
             shareInfo.setImageLogo(mInfoBean.getLogo());
             shareInfo.setUrl("http://app.nq6.com/home/user/index?user_id="+shareInfo.getUserID());
+            shareInfo.setShareTitle("分享用户主页至");
             shareMineHome(shareInfo);
         }
     }

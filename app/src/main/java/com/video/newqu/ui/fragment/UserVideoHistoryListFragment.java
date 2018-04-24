@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.video.newqu.R;
 import com.video.newqu.adapter.GroupHistroyVideoListAdapter;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.HistoryVideoGroupList;
 import com.video.newqu.bean.SubmitEvent;
 import com.video.newqu.bean.UserPlayerVideoHistoryList;
@@ -42,9 +42,10 @@ import java.util.List;
  * 为了排序，直接一次性加载全部，取消分页
  */
 
-public class UserVideoHistoryListFragment extends BaseLightWeightFragment<FragmentHistoryListBinding,UserHistoryPresenter> implements UserHistoryContract.View {
+public class UserVideoHistoryListFragment extends BaseFragment<FragmentHistoryListBinding,UserHistoryPresenter> implements UserHistoryContract.View {
 
-//    private int page=0;
+    private static final String TAG = "UserVideoHistoryListFragment";
+    //    private int page=0;
 //    private int pageSize=10;
     private GroupHistroyVideoListAdapter mUserHistoryVideoListAdapter;
     private ContentFragmentActivity mContext;
@@ -226,6 +227,7 @@ public class UserVideoHistoryListFragment extends BaseLightWeightFragment<Fragme
                                 if(null!=mUserHistoryVideoListAdapter){
                                     ApplicationManager.getInstance().getUserPlayerDB().deteleAllPlayerHistoryList();
                                     mUserHistoryVideoListAdapter.setNewData(null);
+
                                     if(null!=mContext&&!mContext.isFinishing()){
 //                                        page=0;
                                         loadListData();
@@ -272,6 +274,7 @@ public class UserVideoHistoryListFragment extends BaseLightWeightFragment<Fragme
                 mContext.showCanealHistoryMenu(false);
             }
         }
+        if(null!=bindingView) bindingView.tvHeaderView.setVisibility(View.GONE);
 //        if(page>0){
 //            page--;
 //        }

@@ -1,41 +1,39 @@
 package com.video.newqu.ui.dialog;
 
-import android.app.Dialog;
-import android.content.Context;
+import android.app.Activity;
 import android.view.KeyEvent;
-import android.widget.TextView;
 import com.video.newqu.R;
+import com.video.newqu.base.BaseDialog;
+import com.video.newqu.databinding.DialogDownloadTranscodingBinding;
 import com.video.newqu.util.Utils;
-import com.video.newqu.view.widget.CircleProgressView;
-
-
 /**
  * TinyHung@outlook.com
  * 2017-06-25 19:19
  * 居中样式的下载进度条
  */
+public class DownloadProgressDialog extends BaseDialog<DialogDownloadTranscodingBinding> {
 
-public class DownloadProgressDialog extends Dialog {
-
-    private CircleProgressView mCircleProgressbar;
     private boolean isBack=false;
 
-    public DownloadProgressDialog(Context context) {
+    public DownloadProgressDialog(Activity context) {
         super(context, R.style.LoadingProgressDialogStyle);
         setContentView(R.layout.dialog_download_transcoding);
         Utils.setDialogWidth(this);
         setCancelable(false);
-        mCircleProgressbar = (CircleProgressView) findViewById(R.id.circleProgressbar);
-        mCircleProgressbar.setProgress(0);
+        bindingView.circleProgressbar.setProgress(0);
+    }
+
+    @Override
+    public void initViews() {
+
     }
 
     public void setTipsMessage(String tips){
-        TextView tv_loading_message = (TextView) findViewById(R.id.tv_loading_message);
-        if(null!=tv_loading_message) tv_loading_message.setText(tips);
+        bindingView.tvLoadingMessage.setText(tips);
     }
 
     public void setProgress(int progress){
-        if(null!=mCircleProgressbar)mCircleProgressbar.setProgressNotInUiThread(progress);
+        if(null!=bindingView)bindingView.circleProgressbar.setProgressNotInUiThread(progress);
     }
 
 
@@ -45,8 +43,8 @@ public class DownloadProgressDialog extends Dialog {
     @Override
     public void show() {
         super.show();
-        if(null!=mCircleProgressbar){
-            mCircleProgressbar.setProgress(0);
+        if(null!=bindingView){
+            bindingView.circleProgressbar.setProgress(0);
         }
     }
 
@@ -56,7 +54,7 @@ public class DownloadProgressDialog extends Dialog {
     }
 
     public void setMax(int progress) {
-        if(null!=mCircleProgressbar) mCircleProgressbar.setMaxProgress(progress);
+        if(null!=bindingView) bindingView.circleProgressbar.setMaxProgress(progress);
     }
 
 
@@ -68,7 +66,6 @@ public class DownloadProgressDialog extends Dialog {
     public void setOnDialogBackListener(OnDialogBackListener onDialogBackListener) {
         mOnDialogBackListener = onDialogBackListener;
     }
-
 
     /**
      * 将用户按下返回键时间传递出去

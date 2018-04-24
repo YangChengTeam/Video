@@ -22,7 +22,7 @@ public class FileDownloadComposrTask {
 
     private String mOutPath= Constant.IMAGE_PATH;//输出路径
     private DownloadProgressDialog mUploadProgressView;
-    private final Context mContext;
+    private final Activity mContext;
     private final String mFileNetPath;
 
     /**
@@ -30,7 +30,7 @@ public class FileDownloadComposrTask {
      * @param context
      * @param fileNetPath
      */
-    public FileDownloadComposrTask(Context context, String fileNetPath) {
+    public FileDownloadComposrTask(Activity context, String fileNetPath) {
         if(context instanceof Activity){
             this.mContext=context;
             this.mFileNetPath=fileNetPath;
@@ -45,7 +45,7 @@ public class FileDownloadComposrTask {
      * @param fileNetPath
      * @param outPath 输出路径
      */
-    public FileDownloadComposrTask(Context context, String fileNetPath, String outPath) {
+    public FileDownloadComposrTask(Activity context, String fileNetPath, String outPath) {
         if(context instanceof Activity){
             this.mContext=context;
             this.mFileNetPath=fileNetPath;

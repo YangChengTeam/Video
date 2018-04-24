@@ -1,13 +1,12 @@
 package com.video.newqu.ui.dialog;
 
-import android.app.Dialog;
-import android.content.Context;
+import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import com.video.newqu.R;
+import com.video.newqu.base.BaseDialog;
+import com.video.newqu.databinding.DialogStoreGradeLayoutBinding;
 
 /**
  * TinyHung@Outlook.com
@@ -15,11 +14,15 @@ import com.video.newqu.R;
  * 去商店评分
  */
 
-public class StoreGradeDialog extends Dialog {
+public class StoreGradeDialog extends BaseDialog<DialogStoreGradeLayoutBinding> {
 
-    public StoreGradeDialog(@NonNull Context context) {
+    public StoreGradeDialog(@NonNull Activity context) {
         super(context,R.style.SpinKitViewSaveFileDialogAnimation);
         setContentView(R.layout.dialog_store_grade_layout);
+    }
+
+    @Override
+    public void initViews() {
         View.OnClickListener onClickListener=new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,16 +55,10 @@ public class StoreGradeDialog extends Dialog {
                 }
             }
         };
-
-        Button btn_cancel = (Button) findViewById(R.id.btn_cancel);
-        Button btn_service = (Button) findViewById(R.id.btn_service);
-        Button btn_good = (Button) findViewById(R.id.btn_good);
-        ImageView btn_close = (ImageView) findViewById(R.id.btn_close);
-
-        btn_close.setOnClickListener(onClickListener);
-        btn_good.setOnClickListener(onClickListener);
-        btn_service.setOnClickListener(onClickListener);
-        btn_cancel.setOnClickListener(onClickListener);
+        bindingView.btnClose.setOnClickListener(onClickListener);
+        bindingView.btnGood.setOnClickListener(onClickListener);
+        bindingView.btnService.setOnClickListener(onClickListener);
+        bindingView. btnCancel.setOnClickListener(onClickListener);
     }
 
     public interface OnItemClickListener{
@@ -73,7 +70,6 @@ public class StoreGradeDialog extends Dialog {
     public void setTipMsg(String msg){
         ((TextView) findViewById(R.id.tv_title_content)).setText(msg);
     }
-
     private OnItemClickListener mOnItemClickListener;
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {

@@ -1,11 +1,14 @@
 package com.video.newqu.ui.dialog;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 import com.video.newqu.R;
+import com.video.newqu.base.BaseDialog;
+import com.video.newqu.databinding.DialogTranscodingBinding;
 import com.video.newqu.util.Utils;
 import com.video.newqu.view.widget.CircleProgressView;
 import com.video.newqu.view.widget.ProgressWheel;
@@ -16,32 +19,36 @@ import com.video.newqu.view.widget.ProgressWheel;
  * 居中样式的进度条
  */
 
-public class RecordProgressDialog extends Dialog {
+public class RecordProgressDialog extends BaseDialog<DialogTranscodingBinding> {
 
-    private CircleProgressView mCircleProgressbar;
-    private final TextView tv_loading_message;
-    private final ProgressWheel mProgress;
     public static final int SHOW_MODE1=1;//有数字的进度条
     public static final int SHOW_MODE2=2;//没有数字的进度条
+
     private boolean isBack;
 
-    public RecordProgressDialog(Context context) {
+    public void setBack(boolean back) {
+        isBack = back;
+    }
+
+    public RecordProgressDialog(Activity context) {
         super(context, R.style.SpinKitViewSaveFileDialogAnimation);
         setContentView(R.layout.dialog_transcoding);
         Utils.setDialogWidth(this);
         setCancelable(false);
-        mCircleProgressbar = (CircleProgressView) findViewById(R.id.circleProgressbar);
-        mProgress = (ProgressWheel) findViewById(R.id.progress);
-        tv_loading_message = (TextView) findViewById(R.id.tv_loading_message);
-        mCircleProgressbar.setProgress(0);
+        bindingView.circleProgressbar.setProgress(0);
+    }
+
+    @Override
+    public void initViews() {
+
     }
 
     public void setTipsMessage(String tips){
-        if(null!=tv_loading_message) tv_loading_message.setText(tips);
+        if(null!=bindingView) bindingView.tvLoadingMessage.setText(tips);
     }
 
     public void setProgress(int progress){
-        if(null!=mCircleProgressbar)mCircleProgressbar.setProgressNotInUiThread(progress);
+        if(null!=bindingView)bindingView.circleProgressbar.setProgressNotInUiThread(progress);
     }
 
     /**
@@ -49,34 +56,37 @@ public class RecordProgressDialog extends Dialog {
      * @param mode
      */
     public void setMode(int mode){
+        if(null==bindingView) return;
         if(SHOW_MODE2==mode){
-            mCircleProgressbar.setVisibility(View.INVISIBLE);
-            mProgress.setVisibility(View.VISIBLE);
+            bindingView.circleProgressbar.setVisibility(View.INVISIBLE);
+            bindingView.progress.setVisibility(View.VISIBLE);
         }else if(SHOW_MODE1==mode){
-            mProgress.setVisibility(View.INVISIBLE);
-            mCircleProgressbar.setVisibility(View.VISIBLE);
+            bindingView.progress.setVisibility(View.INVISIBLE);
+            bindingView.circleProgressbar.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public void show() {
         super.show();
-        if(null!=mCircleProgressbar){
-            mCircleProgressbar.setProgress(0);
+        if(null!=bindingView){
+            bindingView.circleProgressbar.setProgress(0);
         }
     }
 
     @Override
     public void dismiss() {
-        if(null!=mCircleProgressbar){
-            mCircleProgressbar.setProgress(0);
+        if(null!=bindingView){
+            bindingView.circleProgressbar.setProgress(0);
         }
         super.dismiss();
     }
 
     public void setMax(int progress) {
-        mCircleProgressbar.setMaxProgress(progress);
+        bindingView.circleProgressbar.setMaxProgress(progress);
     }
+
+
 
 
     public interface  OnDialogBackListener{

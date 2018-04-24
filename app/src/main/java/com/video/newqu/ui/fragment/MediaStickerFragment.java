@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import com.video.newqu.R;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.StickerDataBean;
 import com.video.newqu.bean.StickerNetInfo;
 import com.video.newqu.camera.adapter.MediaEditNetStickerListAdapter;
@@ -33,7 +33,7 @@ import java.util.List;
  * 贴纸列表片段
  */
 
-public class MediaStickerFragment extends BaseLightWeightFragment<FragmentRecyclerviewLayoutBinding,MediaStickerPresenter> implements MediaStickerContract.View {
+public class MediaStickerFragment extends BaseFragment<FragmentRecyclerviewLayoutBinding,MediaStickerPresenter> implements MediaStickerContract.View {
 
     private static OnMediaStickerListener mOnMediaStickerListener;
     private String mStickerID;

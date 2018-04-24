@@ -12,7 +12,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
-import com.video.newqu.base.BaseLightWeightFragment;
+import com.video.newqu.base.BaseFragment;
 import com.video.newqu.bean.SMSEventMessage;
 import com.video.newqu.databinding.FragmentEditPasswordBinding;
 import com.video.newqu.ui.activity.LoginGroupActivity;
@@ -33,7 +33,7 @@ import org.json.JSONObject;
  * 修改密码
  */
 
-public class LoginEditPasswordFragment extends BaseLightWeightFragment<FragmentEditPasswordBinding,MikePresenter> implements MakePasswordContract.View {
+public class LoginEditPasswordFragment extends BaseFragment<FragmentEditPasswordBinding,MikePresenter> implements MakePasswordContract.View {
 
     private Animation mInputAnimation;
     private LoginGroupActivity mLoginGroupActivity;

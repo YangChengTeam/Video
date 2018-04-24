@@ -188,6 +188,7 @@ public class AppAboutActivity extends BaseActivity<ActivityAboutBinding> {
         shareInfo.setTitle("新趣小视频");
         shareInfo.setUrl("http://v.nq6.com");
         shareInfo.setVideoID("");
+        shareInfo.setShareTitle("分享新趣小视频至");
         onShare(shareInfo);
     }
 
@@ -352,7 +353,7 @@ public class AppAboutActivity extends BaseActivity<ActivityAboutBinding> {
                 closeProgressDialog();
                 final UpdataApkInfo.DataBean dataBean = updataApkInfo.getData();
                 if(null!=dataBean){
-                    BuildManagerDialog buildManagerDialog =new BuildManagerDialog(AppAboutActivity.this, R.style.UpdataDialogAnimation);
+                    BuildManagerDialog buildManagerDialog =new BuildManagerDialog(AppAboutActivity.this);
                     buildManagerDialog.setUpdataData(dataBean);
                     buildManagerDialog.setOnUpdataListener(new BuildManagerDialog.OnUpdataListener() {
                         @Override

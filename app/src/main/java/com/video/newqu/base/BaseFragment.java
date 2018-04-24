@@ -3,45 +3,43 @@ package com.video.newqu.base;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
-import android.graphics.drawable.Animatable2;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.animation.Animation;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import com.video.newqu.R;
+import com.video.newqu.bean.FollowVideoList;
+import com.video.newqu.bean.UserPlayerVideoHistoryList;
 import com.video.newqu.contants.Constant;
+import com.video.newqu.listener.SnackBarListener;
+import com.video.newqu.manager.ApplicationManager;
 import com.video.newqu.ui.activity.ContentFragmentActivity;
 import com.video.newqu.ui.dialog.LoadingProgressView;
-import com.video.newqu.listener.PerfectClickListener;
-import com.video.newqu.listener.SnackBarListener;
 import com.video.newqu.util.ToastUtils;
 
 /**
  * TinyHung@outlook.com
- * 2017/3/17 15:46
- * 片段基类
+ * 2018/4/12 15:06
+ * 所有Fragment 片段基类，适合于子类不需要父类处理界面显示状态的片段
  */
 
-public abstract class BaseFragment<VS extends ViewDataBinding> extends Fragment {
+public abstract class BaseFragment<VS extends ViewDataBinding,P extends RxPresenter> extends Fragment {
 
     // 子布局view
     protected VS bindingView;
+    protected P mPresenter;
     protected LoadingProgressView mLoadingProgressedView;
-    //数据加载失败界面
-    private LinearLayout mLl_error_view;
-    //数据加载中界面
-    private LinearLayout mLl_loading_view;
-    //加载中动画
-    private AnimationDrawable mAnimationDrawable;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Nullable
     @Override
@@ -61,19 +59,10 @@ public abstract class BaseFragment<VS extends ViewDataBinding> extends Fragment 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews();
-        mLl_error_view = getView(R.id.ll_error_view);
-        mLl_loading_view = getView(R.id.ll_loading_view);
-        ImageView iv_loading_icon = getView(R.id.iv_loading_icon);
-        mAnimationDrawable = (AnimationDrawable) iv_loading_icon.getDrawable();
-        mLl_error_view.setOnClickListener(new PerfectClickListener() {
-            @Override
-            protected void onNoDoubleClick(View v) {
-                onRefresh();
-            }
-        });
-        //默认显示加载中的状态
-        showLoadingView("初始化中...");
     }
+
+    protected abstract void initViews();
+    protected abstract int getLayoutId();
 
     /**
      * 根据Targe打开新的界面
@@ -89,80 +78,6 @@ public abstract class BaseFragment<VS extends ViewDataBinding> extends Fragment 
         getActivity().startActivity(intent);
     }
 
-    /**
-     * 显示加载中
-     */
-    protected void showLoadingView(String message){
-        if(null==bindingView) return;
-        if(null!=bindingView.getRoot()&&bindingView.getRoot().getVisibility()!=View.GONE){
-            bindingView.getRoot().setVisibility(View.GONE);
-        }
-
-        if(null!=mLl_error_view&&mLl_error_view.getVisibility()!=View.GONE){
-            mLl_error_view.setVisibility(View.GONE);
-        }
-
-        if(null!=mLl_loading_view&&mLl_loading_view.getVisibility()!=View.VISIBLE){
-            mLl_loading_view.setVisibility(View.VISIBLE);
-        }
-
-
-        if(null!=mAnimationDrawable&&!getActivity().isFinishing()&&!mAnimationDrawable.isRunning()){
-            mAnimationDrawable.start();
-        }
-    }
-
-
-    /**
-     * 显示界面内容
-     */
-    protected void showContentView() {
-        if(null==bindingView) return;
-        if(null!=mAnimationDrawable&&mAnimationDrawable.isRunning()){
-            mAnimationDrawable.stop();
-        }
-
-        if(null!=mLl_loading_view&&mLl_loading_view.getVisibility()!=View.GONE){
-            mLl_loading_view.setVisibility(View.GONE);
-        }
-
-        if(null!=mLl_error_view&&mLl_error_view.getVisibility()!=View.GONE){
-            mLl_error_view.setVisibility(View.GONE);
-        }
-
-        if(null!=bindingView&&null!=bindingView.getRoot()&&bindingView.getRoot().getVisibility()!=View.VISIBLE){
-            bindingView.getRoot().setVisibility(View.VISIBLE);
-        }
-    }
-
-
-    /**
-     * 显示加载失败
-     */
-    protected void showLoadingErrorView() {
-        if(null==bindingView) return;
-        if(null!=mAnimationDrawable&&mAnimationDrawable.isRunning()){
-            mAnimationDrawable.stop();
-        }
-
-        if(null!=mLl_loading_view&&mLl_loading_view.getVisibility()!=View.GONE){
-            mLl_loading_view.setVisibility(View.GONE);
-        }
-
-        if(null!=bindingView&&null!=bindingView.getRoot()&&bindingView.getRoot().getVisibility()!=View.GONE){
-            bindingView.getRoot().setVisibility(View.GONE);
-        }
-
-        if(null!=mLl_error_view&&mLl_error_view.getVisibility()!=View.VISIBLE){
-            mLl_error_view.setVisibility(View.VISIBLE);
-        }
-    }
-
-    protected abstract void initViews();
-
-    /**
-     * 在这里实现Fragment数据的缓加载.
-     */
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -173,30 +88,12 @@ public abstract class BaseFragment<VS extends ViewDataBinding> extends Fragment 
         }
     }
 
-    protected void onInvisible() {
-
-    }
-
-    protected void onVisible() {
-
-    }
-
+    protected void onInvisible() {}
+    protected void onVisible() {}
 
     protected <T extends View> T getView(int id) {
         if(null==getView()) return null;
         return (T) getView().findViewById(id);
-    }
-
-    /**
-     * 布局
-     */
-    public abstract int getLayoutId();
-
-    /**
-     * 加载失败后点击后的操作
-     */
-    protected void onRefresh() {
-
     }
 
     /**
@@ -235,6 +132,17 @@ public abstract class BaseFragment<VS extends ViewDataBinding> extends Fragment 
             ToastUtils.showSnackebarStateToast(getActivity().getWindow().getDecorView(),action,snackBarListener, R.drawable.snack_bar_error_white, Constant.SNACKBAR_ERROR,message);
         }
     }
+    /**
+     * 成功吐司
+     * @param action
+     * @param snackBarListener
+     * @param message
+     */
+    protected void showFinlishToast(String action, SnackBarListener snackBarListener, String message){
+        if(null!=getActivity()){
+            ToastUtils.showSnackebarStateToast(getActivity().getWindow().findViewById(Window.ID_ANDROID_CONTENT),action,snackBarListener, R.drawable.snack_bar_done_white, Constant.SNACKBAR_DONE,message);
+        }
+    }
 
     /**
      * 统一的网络设置入口
@@ -250,25 +158,43 @@ public abstract class BaseFragment<VS extends ViewDataBinding> extends Fragment 
         }, "没有可用的网络链接");
     }
 
-    /**
-     * 成功吐司
-     * @param action
-     * @param snackBarListener
-     * @param message
-     */
-    protected void showFinlishToast(String action, SnackBarListener snackBarListener, String message){
-        if(null!=getActivity()){
-            ToastUtils.showSnackebarStateToast(getActivity().getWindow().findViewById(Window.ID_ANDROID_CONTENT),action,snackBarListener, R.drawable.snack_bar_done_white, Constant.SNACKBAR_DONE,message);
-        }
-    }
 
-    protected boolean isVisible(View view) {
-        return view.getVisibility() == View.VISIBLE;
+    protected void saveLocationHistoryList(final FollowVideoList.DataBean.ListsBean data) {
+        if(null==data) return;
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                UserPlayerVideoHistoryList userLookVideoList=new UserPlayerVideoHistoryList();
+                userLookVideoList.setUserName(TextUtils.isEmpty(data.getNickname())?"火星人":data.getNickname());
+                userLookVideoList.setUserSinger("该宝宝没有个性签名");
+                userLookVideoList.setUserCover(data.getLogo());
+                userLookVideoList.setVideoDesp(data.getDesp());
+                userLookVideoList.setVideoLikeCount(TextUtils.isEmpty(data.getCollect_times())?"0":data.getCollect_times());
+                userLookVideoList.setVideoCommendCount(TextUtils.isEmpty(data.getComment_count())?"0":data.getComment_count());
+                userLookVideoList.setVideoShareCount(TextUtils.isEmpty(data.getShare_times())?"0":data.getShare_times());
+                userLookVideoList.setUserId(data.getUser_id());
+                userLookVideoList.setVideoId(data.getVideo_id());
+                userLookVideoList.setVideoCover(data.getCover());
+                userLookVideoList.setItemIndex(0);
+                userLookVideoList.setUploadTime(data.getAdd_time());
+                userLookVideoList.setAddTime(System.currentTimeMillis());
+                userLookVideoList.setIs_interest(data.getIs_interest());
+                userLookVideoList.setIs_follow(data.getIs_follow());
+                userLookVideoList.setVideoPath(data.getPath());
+                userLookVideoList.setVideoPlayerCount(TextUtils.isEmpty(data.getPlay_times())?"0":data.getPlay_times());
+                userLookVideoList.setVideoType(TextUtils.isEmpty(data.getType())?"2":data.getType());
+                userLookVideoList.setDownloadPermiss(data.getDownload_permiss());
+                userLookVideoList.setStatus(data.getStatus());
+                ApplicationManager.getInstance().getUserPlayerDB().insertNewPlayerHistoryOfObject(userLookVideoList);
+            }
+        }.start();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if(null!=mPresenter) mPresenter.detachView();
         Runtime.getRuntime().gc();
     }
 }
