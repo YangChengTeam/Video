@@ -11,12 +11,14 @@ import com.video.newqu.base.BaseDialogFragment;
 import com.video.newqu.bean.VideoInfos;
 import com.video.newqu.bean.WeiChactVideoInfo;
 import com.video.newqu.bean.WeiXinVideo;
+import com.video.newqu.contants.Constant;
 import com.video.newqu.databinding.FragmentWeixinVideoBinding;
 import com.video.newqu.listener.OnItemClickListener;
 import com.video.newqu.manager.DBBatchVideoUploadManager;
 import com.video.newqu.ui.presenter.MainPresenter;
 import com.video.newqu.util.FileUtils;
 import com.video.newqu.util.Logger;
+import com.video.newqu.util.SharedPreferencesUtil;
 import com.video.newqu.util.VideoUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,11 +38,6 @@ public class WinXinVideoListFragment extends BaseDialogFragment<FragmentWeixinVi
         WinXinVideoListFragment fragment=new WinXinVideoListFragment();
         mData=weiXinVideos;
         return fragment;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -85,6 +82,7 @@ public class WinXinVideoListFragment extends BaseDialogFragment<FragmentWeixinVi
             }
         });
         bindingView.recyerView.setAdapter(mListAdapter);
+        SharedPreferencesUtil.getInstance().putBoolean(Constant.SETTING_DAY,true);
     }
 
 
@@ -161,7 +159,6 @@ public class WinXinVideoListFragment extends BaseDialogFragment<FragmentWeixinVi
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Logger.d("WinXinVideoListFragment","onDestroy");
         if(null!=mData) mData.clear();
         if(null!=mListAdapter) mListAdapter.setNewData(null);
         mListAdapter =null;mOnDialogUploadListener=null;mData=null;

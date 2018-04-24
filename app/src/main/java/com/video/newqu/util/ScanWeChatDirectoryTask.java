@@ -84,12 +84,12 @@ public class ScanWeChatDirectoryTask extends AsyncTask<String,Void,List<WeiXinVi
                                 newVideoList.add(weiXinVideos.get(i));
                             }
                         }
-//                        if(null!=newVideoList&&newVideoList.size()>0){
-//                            for (int i = 0; i < newVideoList.size(); i++) {
-//                                WeiXinVideo weiXinVideo = newVideoList.get(i);
-//                                DBScanWeiCacheManager.insertNewUploadVideoInfo(weiXinVideo);
-//                            }
-//                        }
+                        if(null!=newVideoList&&newVideoList.size()>0){
+                            for (int i = 0; i < newVideoList.size(); i++) {
+                                WeiXinVideo weiXinVideo = newVideoList.get(i);
+                                DBScanWeiCacheManager.insertNewUploadVideoInfo(weiXinVideo);
+                            }
+                        }
                         return newVideoList;
                     } else {
                         return null;

@@ -201,7 +201,6 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
             }
         });
         Bugly.init(this, "2f71d3ad00", false);
-
         //不是第一次启动并且如果刚好是一个礼拜了
         if(1==SharedPreferencesUtil.getInstance().getInt(Constant.TIPS_MAIN_CODE)&&SharedPreferencesUtil.getInstance().getInt(Constant.SETTING_TODAY_WEEK_SUNDY)==DateParseUtil.getTodayWeekSundy()){
             //如果今天未扫描视频
