@@ -4,10 +4,12 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -15,6 +17,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.video.newqu.R;
 import com.video.newqu.adapter.MediaMusicMenuAdapter;
@@ -58,6 +61,7 @@ public class MediaMusicActivity extends BaseMusicActivity<ActivityRecordMusicBin
     private MediaMusicPresenter mMediaMusicPresenter;
     private int cureenIndex=0;
     private ReEmptyLayoutBinding mEmptyViewbindView;
+    private int mHeaderViewHeight=0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,6 +104,28 @@ public class MediaMusicActivity extends BaseMusicActivity<ActivityRecordMusicBin
         };
         baseBinding.ivBack.setOnClickListener(onClickListener);
         baseBinding.llSearch.setOnClickListener(onClickListener);
+
+        //菜单父窗体高度会随时发生变化的
+        ViewTreeObserver viewTreeObserver = bindingView.collapseToolbar.getViewTreeObserver();
+        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener(){
+            @Override
+            public void onGlobalLayout() {
+                mHeaderViewHeight=bindingView.collapseToolbar.getHeight();
+                bindingView.emptyView.getLayoutParams().height=mHeaderViewHeight;
+            }
+        });
+        bindingView.emptyView.setBackgroundColor(Color.parseColor("#F0F2F5"));
+        bindingView.appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                int abs = Math.abs(verticalOffset);
+                //用户信息图层网上滑动，所以是相反的透明度
+                float scale = (float) abs / mHeaderViewHeight;
+                float alpha =(scale * 255);
+                float v = alpha / 225f;
+                bindingView.emptyView.setAlpha(v);
+            }
+        });
     }
 
 

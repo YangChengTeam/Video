@@ -1,5 +1,7 @@
 package com.video.newqu.ui.fragment;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
@@ -27,12 +29,18 @@ import java.util.List;
 
 public class WinXinVideoListFragment extends BaseDialogFragment<FragmentWeixinVideoBinding,MainPresenter>{
 
-    private static final String TAG = "WinXinVideoListFragment";
+    private static List<WeiXinVideo> mData;
     private LocationVideoListAdapter mListAdapter;
 
-    public static WinXinVideoListFragment newInstance() {
+    public static WinXinVideoListFragment newInstance(List<WeiXinVideo> weiXinVideos) {
         WinXinVideoListFragment fragment=new WinXinVideoListFragment();
+        mData=weiXinVideos;
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -59,7 +67,7 @@ public class WinXinVideoListFragment extends BaseDialogFragment<FragmentWeixinVi
         bindingView.btnCancle.setOnClickListener(onClickListener);
 
         bindingView.recyerView.setLayoutManager(new GridLayoutManager(getContext(),3,GridLayoutManager.VERTICAL,false));
-        mListAdapter = new LocationVideoListAdapter(null, new OnItemClickListener() {
+        mListAdapter = new LocationVideoListAdapter(mData, new OnItemClickListener() {
             @Override
             public void OnItemClick(int position) {
                 //更新底部按钮
@@ -78,6 +86,7 @@ public class WinXinVideoListFragment extends BaseDialogFragment<FragmentWeixinVi
         });
         bindingView.recyerView.setAdapter(mListAdapter);
     }
+
 
     /**
      * 点击了上传按钮
@@ -106,8 +115,7 @@ public class WinXinVideoListFragment extends BaseDialogFragment<FragmentWeixinVi
                     weiChactVideoInfo.setIsUploadFinlish(false);
                     weiChactVideoInfo.setFileName(FileUtils.getFileName(file));
                     weiChactVideoInfo.setSourceType(1);
-                    boolean b = DBBatchVideoUploadManager.insertNewUploadVideoInfo(weiChactVideoInfo);
-                    Logger.d(TAG,"插入待上传记录结果"+b);
+                    DBBatchVideoUploadManager.insertNewUploadVideoInfo(weiChactVideoInfo);
                 }
                 if(null!=mOnDialogUploadListener){
                     dismiss();
@@ -117,18 +125,6 @@ public class WinXinVideoListFragment extends BaseDialogFragment<FragmentWeixinVi
                 dismiss();
             }
         }
-    }
-
-    /**
-     * 设置数据
-     * @param data
-     */
-    public void setData(List<WeiXinVideo> data){
-        if(null!=mListAdapter) {
-            Logger.d(TAG,"setData");
-            mListAdapter.setNewData(data);
-        }
-        //        SharedPreferencesUtil.getInstance().putBoolean(Constant.SETTING_DAY,true);//标记为今天已扫描
     }
 
     /**
@@ -152,6 +148,7 @@ public class WinXinVideoListFragment extends BaseDialogFragment<FragmentWeixinVi
         return null;
     }
 
+
     public interface  OnDialogUploadListener{
         void onUpload();
     }
@@ -164,7 +161,9 @@ public class WinXinVideoListFragment extends BaseDialogFragment<FragmentWeixinVi
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Logger.d("WinXinVideoListFragment","onDestroy");
+        if(null!=mData) mData.clear();
         if(null!=mListAdapter) mListAdapter.setNewData(null);
-        mListAdapter =null;mOnDialogUploadListener=null;
+        mListAdapter =null;mOnDialogUploadListener=null;mData=null;
     }
 }

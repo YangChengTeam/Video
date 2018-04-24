@@ -658,7 +658,6 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
                     break;
                 //添加了批量上传任务
                 case Constant.OBSERVABLE_ACTION_ADD_UPLOAD_TAKS:
-                    Logger.d(TAG,"update:用户批量添加了上传任务");
                     checkedUploadVideoEvent();
                     break;
             }

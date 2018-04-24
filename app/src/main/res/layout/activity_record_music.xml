@@ -14,7 +14,7 @@
                 android:id="@+id/collapse_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:contentScrim="@color/background_dark"
+                app:contentScrim="@color/transparent"
                 app:collapsedTitleGravity="top"
                 app:titleEnabled="true"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -26,6 +26,10 @@
                     android:padding="10dp"
                     android:background="@color/background_dark">
                 </android.support.v7.widget.RecyclerView>
+                <View
+                    android:id="@+id/empty_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
             </android.support.design.widget.CollapsingToolbarLayout>
             <!--悬浮的菜单-->
             <com.androidkun.xtablayout.XTabLayout

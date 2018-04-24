@@ -40,7 +40,6 @@ public class HotVideoPresenter extends RxPresenter<HotVideoContract.View> implem
     public void getHotVideoList(final String page, String uid ) {
         if(isLoading) return;
         isLoading=true;
-        Logger.d("加载热门列表数据","getHotVideoList");
         Map<String,String> params=new HashMap<>();
         params.put("page",page);
         params.put("page_size","10");

@@ -272,13 +272,11 @@ public class PhoneBindingFragment extends BaseFragment<FragmentPhoneBindingBindi
                 switch (action) {
                     //发送验证码成功
                     case Constant.OBSERVABLE_ACTION_SEND_FINLISH_SMS:
-                        Logger.d(TAG,"发送验证码成功");
                         closeProgressDialog();
                         showGetCodeDisplay();
                         break;
                     //发送验证码失败
                     case Constant.OBSERVABLE_ACTION_SEND_SMS_ERROR:
-                        Logger.d(TAG,"发送验证码失败");
                         closeProgressDialog();
                         initGetCodeBtn();
                         break;

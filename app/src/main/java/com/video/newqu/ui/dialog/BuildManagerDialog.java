@@ -11,6 +11,7 @@ import com.video.newqu.R;
 import com.video.newqu.base.BaseDialog;
 import com.video.newqu.bean.UpdataApkInfo;
 import com.video.newqu.databinding.DialogUpdataBinding;
+import com.video.newqu.util.Utils;
 
 /**
  * TinyHung@outlook.com
@@ -22,11 +23,11 @@ public class BuildManagerDialog extends BaseDialog<DialogUpdataBinding> {
     public BuildManagerDialog(Activity context) {
         super(context, R.style.UpdataDialogAnimation);
         setContentView(R.layout.dialog_updata);
+        Utils.setDialogWidth(this);
     }
 
     @Override
     public void initViews() {
-        setCancelable(false);
         View.OnClickListener onClickListener=new View.OnClickListener() {
             @Override
             public void onClick(View v) {

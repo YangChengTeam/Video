@@ -36,7 +36,13 @@ public abstract class BaseDialogFragment<VS extends ViewDataBinding,P extends Rx
     protected VS bindingView;
     protected P mPresenter;
     protected LoadingProgressView mLoadingProgressedView;
+    //这两个属性优先isAutoHeight
     private int fragmentMarginHeight=0;//距离顶部的距离，子类可定制决定
+    private boolean isAutoHeight=false;//根布局是否自适应高度
+
+    public void setAutoHeight(boolean autoHeight) {
+        isAutoHeight = autoHeight;
+    }
 
     protected void setFragmentMarginHeight(int fragmentMarginHeight) {
         this.fragmentMarginHeight = fragmentMarginHeight;
@@ -50,13 +56,21 @@ public abstract class BaseDialogFragment<VS extends ViewDataBinding,P extends Rx
         Window window = getDialog().getWindow();
         window.setGravity(Gravity.BOTTOM);//((ViewGroup) window.findViewById(android.R.id.content))
         View ll = inflater.inflate(R.layout.fragment_base, (ViewGroup) window.findViewById(R.id.content),false);
-        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));//注意此处
-        window.setLayout(ScreenUtils.getScreenWidth(),ScreenUtils.getScreenHeight()-ScreenUtils.dpToPxInt(fragmentMarginHeight));//这2行,和上面的一样,注意顺序就行;
+        bindingView = DataBindingUtil.inflate(getActivity().getLayoutInflater(), getLayoutId(), null, false);
+        int width =View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+        bindingView.getRoot().measure(width,width);
+        //自适应高度显示
+        if(isAutoHeight){
+            window.setBackgroundDrawable(new ColorDrawable(Color.BLACK));//半透明
+            window.setLayout(ScreenUtils.getScreenWidth(),bindingView.getRoot().getMeasuredHeight());//这2行,和上面的一样,注意顺序就行;
+        }else {
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));//注意此
+            window.setLayout(ScreenUtils.getScreenWidth(),ScreenUtils.getScreenHeight()-ScreenUtils.dpToPxInt(fragmentMarginHeight));//这2行,和上面的一样,注意顺序就行;
+        }
         window.setWindowAnimations(R.style.HomeItemPopupAnimation);
         WindowManager.LayoutParams attributes = window.getAttributes();
         attributes.dimAmount=0.0f;
         window.setAttributes(attributes);
-        bindingView = DataBindingUtil.inflate(getActivity().getLayoutInflater(), getLayoutId(), null, false);
         if(null!=bindingView){
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             bindingView.getRoot().setLayoutParams(params);

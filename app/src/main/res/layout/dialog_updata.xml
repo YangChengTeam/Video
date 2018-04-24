@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:orientation="vertical"
-                    android:layout_width="300dp"
-                    android:layout_height="wrap_content">
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -50,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/coment_color"
                     android:text="--"
-                    android:lineSpacingMultiplier="1.1"
+                    android:lineSpacingMultiplier="1.2"
                     android:layout_marginTop="7dp"/>
                 <TextView
                     android:id="@+id/btn_upload"
@@ -64,9 +65,7 @@
                     android:textSize="16sp"
                     android:text="立即更新"/>
             </LinearLayout>
-
         </LinearLayout>
-
             <ImageView
                 android:id="@+id/btn_close"
                 android:layout_width="wrap_content"

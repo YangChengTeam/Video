@@ -82,17 +82,13 @@ public class HomeHotVideoFragment extends BaseFragment<FragmentHotRecylerBinding
     @Override
     protected void onVisible() {
         super.onVisible();
-        Logger.d(TAG,"onVisible1");
         if(isRefresh&&null!=bindingView&&null!= mVideoListAdapter &&null!=mPresenter &&!mPresenter.isLoading()){
-            Logger.d(TAG,"onVisible2");
             List<FollowVideoList.DataBean.ListsBean> data = mVideoListAdapter.getData();
             if(null==data||data.size()<=0){
-                Logger.d(TAG,"onVisible3");
                 mPage=0;
                 if(null!=mEmptyViewbindView) mEmptyViewbindView.emptyView.showLoadingView();
                 loadVideoList();
             }else{
-                Logger.d(TAG,"onVisible4");
                 bindingView.swiperefreshLayout.postDelayed(new Runnable() {
                     @Override
                     public void run() {

@@ -200,19 +200,16 @@ public class PhoneCheckedFragment extends BaseFragment<FragmentPhoneCheckedBindi
                 switch (action) {
                     //发送验证码成功
                     case Constant.OBSERVABLE_ACTION_SEND_FINLISH_SMS:
-                        Logger.d(TAG,"发送验证码成功");
                         closeProgressDialog();
                         showGetCodeDisplay();
                         break;
                     //发送验证码失败
                     case Constant.OBSERVABLE_ACTION_SEND_SMS_ERROR:
-                        Logger.d(TAG,"发送验证码失败");
                         closeProgressDialog();
                         initGetCodeBtn();
                         break;
                     //验证码验证成功
                     case Constant.OBSERVABLE_ACTION_CHECKED_PHONE:
-                        Logger.d(TAG,"手机号验证成功");
                         closeProgressDialog();
                         initGetCodeBtn();
                         //校验通过，去更换手机号码

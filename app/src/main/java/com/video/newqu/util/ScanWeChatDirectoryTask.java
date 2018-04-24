@@ -107,7 +107,7 @@ public class ScanWeChatDirectoryTask extends AsyncTask<String,Void,List<WeiXinVi
         super.onPostExecute(weiXinVideos);
         if(null!=weiXinVideos&&weiXinVideos.size()>0){
             if(null!=mContext){
-                WinXinVideoListFragment fragment = WinXinVideoListFragment.newInstance();
+                WinXinVideoListFragment fragment = WinXinVideoListFragment.newInstance(weiXinVideos);
                 fragment.setOnDialogUploadListener(new WinXinVideoListFragment.OnDialogUploadListener() {
                     @Override
                     public void onUpload() {
@@ -117,7 +117,6 @@ public class ScanWeChatDirectoryTask extends AsyncTask<String,Void,List<WeiXinVi
                 });
                 FragmentManager supportFragmentManager = mContext.getSupportFragmentManager();
                 fragment.show(supportFragmentManager,"winxin_video");
-                fragment.setData(weiXinVideos);
             }
         }
     }
