@@ -328,6 +328,7 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
+                            SharedPreferencesUtil.getInstance().putBoolean(Constant.FOLLOW_WEIXIN,true);
                             try {
                                 Uri uri = Uri.parse("weixin://");
                                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);

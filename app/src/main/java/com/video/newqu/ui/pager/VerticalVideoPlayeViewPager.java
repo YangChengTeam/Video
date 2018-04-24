@@ -353,6 +353,7 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
 //                    Uri contentUrl = Uri.parse("http://jump.hupeh.cn/xqsp1223.php");
 //                    intent.setData(contentUrl);
 //                    mContext.startActivity(intent);
+
                     Utils.copyString("新趣小视频助手");
                     ToastUtils.showCenterToast("已复制微信号");
                     android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mContext)
@@ -363,6 +364,7 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
+                            SharedPreferencesUtil.getInstance().putBoolean(Constant.FOLLOW_WEIXIN,true);
                             try {
                                 Uri uri = Uri.parse("weixin://");
                                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
