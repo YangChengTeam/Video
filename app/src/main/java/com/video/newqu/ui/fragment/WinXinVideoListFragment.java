@@ -1,7 +1,5 @@
 package com.video.newqu.ui.fragment;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
@@ -17,7 +15,6 @@ import com.video.newqu.listener.OnItemClickListener;
 import com.video.newqu.manager.DBBatchVideoUploadManager;
 import com.video.newqu.ui.presenter.MainPresenter;
 import com.video.newqu.util.FileUtils;
-import com.video.newqu.util.Logger;
 import com.video.newqu.util.SharedPreferencesUtil;
 import com.video.newqu.util.VideoUtils;
 import java.util.ArrayList;
