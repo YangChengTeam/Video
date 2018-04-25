@@ -568,25 +568,27 @@ public class HomeWorksFragment extends BaseFragment<MineFragmentRecylerBinding,W
     @Override
     public void update(Observable o, Object arg) {
         if(null!=arg){
-            Integer action= (Integer) arg;
-            switch (action) {
-                //登录
-                case Constant.OBSERVABLE_ACTION_LOGIN:
-                    isRefresh=true;
-                    break;
-                //登出
-                case Constant.OBSERVABLE_ACTION_UNLOGIN:
-                    if(null!=mVideoListAdapter) mVideoListAdapter.setNewData(null);
-                    if(null!=mEmptyViewbindView) mEmptyViewbindView.emptyView.showLoadingView();
-                    break;
-                //删除、上传视频
-                case Constant.OBSERVABLE_ACTION_VIDEO_CHANGED:
-                    isRefresh=true;
-                    if(null!= mPresenter &&!mPresenter.isLoading()){
-                        mPage=0;
-                        loadVideoList();
-                    }
-                    break;
+            if(arg instanceof Integer){
+                Integer action= (Integer) arg;
+                switch (action) {
+                    //登录
+                    case Constant.OBSERVABLE_ACTION_LOGIN:
+                        isRefresh=true;
+                        break;
+                    //登出
+                    case Constant.OBSERVABLE_ACTION_UNLOGIN:
+                        if(null!=mVideoListAdapter) mVideoListAdapter.setNewData(null);
+                        if(null!=mEmptyViewbindView) mEmptyViewbindView.emptyView.showLoadingView();
+                        break;
+                    //删除、上传视频
+                    case Constant.OBSERVABLE_ACTION_VIDEO_CHANGED:
+                        isRefresh=true;
+                        if(null!= mPresenter &&!mPresenter.isLoading()){
+                            mPage=0;
+                            loadVideoList();
+                        }
+                        break;
+                }
             }
         }
     }

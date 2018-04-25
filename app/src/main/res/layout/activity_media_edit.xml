@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#FF212121">
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FF212121">
     <RelativeLayout
         android:id="@+id/preview_layout"
         android:layout_width="match_parent"
@@ -14,7 +14,6 @@
             android:id="@+id/edit_preview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-
         <com.ksyun.media.shortvideo.sticker.KSYStickerView
             android:id="@+id/sticker_panel"
             android:layout_width="match_parent"
@@ -31,14 +30,22 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:visibility="gone"/>
-        <ImageView
-            android:id="@+id/btn_pause"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/iv_play_state_selector"
-            android:layout_centerInParent="true"/>
+            android:orientation="vertical"
+            android:layout_centerInParent="true"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/btn_pause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/iv_play_state_selector" />
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"/>
+        </LinearLayout>
     </RelativeLayout>
-
     <!--顶部控制器-->
     <include
         android:id="@+id/media_edit_right_menu_top_actionbar"
@@ -46,7 +53,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"/>
-
     <!--所有功能模块的View-->
     <include
         layout="@layout/media_edit_bottom_function_bar"
@@ -61,7 +67,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"/>
-
     <!--底部抽屉样式输入区-->
     <include
         android:id="@+id/media_edit_send_view"

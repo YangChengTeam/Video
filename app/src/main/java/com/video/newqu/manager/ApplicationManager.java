@@ -296,8 +296,8 @@ public class ApplicationManager {
         if(null!=mObservableWeakReference) mObservableWeakReference.deleteObservers();
     }
     //刷新事件
-    public void observerUpdata(int action){
-        if(null!=mObservableWeakReference) mObservableWeakReference.updataSubjectObserivce(action);
+    public void observerUpdata(Object obj){
+        if(null!=mObservableWeakReference) mObservableWeakReference.updataSubjectObserivce(obj);
     }
 
 
@@ -318,8 +318,8 @@ public class ApplicationManager {
         if(null!=mMusicObservableWeakReference) mMusicObservableWeakReference.deleteObservers();
     }
     //刷新事件
-    public void observerUpdataToMusic(Object action){
-        if(null!=mMusicObservableWeakReference) mMusicObservableWeakReference.updataSubjectObserivce(action);
+    public void observerUpdataToMusic(Object obj){
+        if(null!=mMusicObservableWeakReference) mMusicObservableWeakReference.updataSubjectObserivce(obj);
     }
 
 

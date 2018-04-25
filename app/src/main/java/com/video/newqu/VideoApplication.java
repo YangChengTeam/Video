@@ -23,6 +23,7 @@ import com.video.newqu.util.ACache;
 import com.video.newqu.util.CommonDateParseUtil;
 import com.video.newqu.util.ContentCheckKey;
 import com.video.newqu.util.DateParseUtil;
+import com.video.newqu.util.Logger;
 import com.video.newqu.util.attach.FaceConversionUtil;
 import com.video.newqu.util.KSYAuthorPermissionsUtil;
 import com.video.newqu.util.SharedPreferencesUtil;
@@ -40,7 +41,6 @@ import cn.jpush.android.api.JPushInterface;
 public class VideoApplication extends Application {
 
     private static VideoApplication mInstance;
-    public static boolean videoComposeFinlish;
     private UserData.DataBean.InfoBean mUserData=null;
     public static  String mUuid;
     public static int mToday=0;
@@ -57,6 +57,9 @@ public class VideoApplication extends Application {
         return mInstance;
     }
 
+    //使用多进程需要注意
+    //主进程：com.video.newqu（默认是包名）
+    //视频生产模块：com.video.newqu:xinqu_video_edit
     @Override
     public void onCreate() {
         super.onCreate();
@@ -65,19 +68,37 @@ public class VideoApplication extends Application {
         SharedPreferencesUtil.init(getApplicationContext(), getPackageName() + "xinquConfig", Context.MODE_MULTI_PROCESS);
         ACache cache = ACache.get(mInstance);
         ApplicationManager.getInstance().setCacheExample(cache);//初始化后需要设置给通用管理者
-        //极光消息推送
-        JPushInterface.setDebugMode(false);
-        JPushInterface.init(mInstance);
         UserData.DataBean.InfoBean userData = (UserData.DataBean.InfoBean)  ApplicationManager.getInstance().getCacheExample().getAsObject(Constant.CACHE_USER_DATA);
         setUserData(userData,false);
         mToday = Integer.parseInt(CommonDateParseUtil.getNowDay());
-        init();
+        int pid = android.os.Process.myPid();
+        String pName = SystemUtils.getProcessName(getApplicationContext(),pid);
+        Logger.d("VideoApplication","onCreate,ProcessID="+pid+",ProcessName="+pName);
+        if(!TextUtils.isEmpty(pName)){
+            //主进程
+            if(TextUtils.equals("com.video.newqu",pName)){
+                init();
+                return;
+            //视频生产模块进程
+            }else if(TextUtils.equals("com.video.newqu:xinqu_video_edit",pName)){
+                Logger.d("VideoApplication","视频模块进程初始化");
+                KSYHardwareDecodeWhiteList.getInstance().init(this);
+                new KSYAuthorPermissionsUtil().init();
+                return;
+            }
+            return;
+        }else{
+            init();
+        }
     }
 
     /**
      * 初始化
      */
     private void init() {
+        //极光消息推送
+        JPushInterface.setDebugMode(false);
+        JPushInterface.init(mInstance);
         new Thread(){
             @Override
             public void run() {
@@ -127,9 +148,6 @@ public class VideoApplication extends Application {
                 //LeakCanary.install(VideoApplication.this);//内存泄漏检测
                 //初始化表情包
                 FaceConversionUtil.getInstace().getFileText(getApplicationContext());
-                //金山云
-                KSYAuthorPermissionsUtil.init();
-                KSYHardwareDecodeWhiteList.getInstance().init(mInstance);
             }
         }.start();
     }

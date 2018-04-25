@@ -45,9 +45,6 @@ import com.video.newqu.util.SystemUtils;
 import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
 import com.video.newqu.util.attach.VideoComposeProcessor;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
@@ -244,75 +241,75 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding,MainPresenter
 
     //===========================================视频合并============================================
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        EventBus.getDefault().register(this);
+//    }
+//
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        EventBus.getDefault().unregister(this);
+//    }
 
     /**
      * 订阅视频合并，视频合并任务和上传任务在一起显示
      */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(final UploadVideoInfo data) {
-        if (null != data) {
-            switch (data.getComposeState()) {
-                //合并开始
-                case Constant.VIDEO_COMPOSE_STARTED:
-                    updataProgress(data);
-                    break;
-                //合并进度
-                case Constant.VIDEO_COMPOSE_PROGRESS:
-                    updataProgress(data);
-                    break;
-                //合并完成
-                case Constant.VIDEO_COMPOSE_FINLISHED:
-                    data.setItemType(1);
-                    updataProgress(data);
-                    break;
-                //开始上传,加入上传队列中
-                case Constant.VIDEO_UPLOAD_STARTED:
-                    VideoApplication.videoComposeFinlish=false;
-                    data.setItemType(0);
-                    data.setUploadType(100);
-                    updataProgress(data);
-                    //接入的是WIFI
-                    if(1==Utils.getNetworkType()){
-                        VideoUploadTaskManager.getInstance().setUploadListener(this).addUploadTaskAndExcute(data);
-                        //不是WIFI网络
-                    }else {
-                        //用户刚刚最新添加了任务
-                        if(Utils.isCheckNetwork()){
-                            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity())
-                                    .setTitle("视频上传提示")
-                                    .setMessage("您的设备未接入WIFI网络，继续使用移动网络上传可能会产生额外的流量费用，是否继续上传?");
-                            builder.setPositiveButton("继续上传",
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                            VideoUploadTaskManager.getInstance().setUploadListener(HomeFragment.this).addUploadTaskAndExcute(data);
-                                        }
-                                    });
-                            builder.setNegativeButton("WIFI下自动上传", null);
-                            builder.setCancelable(false);
-                            builder.show();
-                        //不是WIFI也未接入网络
-                        }else{
-                            //没有网络
-                            showErrorToast(null,null,"没有可用的网络连接");
-                        }
-                    }
-                    break;
-            }
-        }
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onMessageEvent(final UploadVideoInfo data) {
+//        if (null != data) {
+//            switch (data.getComposeState()) {
+//                //合并开始
+//                case Constant.VIDEO_COMPOSE_STARTED:
+//                    updataProgress(data);
+//                    break;
+//                //合并进度
+//                case Constant.VIDEO_COMPOSE_PROGRESS:
+//                    updataProgress(data);
+//                    break;
+//                //合并完成
+//                case Constant.VIDEO_COMPOSE_FINLISHED:
+//                    data.setItemType(1);
+//                    updataProgress(data);
+//                    break;
+//                //开始上传,加入上传队列中
+//                case Constant.VIDEO_UPLOAD_STARTED:
+//                    VideoApplication.videoComposeFinlish=false;
+//                    data.setItemType(0);
+//                    data.setUploadType(100);
+//                    updataProgress(data);
+//                    //接入的是WIFI
+//                    if(1==Utils.getNetworkType()){
+//                        VideoUploadTaskManager.getInstance().setUploadListener(this).addUploadTaskAndExcute(data);
+//                        //不是WIFI网络
+//                    }else {
+//                        //用户刚刚最新添加了任务
+//                        if(Utils.isCheckNetwork()){
+//                            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity())
+//                                    .setTitle("视频上传提示")
+//                                    .setMessage("您的设备未接入WIFI网络，继续使用移动网络上传可能会产生额外的流量费用，是否继续上传?");
+//                            builder.setPositiveButton("继续上传",
+//                                    new DialogInterface.OnClickListener() {
+//                                        @Override
+//                                        public void onClick(DialogInterface dialog, int which) {
+//                                            dialog.dismiss();
+//                                            VideoUploadTaskManager.getInstance().setUploadListener(HomeFragment.this).addUploadTaskAndExcute(data);
+//                                        }
+//                                    });
+//                            builder.setNegativeButton("WIFI下自动上传", null);
+//                            builder.setCancelable(false);
+//                            builder.show();
+//                        //不是WIFI也未接入网络
+//                        }else{
+//                            //没有网络
+//                            showErrorToast(null,null,"没有可用的网络连接");
+//                        }
+//                    }
+//                    break;
+//            }
+//        }
+//    }
 
 
     //===========================================视频上传============================================
@@ -815,15 +812,74 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding,MainPresenter
         VideoComposeProcessor.getInstance().onDestory();
     }
 
+    /**
+     * 观察者更新界面
+     * @param o
+     * @param arg
+     */
     @Override
     public void update(Observable o, Object arg) {
         if(null!=arg){
-            Integer action= (Integer) arg;
-            switch (action) {
-                //登出
-                case Constant.OBSERVABLE_ACTION_UNLOGIN:
-                    hideNewMessageDot();
-                    break;
+            if(arg instanceof Integer){
+                Integer action= (Integer) arg;
+                switch (action) {
+                    //登出
+                    case Constant.OBSERVABLE_ACTION_UNLOGIN:
+                        hideNewMessageDot();
+                        break;
+                }
+            }else if(arg instanceof UploadVideoInfo){
+                final UploadVideoInfo data= (UploadVideoInfo) arg;
+                if(null!=data){
+                    switch (data.getComposeState()) {
+                        //合并开始
+                        case Constant.VIDEO_COMPOSE_STARTED:
+                            updataProgress(data);
+                            break;
+                        //合并进度
+                        case Constant.VIDEO_COMPOSE_PROGRESS:
+                            updataProgress(data);
+                            break;
+                        //合并完成
+                        case Constant.VIDEO_COMPOSE_FINLISHED:
+                            data.setItemType(1);
+                            updataProgress(data);
+                            break;
+                        //开始上传,加入上传队列中
+                        case Constant.VIDEO_UPLOAD_STARTED:
+                            data.setItemType(0);
+                            data.setUploadType(100);
+                            updataProgress(data);
+                            //接入的是WIFI
+                            if(1==Utils.getNetworkType()){
+                                VideoUploadTaskManager.getInstance().setUploadListener(this).addUploadTaskAndExcute(data);
+                                //不是WIFI网络
+                            }else {
+                                //用户刚刚最新添加了任务
+                                if(Utils.isCheckNetwork()){
+                                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity())
+                                            .setTitle("视频上传提示")
+                                            .setMessage("您的设备未接入WIFI网络，继续使用移动网络上传可能会产生额外的流量费用，是否继续上传?");
+                                    builder.setPositiveButton("继续上传",
+                                            new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                    VideoUploadTaskManager.getInstance().setUploadListener(HomeFragment.this).addUploadTaskAndExcute(data);
+                                                }
+                                            });
+                                    builder.setNegativeButton("WIFI下自动上传", null);
+                                    builder.setCancelable(false);
+                                    builder.show();
+                                    //不是WIFI也未接入网络
+                                }else{
+                                    //没有网络
+                                    showErrorToast(null,null,"没有可用的网络连接");
+                                }
+                            }
+                            break;
+                    }
+                }
             }
         }
     }

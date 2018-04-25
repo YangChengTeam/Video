@@ -885,21 +885,23 @@ public class MineFragment extends BaseFragment<FragmentMineBinding,UserInfoPrese
     @Override
     public void update(Observable o, Object arg) {
         if(null!=arg){
-            Integer action= (Integer) arg;
-            switch (action) {
-                //登录
-                case Constant.OBSERVABLE_ACTION_LOGIN:
-                    isUpdata=true;
-                    break;
-                //登出
-                case Constant.OBSERVABLE_ACTION_UNLOGIN:
-                    canelUserData();
-                    bindingView.viewPager.setCurrentItem(0);
-                    break;
-                //关注、取关，只更新基本数据和关注数量
-                case Constant.OBSERVABLE_ACTION_FOLLOW_USER_CHANGED:
-                    getUserData();
-                    break;
+            if(arg instanceof Integer){
+                Integer action= (Integer) arg;
+                switch (action) {
+                    //登录
+                    case Constant.OBSERVABLE_ACTION_LOGIN:
+                        isUpdata=true;
+                        break;
+                    //登出
+                    case Constant.OBSERVABLE_ACTION_UNLOGIN:
+                        canelUserData();
+                        bindingView.viewPager.setCurrentItem(0);
+                        break;
+                    //关注、取关，只更新基本数据和关注数量
+                    case Constant.OBSERVABLE_ACTION_FOLLOW_USER_CHANGED:
+                        getUserData();
+                        break;
+                }
             }
         }
     }

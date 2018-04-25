@@ -483,25 +483,27 @@ public class HomeLikeVideoFragment extends BaseFragment<MineFragmentRecylerBindi
     @Override
     public void update(Observable o, Object arg) {
         if(null!=arg){
-            Integer action= (Integer) arg;
-            switch (action) {
-                //登录
-                case Constant.OBSERVABLE_ACTION_LOGIN:
-                    isRefresh=true;
-                    break;
-                //登出
-                case Constant.OBSERVABLE_ACTION_UNLOGIN:
-                    if(null!=mVideoListAdapter) mVideoListAdapter.setNewData(null);
-                    if(null!=mEmptyViewbindView) mEmptyViewbindView.emptyView.showLoadingView();
-                    break;
-                //收藏、取收
-                case Constant.OBSERVABLE_ACTION_FOLLOW_VIDEO_CHANGED:
-                    isRefresh=true;
-                    if(null!= mPresenter &&!mPresenter.isLoading()){
-                        mPage=0;
-                        loadFollowVideoList();
-                    }
-                    break;
+            if(arg instanceof Integer){
+                Integer action= (Integer) arg;
+                switch (action) {
+                    //登录
+                    case Constant.OBSERVABLE_ACTION_LOGIN:
+                        isRefresh=true;
+                        break;
+                    //登出
+                    case Constant.OBSERVABLE_ACTION_UNLOGIN:
+                        if(null!=mVideoListAdapter) mVideoListAdapter.setNewData(null);
+                        if(null!=mEmptyViewbindView) mEmptyViewbindView.emptyView.showLoadingView();
+                        break;
+                    //收藏、取收
+                    case Constant.OBSERVABLE_ACTION_FOLLOW_VIDEO_CHANGED:
+                        isRefresh=true;
+                        if(null!= mPresenter &&!mPresenter.isLoading()){
+                            mPage=0;
+                            loadFollowVideoList();
+                        }
+                        break;
+                }
             }
         }
     }

@@ -48,6 +48,7 @@ public class InputKeyBoardDialog extends BaseDialog<DialogInputKeyboardLayoutBin
     private boolean isShowTips=false;//是否显示首次播放的评论提示
     private AutoDismissRunnable mDismissRunnable;
     private Animation mClickViewVisibleAnimation;
+    private boolean faceIsForbidden;//表情面板是否禁用
 
     public InputKeyBoardDialog(@NonNull Activity context) {
         super(context, R.style.SpinKitViewSaveFileDialogAnimation);
@@ -67,6 +68,10 @@ public class InputKeyBoardDialog extends BaseDialog<DialogInputKeyboardLayoutBin
             public void onClick(View view) {
                 switch (view.getId()) {
                     case R.id.iv_btn_face:
+                        if(faceIsForbidden){
+                            ToastUtils.showCenterToast("表情不可用!");
+                            return;
+                        }
                         showFaceBoard();
                         if(null!= bindingView) InputTools.closeKeybord( bindingView.inputEditText);
                         break;
@@ -139,6 +144,7 @@ public class InputKeyBoardDialog extends BaseDialog<DialogInputKeyboardLayoutBin
             bindingView.tvTipsMineMessage.setVisibility(View.GONE);
         }
         super.dismiss();
+        faceIsForbidden=false;
         mClickViewVisibleAnimation=null;mDismissRunnable=null;mEmojiListAdapter=null;
     }
 
@@ -217,8 +223,6 @@ public class InputKeyBoardDialog extends BaseDialog<DialogInputKeyboardLayoutBin
         }
     }
 
-
-
     /**
      * 显示表情面板
      */
@@ -263,13 +267,10 @@ public class InputKeyBoardDialog extends BaseDialog<DialogInputKeyboardLayoutBin
 
 
     /**
-     * 隐藏表平面板
+     * 隐藏表情面板
      */
     public void hideFaceBtn() {
-        if(null!=bindingView){
-            bindingView.ivBtnFace.setVisibility(View.GONE);
-            bindingView.tvEmpty.setVisibility(View.VISIBLE);
-        }
+        faceIsForbidden=true;
     }
 
     /**

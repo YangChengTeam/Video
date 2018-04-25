@@ -6,6 +6,11 @@
     <permission
         android:name="com.video.newqu.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature"/>
+    <!--视频合并的私有权限-->
+    <permission
+        android:name="com.video.newqu.permission.VIDEO_COMPOSE"
+        android:protectionLevel="signature"/>
+    <uses-permission android:name="com.video.newqu.permission.VIDEO_COMPOSE" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -217,7 +222,8 @@
             android:name=".ui.activity.MediaRecordActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:process=":xinqu_video_edit">
             <intent-filter>
                 <action android:name="com.xinqu.media.recoed"/>    <!-- 自定义的action-->
                 <action android:name="android.intent.action.VIEW"/>
@@ -231,13 +237,15 @@
             android:name=".ui.activity.MediaEditActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|stateHidden"/>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|stateHidden"
+            android:process=":xinqu_video_edit"/>
         <!-- 视频裁剪 -->
         <activity
             android:name=".ui.activity.MediaVideoCatActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|stateHidden">
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|stateHidden"
+            android:process=":xinqu_video_edit">
         </activity>
 <!--            android:configChanges="orientation|keyboardHidden|screenSize"-->
         <!-- 封面选择 -->
@@ -245,7 +253,8 @@
             android:name=".ui.activity.MediaScreenShortActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:process=":xinqu_video_edit"/>
         <!-- 单张大图片预览 -->
         <activity
             android:name=".ui.activity.MediaSingerImagePreviewActivity"
@@ -396,7 +405,6 @@
                 <category android:name="com.video.newqu"/>
             </intent-filter>
         </activity>
-
         <!-- Required SDK 核心功能 -->
         <!-- 可配置android:process参数将PushService放在其他进程中 -->
         <service

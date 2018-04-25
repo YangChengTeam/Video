@@ -1,12 +1,12 @@
 package com.video.newqu.util.attach;
 
+import android.content.Intent;
 import android.text.TextUtils;
 import com.ksyun.media.shortvideo.kit.KSYEditKit;
+import com.video.newqu.VideoApplication;
 import com.video.newqu.bean.UploadVideoInfo;
 import com.video.newqu.contants.Constant;
-import com.video.newqu.manager.ApplicationManager;
 import com.video.newqu.util.ToastUtils;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -45,7 +45,11 @@ public class VideoComposeProcessor {
             ToastUtils.showCenterToast("必须传入输出路径！");
             return;
         }
-        ApplicationManager.getInstance().observerUpdata(Constant.OBSERVABLE_ACTION_ADD_VIDEO_TASK);//通知切换到HomeFragment界面
+        Intent intent=new Intent();
+        intent.setAction(Constant.ACTION_XINQU_VIDEO_COMPOSE);
+        intent.putExtra("action_type",1);
+        VideoApplication.getInstance().sendBroadcast(intent,Constant.PERMISSION_VIDEO_COMPOSE);
+//        ApplicationManager.getInstance().observerUpdata(Constant.OBSERVABLE_ACTION_ADD_VIDEO_TASK);//通知切换到HomeFragment界面
         VideoComposeTask videoComposeTask = new VideoComposeTask(composeTaskInfo, editKit);
         if(null!=cVideoComposeTaskMap){
             cVideoComposeTaskMap.put(composeTaskInfo.getId(),videoComposeTask);

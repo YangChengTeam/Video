@@ -1,13 +1,13 @@
 package com.video.newqu.util.attach;
 
+import android.content.Intent;
 import com.ksyun.media.shortvideo.kit.KSYEditKit;
 import com.ksyun.media.shortvideo.utils.ShortVideoConstants;
+import com.video.newqu.VideoApplication;
 import com.video.newqu.bean.UploadVideoInfo;
 import com.video.newqu.manager.ApplicationManager;
 import com.video.newqu.contants.Constant;
 import com.video.newqu.util.FileUtils;
-
-import org.greenrobot.eventbus.EventBus;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.ref.WeakReference;
@@ -31,11 +31,11 @@ public class VideoComposeTask extends Thread {
         return mEditKtiWeakReference.get();
     }
 
-
     public VideoComposeTask(UploadVideoInfo composeTaskInfo, KSYEditKit editKit) {
         this.mComposeTaskInfo=composeTaskInfo;
         mEditKtiWeakReference = new WeakReference<KSYEditKit>(editKit);
     }
+
     /**
      * 开始合成
      */
@@ -101,7 +101,11 @@ public class VideoComposeTask extends Thread {
         if(null!=mComposeTaskInfo){
             mComposeTaskInfo.setComposeState(Constant.VIDEO_COMPOSE_STARTED);
             mComposeTaskInfo.setUploadProgress(0);
-            EventBus.getDefault().post(mComposeTaskInfo);
+            Intent intent=new Intent();
+            intent.putExtra("video_info",mComposeTaskInfo);
+            intent.setAction(Constant.ACTION_XINQU_VIDEO_COMPOSE);
+            intent.putExtra("action_type",1);
+            VideoApplication.getInstance().sendBroadcast(intent,Constant.PERMISSION_VIDEO_COMPOSE);
             mTimer = new Timer();
             mTimer.schedule(new TimerTask() {
                 @Override
@@ -123,7 +127,11 @@ public class VideoComposeTask extends Thread {
         if(null!=mComposeTaskInfo){
             mComposeTaskInfo.setComposeState(Constant.VIDEO_COMPOSE_PROGRESS);
             mComposeTaskInfo.setUploadProgress(progress);
-            EventBus.getDefault().post(mComposeTaskInfo);
+            Intent intent=new Intent();
+            intent.putExtra("video_info",mComposeTaskInfo);
+            intent.setAction(Constant.ACTION_XINQU_VIDEO_COMPOSE);
+            intent.putExtra("action_type",1);
+            VideoApplication.getInstance().sendBroadcast(intent,Constant.PERMISSION_VIDEO_COMPOSE);
         }
     }
 
@@ -142,7 +150,11 @@ public class VideoComposeTask extends Thread {
             if(null!=mComposeTaskInfo){
                 mComposeTaskInfo.setComposeState(Constant.VIDEO_COMPOSE_FINLISHED);
                 mComposeTaskInfo.setUploadProgress(100);
-                EventBus.getDefault().post(mComposeTaskInfo);
+                Intent intent=new Intent();
+                intent.putExtra("video_info",mComposeTaskInfo);
+                intent.setAction(Constant.ACTION_XINQU_VIDEO_COMPOSE);
+                intent.putExtra("action_type",1);
+                VideoApplication.getInstance().sendBroadcast(intent,Constant.PERMISSION_VIDEO_COMPOSE);
                 addUploadTaskList(mComposeTaskInfo);
             }
         }
@@ -156,13 +168,11 @@ public class VideoComposeTask extends Thread {
         }
     }
 
-
     /**
      * 合并成功后添加至上传任务列表并立即启动上传程序
      * @param composeTaskInfo
      */
     private void addUploadTaskList(UploadVideoInfo composeTaskInfo) {
-
         if(null==composeTaskInfo) return;
         composeTaskInfo.setUploadType(100);//默认等待上传中
         try {
@@ -173,9 +183,16 @@ public class VideoComposeTask extends Thread {
         composeTaskInfo.setItemType(0);
         composeTaskInfo.setVideoName(new File(composeTaskInfo.getFilePath()).getName());
         boolean insertVideoInfo = ApplicationManager.getInstance().getVideoUploadDB().insertNewUploadVideoInfo(composeTaskInfo);
+
         if (insertVideoInfo) {
             composeTaskInfo.setComposeState(Constant.VIDEO_UPLOAD_STARTED);
-            EventBus.getDefault().post(composeTaskInfo);
+            Intent intent=new Intent();
+            intent.putExtra("video_info",mComposeTaskInfo);
+            intent.setAction(Constant.ACTION_XINQU_VIDEO_COMPOSE);
+            intent.putExtra("action_type",1);
+            VideoApplication.getInstance().sendBroadcast(intent,Constant.PERMISSION_VIDEO_COMPOSE);
+            mComposeTaskInfo=null;
+//            System.exit(0);//强制结束自己，调用可释放所有内存，但是第二次开启视频编辑，又会重新初始化
             return;
         }
     }

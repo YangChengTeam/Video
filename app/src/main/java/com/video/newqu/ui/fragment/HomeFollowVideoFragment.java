@@ -498,36 +498,38 @@ public class HomeFollowVideoFragment extends BaseFragment<FragmentVideoFollowBin
     @Override
     public void update(Observable o, Object arg) {
         if(null!=arg){
-            Integer action= (Integer) arg;
-            //已登录
-            if(null!=VideoApplication.getInstance().getUserData()){
-                mEmptyViewbindView.emptyView.showLoadingView();
-                //未登录
-            }else{
-                mEmptyViewbindView.emptyView.showLoginView(true);
-            }
-            switch (action) {
-                //登录
-                case Constant.OBSERVABLE_ACTION_LOGIN:
-                    isRefresh=true;
-                    if(null!= mPresenter &&!mPresenter.isLoading()){
-                        mPage=0;
-                        if(null!=mEmptyViewbindView) mEmptyViewbindView.emptyView.showLoadingView();
-                        loadVideoList();
-                    }
-                    break;
-                //登出
-                case Constant.OBSERVABLE_ACTION_UNLOGIN:
-                    if(null!=mVideoListAdapter) mVideoListAdapter.setNewData(null);
-                    if(null!=mEmptyViewbindView) mEmptyViewbindView.emptyView.showLoginView(true);
-                    break;
-                //关注、取关
-                case Constant.OBSERVABLE_ACTION_FOLLOW_USER_CHANGED:
-                    if(null!= mPresenter &&!mPresenter.isLoading()){
-                        mPage=0;
-                        loadVideoList();
-                    }
-                    break;
+            if(arg instanceof Integer){
+                Integer action= (Integer) arg;
+                //已登录
+                if(null!=VideoApplication.getInstance().getUserData()){
+                    mEmptyViewbindView.emptyView.showLoadingView();
+                    //未登录
+                }else{
+                    mEmptyViewbindView.emptyView.showLoginView(true);
+                }
+                switch (action) {
+                    //登录
+                    case Constant.OBSERVABLE_ACTION_LOGIN:
+                        isRefresh=true;
+                        if(null!= mPresenter &&!mPresenter.isLoading()){
+                            mPage=0;
+                            if(null!=mEmptyViewbindView) mEmptyViewbindView.emptyView.showLoadingView();
+                            loadVideoList();
+                        }
+                        break;
+                    //登出
+                    case Constant.OBSERVABLE_ACTION_UNLOGIN:
+                        if(null!=mVideoListAdapter) mVideoListAdapter.setNewData(null);
+                        if(null!=mEmptyViewbindView) mEmptyViewbindView.emptyView.showLoginView(true);
+                        break;
+                    //关注、取关
+                    case Constant.OBSERVABLE_ACTION_FOLLOW_USER_CHANGED:
+                        if(null!= mPresenter &&!mPresenter.isLoading()){
+                            mPage=0;
+                            loadVideoList();
+                        }
+                        break;
+                }
             }
         }
     }

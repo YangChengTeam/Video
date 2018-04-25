@@ -41,24 +41,15 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="0"
-                    android:padding="10dp"
+                    android:padding="12dp"
                     android:src="@drawable/ic_face_boart"/>
-                <TextView
-                    android:id="@+id/tv_empty"
-                    android:layout_width="12dp"
-                    android:layout_height="10dp"
-                    android:layout_gravity="center_vertical"
-                    android:visibility="gone"/>
-
                 <EditText
                     android:id="@+id/input_edit_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
+                    android:paddingTop="7dp"
+                    android:paddingBottom="7dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="8dp"
                     android:layout_gravity="center_vertical"

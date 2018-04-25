@@ -17,10 +17,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSeekBar;
@@ -102,6 +102,7 @@ import com.video.newqu.model.HorzontalSpacesItemDecoration;
 import com.video.newqu.ui.contract.MediaEditContract;
 import com.video.newqu.ui.dialog.InputKeyBoardDialog;
 import com.video.newqu.ui.dialog.LoadingProgressView;
+import com.video.newqu.ui.fragment.KsyAuthorizeSettingFragment;
 import com.video.newqu.ui.fragment.MediaStickerUseFragment;
 import com.video.newqu.ui.fragment.MediaStickerFragment;
 import com.video.newqu.ui.fragment.TopicListDialogFragment;
@@ -115,8 +116,8 @@ import com.video.newqu.util.SystemUtils;
 import com.video.newqu.util.TextViewTopicSpan;
 import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
-import com.video.newqu.util.attach.VideoComposeProcessor;
 import com.video.newqu.util.VideoUtils;
+import com.video.newqu.util.attach.VideoComposeProcessor;
 import com.video.newqu.view.widget.ColorPickerView;
 import com.video.newqu.view.widget.EffectsButton;
 import com.video.newqu.view.widget.MultiDirectionSlidingDrawer;
@@ -1197,34 +1198,6 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
             mEditKit.pausePlay(false);
             changePlayButton(true);
         }
-        //检查授权状态，未授权成功，提示用户连接可用网络
-        if(!AuthInfoManager.getInstance().getAuthState()){
-            new android.support.v7.app.AlertDialog.Builder(this)
-                    .setTitle(getResources().getString(R.string.ksy_tips_permissions_title))
-                    .setMessage(getResources().getString(R.string.ksy_tips_permissions))
-                    .setNegativeButton(
-                            "网络设置", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    Intent intent = new Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS);//直接进入网络设置
-                                    startActivity(intent);
-                                }
-                            })
-                    .setNeutralButton("关闭", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .setPositiveButton("打开WLAN", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int i) {
-                            dialog.dismiss();
-                            SystemUtils.openWLAN();
-                        }
-                    }).setCancelable(false).show();
-        }
     }
 
     @Override
@@ -1280,15 +1253,6 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
         if(null!=drawableAnimation) drawableAnimation.start();
         drawableAnimation=null;
         ActivityCollectorManager.removeActivity(this);
-//        if(null!=mStickerListInfoList) mStickerListInfoList.clear();
-//        mBtn_fair=null;mIv_video_cover=null;mTv_num=null;mVideoDespContent=null;mLoadingProgressedView=null;mIc_media_handle=null;mMainHandler=null;
-//        mVideoInfo=null;mSticker_tab_viewpager=null;
-//        mScaleMode=0;mScreenHeight=0;mScreenWidth=0;PREVIEW_TOUCH_MOVE_MARGIN=0;mTouchLastY=0;mTouchLastX=0;mLastRawY=0;mLastRawX=0;mPreviewTouchStartY=0;mPreviewTouchStartX=0;mMaxCrop=0;mMinCrop=0;mScaleMode=0;mScaleType=0;
-//        mVideoThumbnailList=null;mVideoRangeStart=null;mVideoRange=null;mVideoRangeEnd=null;mStickerAnimationDrawable=null;mLl_sticker_loading_error=null;
-//        SOUND_CHANGE_TYPE=null;REVERB_TYPE=null;mVideoRangeSeekBar=null;mMediaEditThumbnailAdapter=null;mLl_sticker_loading_view=null;
-//        mStickerDeleteBitmap=null;mStickerRotateBitmap=null; mStickerHelpBoxInfo=null;mSectionView=null;mOriginAudioVolumeSeekBar=null;mBgmVolumeSeekBar=null;mAudioSeekListener=null;
-//        mAudioSeekLayout=null;mComposeConfig=null;mStickerListInfoList=null;mTv_color_view=null;mIv_thbum_icon=null;mImageSeekTools=null;mDefaultRecordBottomLayout=null;
-//        mBottomViewList=null;mImgBeautyProFilter=null;mPreviewLayout=null;mEditPreviewView=null;mPauseView=null;mPreRecordConfigLayout=null;
         Runtime.getRuntime().gc();
     }
 
@@ -1636,7 +1600,6 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
         }
         return bitmap;
     }
-
     private void onWaterMarkLogoClick(boolean isCheck) {
         if (isCheck) {
             mEditKit.showWaterMarkLogo(mLogoPath, 0.77f, 0.02f, 0.20f, 0, 0.8f);
@@ -1644,7 +1607,6 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
             mEditKit.hideWaterMarkLogo();
         }
     }
-
 
     /**
      * 暂停和开始播放
@@ -1659,7 +1621,6 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
         }
     }
 
-
     private void onBackoffClick() {
         if(-1!=mBottomViewPreIndex){
             cleafunctionUI();
@@ -1667,7 +1628,6 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
             onBackPressed();
         }
     }
-
 
     @Override
     public void onBackPressed() {
@@ -1723,6 +1683,7 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
             @Override
             public void call(Boolean aBoolean) {
                 if(null!=aBoolean&&aBoolean){
+                    //已经取得授权
                     if(AuthInfoManager.getInstance().getAuthState()){
                         if(null==mComposeConfig) mComposeConfig=new ShortVideoConfig();
                         //配置合成参数
@@ -1776,32 +1737,17 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
                         obiectIsRecyler=false;
                         VideoComposeProcessor.getInstance().addVideoComposeTask(uploadVideoInfo,mEditKit);//调整为添加至后台合成视频
                         ActivityCollectorManager.finlishAllActivity();
+                    //金山云权限不够,去检查和重新获取权限
                     }else{
-                        new android.support.v7.app.AlertDialog.Builder(MediaEditActivity.this)
-                                .setTitle("视频合成提示")
-                                .setMessage(getResources().getString(R.string.ksy_tips_compose))
-                                .setNegativeButton(
-                                        "网络设置", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                                Intent intent = new Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS);//直接进入网络设置
-                                                startActivity(intent);
-                                            }
-                                        })
-                                .setNeutralButton("关闭", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setPositiveButton("打开WLAN", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int i) {
-                                        dialog.dismiss();
-                                        SystemUtils.openWLAN();
-                                    }
-                                }).setCancelable(false).show();
+                        //暂停预览
+                        if(null!=mEditKit) mEditKit.onPause();
+                        if(null!=mEditKit&&mPauseView.getDrawable().getLevel() == 2){
+                            mEditKit.pausePlay(true);
+                            changePlayButton(false);
+                        }
+                        KsyAuthorizeSettingFragment fragment = KsyAuthorizeSettingFragment.newInstance();
+                        FragmentManager supportFragmentManager = getSupportFragmentManager();
+                        fragment.show(supportFragmentManager,"ksy_authorize");
                     }
                 }else{
                     if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {

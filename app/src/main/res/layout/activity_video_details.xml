@@ -168,70 +168,60 @@
                 android:id="@+id/ll_bottom_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
                 android:orientation="vertical"
-                android:layout_gravity="bottom">
+                android:clickable="true">
                 <View
+                    android:id="@+id/view_line"
                     android:layout_width="match_parent"
-                    android:layout_height="6dp"
-                    android:background="@drawable/bg_black_shape_gratien"/>
+                    android:layout_height="8dp"
+                    android:background="@drawable/mine_line_bg_shape"/>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:padding="6dp"
                     android:orientation="horizontal">
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1">
-                        <TextView
-                            android:id="@+id/tv_input_content"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:paddingTop="6dp"
-                            android:paddingBottom="6dp"
-                            android:paddingLeft="10dp"
-                            android:singleLine="true"
-                            android:ellipsize="end"
-                            android:paddingRight="8dp"
-                            android:background="@drawable/square_search_circle_bar_background_gray"
-                            android:inputType="textMultiLine"
-                            android:textSize="15sp"
-                            android:hint="说点什么..."/>
-                    </RelativeLayout>
-                    <!--输入框顶部右边功能区-->
-                    <LinearLayout
+
+                    <ImageView
+                        android:id="@+id/btn_iv_face_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0"
                         android:layout_gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:layout_marginLeft="5dp">
-                        <ImageView
-                            android:id="@+id/btn_iv_face_icon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="5dp"
-                            android:layout_gravity="center_vertical"
-                            android:visibility="visible"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:src="@drawable/ic_face_boart"/>
+                        android:layout_weight="0"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_face_boart"/>
 
-                        <TextView
-                            android:id="@+id/btn_tv_send"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="17sp"
-                            android:textColor="@color/colorTabText"
-                            android:layout_gravity="center_vertical"
-                            android:gravity="center"
-                            android:padding="5dp"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:text="发送"/>
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/tv_input_content"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:background="@drawable/square_search_circle_bar_background_gray"
+                        android:ellipsize="end"
+                        android:hint="写评论..."
+                        android:inputType="textMultiLine"
+                        android:lineSpacingMultiplier="1.2"
+                        android:paddingTop="7dp"
+                        android:paddingBottom="7dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="8dp"
+                        android:singleLine="true"
+                        android:textColor="@color/colorTabText"
+                        android:textSize="16sp"/>
+                    <!--输入框顶部右边功能区-->
+                    <TextView
+                        android:id="@+id/btn_tv_send"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:gravity="center"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:text="发送"
+                        android:textColor="@color/colorTabText"
+                        android:textSize="16sp"/>
                 </LinearLayout>
             </LinearLayout>
         </FrameLayout>
@@ -244,7 +234,9 @@
             <View
                 android:id="@+id/top_bar_bg"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true" />
             <LinearLayout
                 android:id="@+id/ll_top_bar_bg"
                 android:layout_width="match_parent"
@@ -263,7 +255,6 @@
                         android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <ImageView
                             android:id="@+id/btn_back"
                             android:layout_width="wrap_content"
@@ -271,7 +262,6 @@
                             android:layout_marginLeft="5dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:src="@drawable/ban_nav_menu_back_selector_white"/>
-
                         <ImageView
                             android:id="@+id/btn_price"
                             android:layout_width="wrap_content"
@@ -303,8 +293,6 @@
                             android:layout_marginLeft="10dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:src="@drawable/btn_nav_menu_selector_white"/>
-
-
                     </LinearLayout>
                     <!--关注按钮-->
                     <RelativeLayout

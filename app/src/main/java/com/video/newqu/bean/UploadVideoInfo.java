@@ -1,10 +1,10 @@
 package com.video.newqu.bean;
 
 import android.support.annotation.NonNull;
-
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import java.io.Serializable;
 
 /**
  * YuyeTinyHung@outlook.com
@@ -13,7 +13,7 @@ import org.greenrobot.greendao.annotation.Generated;
  */
 
 @Entity
-public class UploadVideoInfo  implements Comparable<UploadVideoInfo>{
+public class UploadVideoInfo  implements Comparable<UploadVideoInfo> ,Serializable {
 
     @Id(autoincrement = true)
     private Long id;
@@ -245,5 +245,4 @@ public class UploadVideoInfo  implements Comparable<UploadVideoInfo>{
     public void setDownloadPermiss(String downloadPermiss) {
         this.downloadPermiss = downloadPermiss;
     }
-
 }

@@ -277,6 +277,7 @@ public interface Constant {
     int VIDEO_COMPOSE_PROGRESS = 11;
     int VIDEO_COMPOSE_FINLISHED = 12;
     int VIDEO_UPLOAD_STARTED = 13;
+
     String KEY_INTENT_MEDIA_THUBM = "thbum_seek_time";
     String INTENT_BINDING_TIPS ="intent_binding_tips" ;
     //文件找不到
@@ -319,4 +320,7 @@ public interface Constant {
     int OBSERVABLE_ACTION_BINDING_PHONE=14;
     int OBSERVABLE_ACTION_CHECKED_PHONE=15;
     long POST_DELAYED_ADD_DATA_TIME = 400;
+
+    String ACTION_XINQU_VIDEO_COMPOSE = "ACTION_XINQU_VIDEO_COMPOSE";
+    String PERMISSION_VIDEO_COMPOSE = "com.video.newqu.permission.VIDEO_COMPOSE";
 }

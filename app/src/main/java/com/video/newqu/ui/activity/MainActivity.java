@@ -1,8 +1,11 @@
 package com.video.newqu.ui.activity;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
@@ -18,7 +21,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import com.ksyun.media.shortvideo.utils.AuthInfoManager;
 import com.tencent.bugly.Bugly;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.UMShareAPI;
@@ -26,6 +28,7 @@ import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.XinQuFragmentPagerAdapter;
 import com.video.newqu.base.TopBaseActivity;
+import com.video.newqu.bean.UploadVideoInfo;
 import com.video.newqu.bean.WeiChactVideoInfo;
 import com.video.newqu.contants.ConfigSet;
 import com.video.newqu.contants.Constant;
@@ -34,7 +37,6 @@ import com.video.newqu.databinding.ActivityMainBinding;
 import com.video.newqu.event.MessageEvent;
 import com.video.newqu.manager.ActivityCollectorManager;
 import com.video.newqu.manager.ApplicationManager;
-import com.video.newqu.manager.ThreadManager;
 import com.video.newqu.ui.contract.MainContract;
 import com.video.newqu.ui.dialog.ExitAppDialog;
 import com.video.newqu.ui.dialog.FollowWeiXnDialog;
@@ -45,8 +47,6 @@ import com.video.newqu.ui.fragment.MineFragment;
 import com.video.newqu.ui.presenter.MainPresenter;
 import com.video.newqu.upload.manager.BatchFileUploadManager;
 import com.video.newqu.util.DateParseUtil;
-import com.video.newqu.util.KSYAuthorPermissionsUtil;
-import com.video.newqu.util.Logger;
 import com.video.newqu.util.attach.ScanWeChatDirectoryVideoTask;
 import com.video.newqu.util.SharedPreferencesUtil;
 import com.video.newqu.util.SystemUtils;
@@ -82,6 +82,7 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
     private MainPresenter mMainPresenter;
     private static final int REQUEST_PERMISSION_LOCATION = 255; // int should be between 0 and 255
     private boolean weixinScaning=false;//是否正在扫描视频视频
+    private ComposeTaskReceiver mTaskReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -264,6 +265,10 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
                 }
             }
         }
+        mTaskReceiver = new ComposeTaskReceiver();
+        IntentFilter intentFilter=new IntentFilter();
+        intentFilter.addAction(Constant.ACTION_XINQU_VIDEO_COMPOSE);//订阅这条广播
+        registerReceiver(mTaskReceiver,intentFilter,Constant.PERMISSION_VIDEO_COMPOSE,null);//
     }
 
     //请求权限结果
@@ -502,6 +507,8 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
         ApplicationManager.getInstance().removeAllObserver();
         ApplicationManager.getInstance().onDestory();
         SharedPreferencesUtil.getInstance().putBoolean(Constant.SETTING_FIRST_START_GRADE, true);//已经启动过App了
+        unregisterReceiver(mTaskReceiver);
+        mTaskReceiver=null;
         Runtime.getRuntime().gc();
     }
 
@@ -571,16 +578,11 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
                     }
                 }
                 checkedUploadVideoEvent();
-                //金山云鉴权
-                if(!AuthInfoManager.getInstance().getAuthState()){
-                    ThreadManager.getInstance().createLongPool().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            //在这里与金山云通信获得授权
-                            KSYAuthorPermissionsUtil.init();
-                        }
-                    });
-                }
+//                //金山云鉴权
+//                if(!AuthInfoManager.getInstance().getAuthState()){
+//                    //在这里与金山云通信获得授权
+//                    KSYAuthorPermissionsUtil.init();
+//                }
             }
         }
     }
@@ -645,28 +647,57 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
     @Override
     public void update(Observable o, Object arg) {
         if(null!=arg){
-            Integer action= (Integer) arg;
-            switch (action) {
-                //登录
-                case Constant.OBSERVABLE_ACTION_LOGIN:
-                    break;
-                //登出
-                case Constant.OBSERVABLE_ACTION_UNLOGIN:
-                    setMessageCount(0);
-                    setCureenIndex(0);
-                    break;
-                //用户添加的视频任务
-                case Constant.OBSERVABLE_ACTION_ADD_VIDEO_TASK:
-                    setCureenIndex(0);
-                    break;
-                //添加了批量上传任务
-                case Constant.OBSERVABLE_ACTION_ADD_UPLOAD_TAKS:
-                    checkedUploadVideoEvent();
-                    break;
-                //结束了微信扫描的所有任务，此时只剩下上传了，防止多个弹窗同事出现
-                case Constant.OBSERVABLE_ACTION_SCANWEIXIN_VIDEO_FINLISH:
-                    weixinScaning=false;
-                    break;
+            if(arg instanceof Integer){
+                Integer action= (Integer) arg;
+                switch (action) {
+                    //登录
+                    case Constant.OBSERVABLE_ACTION_LOGIN:
+                        break;
+                    //登出
+                    case Constant.OBSERVABLE_ACTION_UNLOGIN:
+                        setMessageCount(0);
+                        setCureenIndex(0);
+                        break;
+                    //用户添加的视频任务
+                    case Constant.OBSERVABLE_ACTION_ADD_VIDEO_TASK:
+                        setCureenIndex(0);
+                        break;
+                    //添加了批量上传任务
+                    case Constant.OBSERVABLE_ACTION_ADD_UPLOAD_TAKS:
+                        checkedUploadVideoEvent();
+                        break;
+                    //结束了微信扫描的所有任务，此时只剩下上传了，防止多个弹窗同事出现
+                    case Constant.OBSERVABLE_ACTION_SCANWEIXIN_VIDEO_FINLISH:
+                        weixinScaning=false;
+                        break;
+                }
+            }
+        }
+    }
+
+    /**
+     * 监听视频合并的通知
+     */
+    private class ComposeTaskReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(null!=intent){
+                if(TextUtils.equals(Constant.ACTION_XINQU_VIDEO_COMPOSE,intent.getAction())){
+                    switch (intent.getIntExtra("action_type", 0)) {
+                        //开始合并之前的准备工作,切换至HomeFragmen
+                        case 0:
+                            ActivityCollectorManager.finlishAllActivity();//关闭除主页之外的所有正在显示的Activity
+                            setCureenIndex(0);
+                            break;
+                        //新增了视频合并任务
+                        case 1:
+                            UploadVideoInfo videoInfo = (UploadVideoInfo) intent.getSerializableExtra("video_info");
+                            if(null!=videoInfo){
+                                ApplicationManager.getInstance().observerUpdata(videoInfo);
+                            }
+                            break;
+                    }
+                }
             }
         }
     }

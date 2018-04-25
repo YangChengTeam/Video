@@ -413,4 +413,15 @@
         <attr format="float" name="realtimeDownsampleFactor"/>
         <attr format="color" name="realtimeOverlayColor"/>
     </declare-styleable>
+
+    <!--LoadingSubmit组件-->
+    <declare-styleable name="LoadingButton">
+        <attr name="loadBackground" format="reference"/>
+        <attr name="loadBackgroundBlock" format="reference"/>
+        <attr name="loadButtonTextColor" format="color"/>
+        <attr name="loadTextSize" format="dimension"/>
+        <attr name="loadIconSrc" format="reference"/>
+        <attr name="loadButtonText" format="string"/>
+        <attr name="loadButtonBolckText" format="string"/>
+    </declare-styleable>
 </resources>

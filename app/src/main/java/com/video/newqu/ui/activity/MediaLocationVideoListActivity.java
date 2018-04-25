@@ -140,9 +140,9 @@ public class MediaLocationVideoListActivity extends BaseActivity<ActivityMediaVi
             @Override
             public void onClick(View view) {
                 new android.support.v7.app.AlertDialog.Builder(MediaLocationVideoListActivity.this)
-                        .setTitle("扫描视频说明")
+                        .setTitle("视频扫描规则说明")
                         .setMessage("扫描到的视频数量和前面界面标注的数量不一样？是程序过滤了不受支持的视频格式文件。")
-                        .setPositiveButton("知道了", null).setCancelable(true).show();
+                        .setPositiveButton("确定", null).setCancelable(true).show();
             }
         });
     }

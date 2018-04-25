@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
-import android.provider.Settings;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -38,7 +37,6 @@ import com.ksyun.media.player.IMediaPlayer;
 import com.ksyun.media.player.KSYMediaPlayer;
 import com.ksyun.media.shortvideo.kit.KSYRecordKit;
 import com.ksyun.media.shortvideo.mv.KSYMVInfo;
-import com.ksyun.media.shortvideo.utils.AuthInfoManager;
 import com.ksyun.media.streamer.capture.CameraCapture;
 import com.ksyun.media.streamer.capture.camera.CameraTouchHelper;
 import com.ksyun.media.streamer.encoder.VideoEncodeFormat;
@@ -74,6 +72,7 @@ import com.video.newqu.camera.util.FileUtils;
 import com.video.newqu.camera.view.CameraHintView;
 import com.video.newqu.comadapter.BaseQuickAdapter;
 import com.video.newqu.comadapter.listener.OnItemClickListener;
+import com.video.newqu.event.MessageEvent;
 import com.video.newqu.manager.ApplicationManager;
 import com.video.newqu.contants.Constant;
 import com.video.newqu.listener.PerfectClickViewListener;
@@ -1037,37 +1036,7 @@ public class MediaRecordActivity extends AppCompatActivity implements ActivityCo
         mKSYRecordKit.onResume();
         mCameraHintView.hideAll();
         startCameraPreviewWithPermCheck();
-        //检查授权状态，未授权成功，提示用户连接可用网络
-        if(!AuthInfoManager.getInstance().getAuthState()){
-            new android.support.v7.app.AlertDialog.Builder(this)
-                    .setTitle(getResources().getString(R.string.ksy_tips_permissions_title))
-                    .setMessage(getResources().getString(R.string.ksy_tips_permissions))
-                    .setNegativeButton(
-                            "网络设置", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    Intent intent = new Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS);//直接进入网络设置
-                                    startActivity(intent);
-                                }
-                            })
-                    .setNeutralButton("关闭", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .setPositiveButton("打开WLAN", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int i) {
-                            dialog.dismiss();
-                            SystemUtils.openWLAN();
-                        }
-                    }).setCancelable(false).show();
-        }
     }
-
-
 
     /**
      * 读取磁盘权限检查
@@ -1130,13 +1099,6 @@ public class MediaRecordActivity extends AppCompatActivity implements ActivityCo
         mKSYRecordKit.release();
         mKSYRecordKit.deleteAllFiles();//删除断点录制所有内容
         mKSYRecordKit=null;
-//        if(null!=mChronometer) mChronometer.stop();
-//        mTimeCountDownText=null;mBtn_record_music=null;SOUND_CHANGE_TYPE=null;REVERB_TYPE=null;mCameraPreviewView=null;mCameraHintView=null;
-//        mChronometer=null;mRecordView=null;mBackView=null;mDefaultRecordBottomLayout=null;mViewSoundEffectLayout=null;mRecord_fair_layout=null;mRecord_mv_layout=null;
-//        mRecord_filter_layout=null;mEffectFilters=null;mBeautyFilters=null;mImgBeautyProFilter=null;
-//        mMainHandler=null;mBtn_record_delayed=null;mBtn_flash=null;mBtn_camera_fail=null;
-//        mBottomMenu=null;mBtn_record_music=null;mLl_top_tab_controlle=null;mRecord_right_menu_layout=null;mRecordUrl=null;mPreRecordConfigLayout=null;mLoadingProgressedView=null;
-//        mMaterialIndex = -1;
         ActivityCollectorManager.removeActivity(this);
         Runtime.getRuntime().gc();
     }
