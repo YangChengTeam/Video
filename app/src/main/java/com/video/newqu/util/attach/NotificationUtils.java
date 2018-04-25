@@ -1,4 +1,4 @@
-package com.video.newqu.util;
+package com.video.newqu.util.attach;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
@@ -12,7 +12,6 @@ import android.os.Build;
 import android.support.v7.app.NotificationCompat;
 
 import com.video.newqu.R;
-import com.video.newqu.contants.Constant;
 
 /**
  * @time 2017/2/24 17:42

@@ -23,7 +23,7 @@ import com.video.newqu.util.ACache;
 import com.video.newqu.util.CommonDateParseUtil;
 import com.video.newqu.util.ContentCheckKey;
 import com.video.newqu.util.DateParseUtil;
-import com.video.newqu.util.FaceConversionUtil;
+import com.video.newqu.util.attach.FaceConversionUtil;
 import com.video.newqu.util.KSYAuthorPermissionsUtil;
 import com.video.newqu.util.SharedPreferencesUtil;
 import com.video.newqu.util.SystemUtils;

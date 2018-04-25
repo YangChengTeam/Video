@@ -1,4 +1,4 @@
-package com.video.newqu.util;
+package com.video.newqu.util.attach;
 
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
@@ -7,6 +7,9 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import com.video.newqu.contants.Constant;
+import com.video.newqu.util.FileUtils;
+import com.video.newqu.util.ImageCache;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -58,7 +61,7 @@ public class LoadLocalBigImgTask extends AsyncTask<String,Void,Bitmap> {
             file.mkdirs();
         }
 
-        File filePath=new File(Constant.IMAGE_PATH,FileUtils.getFileName(resourceUrl));
+        File filePath=new File(Constant.IMAGE_PATH, FileUtils.getFileName(resourceUrl));
         if(!filePath.exists()&&!filePath.isFile()){
             try {
                 FileOutputStream fileOutputStream=new FileOutputStream(filePath);

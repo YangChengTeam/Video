@@ -1,7 +1,6 @@
-package com.video.newqu.util;
+package com.video.newqu.util.attach;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -12,6 +11,9 @@ import com.ksyun.media.shortvideo.utils.AuthInfoManager;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.contants.Constant;
 import com.video.newqu.ui.dialog.DownloadProgressDialog;
+import com.video.newqu.util.FileUtils;
+import com.video.newqu.util.ToastUtils;
+import com.video.newqu.util.Utils;
 import java.io.File;
 
 /**
@@ -53,7 +55,7 @@ public class VideoDownloadComposrTask {
      */
     private void createDownload() {
         //文件地址可能不是.mp4结尾的，需要判断下 rexVideoPath(name);
-        File watermarkFilePath=new File(Constant.DOWNLOAD_WATERMARK_VIDEO_PATH,Utils.rexVideoPath(Utils.getFileName(mFileNetPath)));
+        File watermarkFilePath=new File(Constant.DOWNLOAD_WATERMARK_VIDEO_PATH, Utils.rexVideoPath(Utils.getFileName(mFileNetPath)));
         //先判断添加水印之后的视频中是否存在将要下载的视频文件
         if(watermarkFilePath.exists()&&watermarkFilePath.isFile()){
             if(null!=mContext) ToastUtils.showFinlishToast((AppCompatActivity)mContext,null,null,"已保存至本地:"+Constant.DOWNLOAD_WATERMARK_VIDEO_PATH);

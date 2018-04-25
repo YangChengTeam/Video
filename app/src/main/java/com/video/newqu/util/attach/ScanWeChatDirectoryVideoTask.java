@@ -1,4 +1,4 @@
-package com.video.newqu.util;
+package com.video.newqu.util.attach;
 
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
@@ -9,6 +9,7 @@ import com.video.newqu.manager.ApplicationManager;
 import com.video.newqu.manager.DBScanWeiCacheManager;
 import com.video.newqu.ui.activity.MainActivity;
 import com.video.newqu.ui.fragment.WinXinVideoListFragment;
+import com.video.newqu.util.ScanWeixin;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -20,14 +21,17 @@ import java.util.List;
  * 微信视频扫描
  */
 
-public class ScanWeChatDirectoryTask extends AsyncTask<String,Void,List<WeiXinVideo>> {
+public class ScanWeChatDirectoryVideoTask extends AsyncTask<String,Void,List<WeiXinVideo>> {
 
+    private  int mMaxVideoNum=9;//一次最大展示扫描结果视频长度
     private  MainActivity mContext;
     private ScanWeixin mScanWeixin;
 
-    public  ScanWeChatDirectoryTask(MainActivity context){
+    public ScanWeChatDirectoryVideoTask(MainActivity context, int maxVideoNum){
         this.mContext=context;
+        this.mMaxVideoNum=maxVideoNum;
     }
+
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
@@ -45,7 +49,7 @@ public class ScanWeChatDirectoryTask extends AsyncTask<String,Void,List<WeiXinVi
                     mScanWeixin.setMinDurtion(3);
                     mScanWeixin.setMaxDurtion(Constant.MEDIA_VIDEO_EDIT_MAX_DURTION);
                     List<WeiXinVideo> weiXinVideos =mScanWeixin.scanFiles(params[0]);
-                    List<WeiXinVideo> newVideoList=null;
+                    List<WeiXinVideo> newVideoList;
                     if (null != weiXinVideos && weiXinVideos.size() > 0) {
                         //对视频时间进行倒序排序
                         Collections.sort(weiXinVideos, new Comparator<WeiXinVideo>() {
@@ -60,7 +64,7 @@ public class ScanWeChatDirectoryTask extends AsyncTask<String,Void,List<WeiXinVi
                         List<WeiXinVideo> locationVideoList = DBScanWeiCacheManager.getUploadVideoList();//之前扫描的所有记录
                         if (null != locationVideoList && locationVideoList.size() > 0) {
                             for (int i = 0; i < weiXinVideos.size(); i++) {
-                                if (newVideoList.size() >= 9) {
+                                if (newVideoList.size() >= mMaxVideoNum) {
                                     break;
                                 }
                                 WeiXinVideo weiXinVideo = weiXinVideos.get(i);
@@ -78,7 +82,7 @@ public class ScanWeChatDirectoryTask extends AsyncTask<String,Void,List<WeiXinVi
                             }
                         } else {
                             for (int i = 0; i < weiXinVideos.size(); i++) {
-                                if (newVideoList.size() >= 9) {
+                                if (newVideoList.size() >= mMaxVideoNum) {
                                     break;
                                 }
                                 newVideoList.add(weiXinVideos.get(i));
@@ -112,9 +116,16 @@ public class ScanWeChatDirectoryTask extends AsyncTask<String,Void,List<WeiXinVi
                     @Override
                     public void onUpload() {
                         //用户确定了上传事件
+                        ApplicationManager.getInstance().observerUpdata(Constant.OBSERVABLE_ACTION_SCANWEIXIN_VIDEO_FINLISH);
                         ApplicationManager.getInstance().observerUpdata(Constant.OBSERVABLE_ACTION_ADD_UPLOAD_TAKS);
+                        mContext=null;mScanWeixin=null;mMaxVideoNum=0;
+                    }
+                    @Override
+                    public void onDissmiss() {
+                        ApplicationManager.getInstance().observerUpdata(Constant.OBSERVABLE_ACTION_SCANWEIXIN_VIDEO_FINLISH);
                     }
                 });
+
                 FragmentManager supportFragmentManager = mContext.getSupportFragmentManager();
                 fragment.show(supportFragmentManager,"winxin_video");
             }

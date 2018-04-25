@@ -338,7 +338,7 @@ public class BatchFileUploadManager {
         Map<String,String>mParamVars = new HashMap<>();
         mParamVars.put("x:imeil", VideoApplication.mUuid);
         mParamVars.put("x:user_id",VideoApplication.getLoginUserID());
-        mParamVars.put("x:desp","没有视频介绍");//视频详情介绍
+        mParamVars.put("x:desp","");//视频详情介绍
         mParamVars.put("x:cur_frame","1");//帧数
         mParamVars.put("x:is_private","0");//是否隐私
         mParamVars.put("x:video_id",videoInfo.getID()+"");//视频ID

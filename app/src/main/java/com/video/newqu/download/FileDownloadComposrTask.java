@@ -1,13 +1,12 @@
 package com.video.newqu.download;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.widget.Toast;
 import com.video.newqu.contants.Constant;
 import com.video.newqu.ui.dialog.DownloadProgressDialog;
-import com.video.newqu.util.FileDownloadTask;
+import com.video.newqu.util.attach.FileDownloadTask;
 import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
 import java.io.File;

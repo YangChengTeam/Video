@@ -53,7 +53,7 @@ import com.video.newqu.util.SystemUtils;
 import com.video.newqu.util.TextViewTopicSpan;
 import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
-import com.video.newqu.util.VideoDownloadComposrTask;
+import com.video.newqu.util.attach.VideoDownloadComposrTask;
 import com.video.newqu.view.widget.GlideCircleTransform;
 import com.video.newqu.view.widget.VideoGroupRelativeLayout;
 import com.xinqu.videoplayer.full.WindowVideoPlayer;
@@ -299,16 +299,6 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
             bindingView.tvUserFans.setText(TextUtils.isEmpty(mVideoBean.getPlay_times())?"0次播放":Utils.formatW(Integer.parseInt(mVideoBean.getPlay_times()))+"次播放");
             bindingView.ivPrice.setImageResource(1==mVideoBean.getIs_interest()?R.drawable.iv_icon_follow_true:R.drawable.iv_follow_selector);
             setVideoRatio(Integer.parseInt(TextUtils.isEmpty(mVideoBean.getType())?"2":mVideoBean.getType()),bindingView.videoPlayer);
-            //布局的全局宽高变化监听器
-//            ViewTreeObserver viewTreeObserver = bindingView.reItemVideo.getViewTreeObserver();
-//            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener(){
-//                @Override
-//                public void onGlobalLayout() {
-//                    int mVideoViewHeight=bindingView.reItemVideo.getHeight();
-//                    bindingView.reVideoGroup.getLayoutParams().height=mVideoViewHeight;
-//                    bindingView.reItemVideo.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-//                }
-//            });
             HttpProxyCacheServer proxy = VideoApplication.getProxy();
             String proxyUrl = proxy.getProxyUrl(mVideoBean.getPath());
             bindingView.videoPlayer.setUp(proxyUrl, WindowVideoPlayer.SCREEN_WINDOW_LIST, ConfigSet.getInstance().isPalyerLoop(),mVideoBean.getDesp());
@@ -731,7 +721,7 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
                 bindingView.reInvalidView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ToastUtils.showCenterToast("您的视频审核不通过，无法播放和响应其他操作！");
+                        ToastUtils.showCenterToast("该视频审核未通过，无法播放！");
                     }
                 });
                 return;

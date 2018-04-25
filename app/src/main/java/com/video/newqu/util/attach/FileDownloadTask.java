@@ -1,8 +1,10 @@
-package com.video.newqu.util;
+package com.video.newqu.util.attach;
 
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import com.video.newqu.contants.Constant;
+import com.video.newqu.util.FileUtils;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -68,7 +70,7 @@ public class FileDownloadTask extends AsyncTask<String,Integer,File> {
         if(!file.exists()){
             file.mkdirs();
         }
-        String name=FileUtils.getFileName(params[0]);
+        String name= FileUtils.getFileName(params[0]);
         //下载的是视频文件，在这里将要下载的文件名称命名为带.mp4后缀的文件名称，方便创建添加水印任务
         if(mDownloadFileType==FILE_TYPE_VIDEO){
             if(!name.endsWith(".mp4")||name.endsWith(".MP4")){

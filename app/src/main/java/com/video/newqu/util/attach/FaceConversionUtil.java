@@ -1,4 +1,4 @@
-package com.video.newqu.util;
+package com.video.newqu.util.attach;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,6 +10,9 @@ import android.text.style.ImageSpan;
 import android.util.Log;
 import com.video.newqu.R;
 import com.video.newqu.bean.ChatEmoji;
+import com.video.newqu.util.FileUtils;
+import com.video.newqu.util.ScreenUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

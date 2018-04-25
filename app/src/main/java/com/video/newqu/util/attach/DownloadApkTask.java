@@ -1,4 +1,4 @@
-package com.video.newqu.util;
+package com.video.newqu.util.attach;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -18,6 +18,9 @@ import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.bean.UpdataApkInfo;
 import com.video.newqu.listener.OnDownloadListener;
+import com.video.newqu.util.ToastUtils;
+import com.video.newqu.util.Utils;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

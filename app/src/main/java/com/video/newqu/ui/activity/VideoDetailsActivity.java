@@ -30,9 +30,6 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.google.gson.Gson;
 import com.tbruyelle.rxpermissions.RxPermissions;
@@ -72,7 +69,7 @@ import com.video.newqu.util.TextViewTopicSpan;
 import com.video.newqu.util.TimeUtils;
 import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
-import com.video.newqu.util.VideoDownloadComposrTask;
+import com.video.newqu.util.attach.VideoDownloadComposrTask;
 import com.video.newqu.view.layout.DataChangeMarginView;
 import com.video.newqu.view.layout.VideoGroupRelativeLayout;
 import com.video.newqu.view.widget.GlideCircleTransform;
@@ -90,16 +87,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import cn.jpush.android.api.JPushInterface;
-import jp.wasabeef.glide.transformations.BlurTransformation;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-
 /**
  * TinyHung@outlook.com
  * 2017/5/25 9:26
  * 视频详情，留言评论列表
  */
-
 public class VideoDetailsActivity extends BaseActivity<ActivityVideoDetailsBinding> implements VideoDetailsContract.View, TopicClickListener , VideoComendClickListener {
 
     private String mVideoId;
@@ -199,7 +193,6 @@ public class VideoDetailsActivity extends BaseActivity<ActivityVideoDetailsBindi
                 }
             }
         };
-
         bindingView.btnBack.setOnClickListener(onClickListenet);
         bindingView.btnMenu.setOnClickListener(onClickListenet);
         bindingView.btnShare.setOnClickListener(onClickListenet);
@@ -243,7 +236,6 @@ public class VideoDetailsActivity extends BaseActivity<ActivityVideoDetailsBindi
         layoutParams.height=  bindingView.llTopBarBg.getMeasuredHeight();
         bindingView.topBarBg.setLayoutParams(layoutParams);
         bindingView.topBarBg.setBackgroundResource(R.drawable.home_top_bar_bg_shape);
-
         bindingView.collapseToolbar.measure(width,width);
         mHeaderViewHeight=bindingView.collapseToolbar.getMeasuredHeight();
         //滚动手势处理
@@ -635,7 +627,7 @@ public class VideoDetailsActivity extends BaseActivity<ActivityVideoDetailsBindi
             public void onGlobalLayout() {
                 mVideoViewHeight=bindingView.reItemVideo.getHeight();
                 bindingView.reVideoGroup.getLayoutParams().height=mVideoViewHeight;
-//                bindingView.videoPlayer.getLayoutParams().height=mVideoViewHeight;
+                bindingView.reInvalidView.getLayoutParams().height=mVideoViewHeight;
                 bindingView.reItemVideo.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 mHeaderViewHeight=mVideoViewHeight;
             }
@@ -809,7 +801,7 @@ public class VideoDetailsActivity extends BaseActivity<ActivityVideoDetailsBindi
                 bindingView.reInvalidView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ToastUtils.showCenterToast("您的视频审核不通过，无法播放!");
+                        ToastUtils.showCenterToast("该视频审核未通过，无法播放！");
                     }
                 });
                 return;

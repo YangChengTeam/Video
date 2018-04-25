@@ -42,7 +42,7 @@ import com.video.newqu.util.SystemUtils;
 import com.video.newqu.util.TextViewTopicSpan;
 import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
-import com.video.newqu.util.VideoDownloadComposrTask;
+import com.video.newqu.util.attach.VideoDownloadComposrTask;
 import com.video.newqu.view.widget.GlideCircleTransform;
 import com.video.newqu.view.widget.VideoGroupRelativeLayout;
 import com.xinqu.videoplayer.full.WindowVideoPlayer;
@@ -405,7 +405,7 @@ public class VerticalHistoryVidepPlayViewPager extends BasePager<PagerVideoPlaye
                 bindingView.reInvalidView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ToastUtils.showCenterToast("您的视频审核不通过，无法播放和响应其他操作！");
+                        ToastUtils.showCenterToast("该视频审核未通过，无法播放！");
                     }
                 });
                 return;

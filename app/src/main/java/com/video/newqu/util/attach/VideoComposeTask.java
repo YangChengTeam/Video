@@ -1,11 +1,12 @@
-package com.video.newqu.util;
+package com.video.newqu.util.attach;
 
 import com.ksyun.media.shortvideo.kit.KSYEditKit;
 import com.ksyun.media.shortvideo.utils.ShortVideoConstants;
-import com.video.newqu.VideoApplication;
 import com.video.newqu.bean.UploadVideoInfo;
 import com.video.newqu.manager.ApplicationManager;
 import com.video.newqu.contants.Constant;
+import com.video.newqu.util.FileUtils;
+
 import org.greenrobot.eventbus.EventBus;
 import java.io.File;
 import java.io.FileNotFoundException;

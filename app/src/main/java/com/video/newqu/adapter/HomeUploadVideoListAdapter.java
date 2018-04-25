@@ -13,7 +13,7 @@ import com.video.newqu.R;
 import com.video.newqu.bean.UploadVideoInfo;
 import com.video.newqu.util.CommonUtils;
 import com.video.newqu.util.ImageCache;
-import com.video.newqu.util.LoadLocalShortImgTask;
+import com.video.newqu.util.attach.LoadLocalShortImgTask;
 import com.video.newqu.util.SystemUtils;
 import com.video.newqu.view.widget.CircleProgressView;
 import java.util.ArrayList;

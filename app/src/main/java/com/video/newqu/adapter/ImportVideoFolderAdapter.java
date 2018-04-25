@@ -11,7 +11,7 @@ import com.video.newqu.bean.WeiXinVideo;
 import com.video.newqu.comadapter.BaseQuickAdapter;
 import com.video.newqu.comadapter.BaseViewHolder;
 import com.video.newqu.util.ImageCache;
-import com.video.newqu.util.LoadLocalBigImgTask;
+import com.video.newqu.util.attach.LoadLocalBigImgTask;
 import com.video.newqu.util.ScanWeixin;
 import java.util.List;
 import java.util.concurrent.ExecutorService;

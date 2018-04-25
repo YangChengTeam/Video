@@ -44,7 +44,7 @@ import com.video.newqu.util.ShareUtils;
 import com.video.newqu.util.SystemUtils;
 import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
-import com.video.newqu.util.VideoComposeProcessor;
+import com.video.newqu.util.attach.VideoComposeProcessor;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;

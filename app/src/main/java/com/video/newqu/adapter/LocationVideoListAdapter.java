@@ -29,9 +29,9 @@ public class LocationVideoListAdapter extends BaseQuickAdapter<WeiXinVideo,com.v
         super(R.layout.location_video_item, data);
         this.onItemClickListener=onItemClickListener;
         if (ScreenUtils.getScreenHeight() >= 1280) {
-            mItemHeight = ScreenUtils.dpToPxInt(139);
+            mItemHeight = ScreenUtils.dpToPxInt(150);
         } else {
-            mItemHeight = ScreenUtils.dpToPxInt(126);
+            mItemHeight = ScreenUtils.dpToPxInt(130);
         }
     }
 

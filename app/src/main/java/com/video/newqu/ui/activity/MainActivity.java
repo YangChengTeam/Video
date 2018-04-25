@@ -47,12 +47,12 @@ import com.video.newqu.upload.manager.BatchFileUploadManager;
 import com.video.newqu.util.DateParseUtil;
 import com.video.newqu.util.KSYAuthorPermissionsUtil;
 import com.video.newqu.util.Logger;
-import com.video.newqu.util.ScanWeChatDirectoryTask;
+import com.video.newqu.util.attach.ScanWeChatDirectoryVideoTask;
 import com.video.newqu.util.SharedPreferencesUtil;
 import com.video.newqu.util.SystemUtils;
 import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
-import com.video.newqu.util.VideoComposeProcessor;
+import com.video.newqu.util.attach.VideoComposeProcessor;
 import com.video.newqu.view.widget.HomeTabItem;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -75,13 +75,13 @@ import cn.jpush.android.api.JPushInterface;
 
 public class MainActivity extends TopBaseActivity implements MainContract.View, Observer {
 
-    private static final String TAG = "MainActivity";
     private List<Fragment> mFragments=null;
     private ActivityMainBinding bindingView;
     private boolean isLogin=false;//登录成功后是否显示我的界面
     private WeakReference<BatchFileUploadManager> mUploadManagerWeakReference=null;
     private MainPresenter mMainPresenter;
     private static final int REQUEST_PERMISSION_LOCATION = 255; // int should be between 0 and 255
+    private boolean weixinScaning=false;//是否正在扫描视频视频
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,7 +208,8 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
                 File filePath = new File(NetContants.WEICHAT_VIDEO_PATH);
                 //如果微信聊天文件夹存在
                 if(filePath.exists()){
-                    new ScanWeChatDirectoryTask(MainActivity.this).execute(filePath.getAbsolutePath());
+                    weixinScaning=true;
+                    new ScanWeChatDirectoryVideoTask(MainActivity.this,12).execute(filePath.getAbsolutePath());
                     //不存在微信文件夹，检查更新
                 }else{
                     checkedUploadVideoEvent();//检查上传任务
@@ -265,6 +266,7 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
         }
     }
 
+    //请求权限结果
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -303,49 +305,51 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
         if(null==VideoApplication.getInstance().getUserData()){
             setCureenIndex(0);
         }
-        //微信关注,用户未关注过、当天未弹窗、播放视频数量达到标准，弹出关注微信弹窗
-        if(!SharedPreferencesUtil.getInstance().getBoolean(Constant.FOLLOW_WEIXIN)&&SharedPreferencesUtil.getInstance().getInt(Constant.MAIN_FOLLOW_WEIXIN_TODAY, 0)!=VideoApplication.mToday&&SharedPreferencesUtil.getInstance().getInt(Constant.GRADE_PLAYER_VIDEO_COUNT)>=3){
-            SharedPreferencesUtil.getInstance().putInt(Constant.MAIN_FOLLOW_WEIXIN_TODAY, VideoApplication.mToday);//今天已经提示过了
-            FollowWeiXnDialog followWeiXnDialog=new FollowWeiXnDialog(MainActivity.this);
-            followWeiXnDialog.setOnItemClickListener(new FollowWeiXnDialog.OnItemClickListener() {
-                @Override
-                public void onFollow() {
-                    MobclickAgent.onEvent(MainActivity.this, "click_follow_wechat");
+        if(!weixinScaning){
+            //微信关注,用户未关注过、当天未弹窗、播放视频数量达到标准，弹出关注微信弹窗
+            if(!SharedPreferencesUtil.getInstance().getBoolean(Constant.FOLLOW_WEIXIN)&&SharedPreferencesUtil.getInstance().getInt(Constant.MAIN_FOLLOW_WEIXIN_TODAY, 0)!=VideoApplication.mToday&&SharedPreferencesUtil.getInstance().getInt(Constant.GRADE_PLAYER_VIDEO_COUNT)>=3){
+                SharedPreferencesUtil.getInstance().putInt(Constant.MAIN_FOLLOW_WEIXIN_TODAY, VideoApplication.mToday);//今天已经提示过了
+                FollowWeiXnDialog followWeiXnDialog=new FollowWeiXnDialog(MainActivity.this);
+                followWeiXnDialog.setOnItemClickListener(new FollowWeiXnDialog.OnItemClickListener() {
+                    @Override
+                    public void onFollow() {
+                        MobclickAgent.onEvent(MainActivity.this, "click_follow_wechat");
 //                    SharedPreferencesUtil.getInstance().putBoolean(Constant.FOLLOW_WEIXIN,true);
 //                    Intent intent= new Intent();
 //                    intent.setAction("android.intent.action.VIEW");
 //                    Uri contentUrl = Uri.parse("http://jump.hupeh.cn/xqsp1223.php");
 //                    intent.setData(contentUrl);
 //                    startActivity(intent);
-                    Utils.copyString("新趣小视频助手");
-                    ToastUtils.showCenterToast("已复制微信号");
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this)
-                            .setTitle("新趣小视频助手")
-                            .setMessage(getResources().getString(R.string.open_weixin_tips));
-                    builder.setNegativeButton("算了", null);
-                    builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            SharedPreferencesUtil.getInstance().putBoolean(Constant.FOLLOW_WEIXIN,true);
-                            try {
-                                Uri uri = Uri.parse("weixin://");
-                                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                                startActivity(intent);
-                            } catch (Exception e) {
-                                //若无法正常跳转，在此进行错误处理
-                                ToastUtils.showCenterToast("无法跳转到微信，请检查设备是否安装了微信！");
+                        Utils.copyString("新趣小视频助手");
+                        ToastUtils.showCenterToast("已复制微信号");
+                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this)
+                                .setTitle("新趣小视频助手")
+                                .setMessage(getResources().getString(R.string.open_weixin_tips));
+                        builder.setNegativeButton("算了", null);
+                        builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                SharedPreferencesUtil.getInstance().putBoolean(Constant.FOLLOW_WEIXIN,true);
+                                try {
+                                    Uri uri = Uri.parse("weixin://");
+                                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                                    startActivity(intent);
+                                } catch (Exception e) {
+                                    //若无法正常跳转，在此进行错误处理
+                                    ToastUtils.showCenterToast("无法跳转到微信，请检查设备是否安装了微信！");
+                                }
                             }
-                        }
-                    });
-                    builder.setCancelable(false);
-                    builder.show();
-                }
-            });
-            followWeiXnDialog.show();
-        //最后去初始化评分
-        }else if(SharedPreferencesUtil.getInstance().getInt(Constant.GRADE_PLAYER_VIDEO_COUNT)>0){
-            showGradDialog();
+                        });
+                        builder.setCancelable(false);
+                        builder.show();
+                    }
+                });
+                followWeiXnDialog.show();
+                //最后去初始化评分
+            }else if(SharedPreferencesUtil.getInstance().getInt(Constant.GRADE_PLAYER_VIDEO_COUNT)>0){
+                showGradDialog();
+            }
         }
     }
 
@@ -658,6 +662,10 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
                 //添加了批量上传任务
                 case Constant.OBSERVABLE_ACTION_ADD_UPLOAD_TAKS:
                     checkedUploadVideoEvent();
+                    break;
+                //结束了微信扫描的所有任务，此时只剩下上传了，防止多个弹窗同事出现
+                case Constant.OBSERVABLE_ACTION_SCANWEIXIN_VIDEO_FINLISH:
+                    weixinScaning=false;
                     break;
             }
         }

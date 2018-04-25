@@ -26,7 +26,7 @@ import java.util.List;
  * 微信文件夹下面的视频列表，多选，上传
  */
 
-public class WinXinVideoListFragment extends BaseDialogFragment<FragmentWeixinVideoBinding,MainPresenter>{
+public class WinXinVideoListFragment extends BaseDialogFragment<FragmentWeixinVideoBinding,MainPresenter> {
 
     private static List<WeiXinVideo> mData;
     private LocationVideoListAdapter mListAdapter;
@@ -68,17 +68,23 @@ public class WinXinVideoListFragment extends BaseDialogFragment<FragmentWeixinVi
                 List<WeiXinVideo> data = mListAdapter.getData();
                 if(null!=data&&data.size()>0){
                     String submitText="关闭";
+                    int count=0;
                     for (WeiXinVideo item : data) {
                         if(item.getIsSelector()){
-                            submitText="一键分享";
-                            break;
+                            count++;
                         }
+                    }
+                    if(count>0){
+                        submitText="分享 "+count+"/"+data.size();
                     }
                     bindingView.btnSubmit.setText(submitText);
                 }
             }
         });
         bindingView.recyerView.setAdapter(mListAdapter);
+        if(null!=mData&&mData.size()>0){
+            bindingView.btnSubmit.setText("分享 "+mData.size()+"/"+mData.size());
+        }
         SharedPreferencesUtil.getInstance().putBoolean(Constant.SETTING_DAY,true);
     }
 
@@ -143,9 +149,17 @@ public class WinXinVideoListFragment extends BaseDialogFragment<FragmentWeixinVi
         return null;
     }
 
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        if(null!=mOnDialogUploadListener){
+            mOnDialogUploadListener.onDissmiss();
+        }
+    }
 
     public interface  OnDialogUploadListener{
         void onUpload();
+        void onDissmiss();
     }
     private OnDialogUploadListener mOnDialogUploadListener;
 

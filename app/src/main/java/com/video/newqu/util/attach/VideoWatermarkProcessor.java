@@ -1,13 +1,12 @@
-package com.video.newqu.util;
+package com.video.newqu.util.attach;
 
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-
 import com.ksyun.media.shortvideo.kit.KSYEditKit;
 import com.ksyun.media.shortvideo.utils.ShortVideoConstants;
-
+import com.video.newqu.util.Utils;
 import java.lang.ref.WeakReference;
 import java.util.Timer;
 import java.util.TimerTask;

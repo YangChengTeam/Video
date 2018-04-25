@@ -1,10 +1,12 @@
-package com.video.newqu.util;
+package com.video.newqu.util.attach;
 
 import android.text.TextUtils;
 import com.ksyun.media.shortvideo.kit.KSYEditKit;
 import com.video.newqu.bean.UploadVideoInfo;
 import com.video.newqu.contants.Constant;
 import com.video.newqu.manager.ApplicationManager;
+import com.video.newqu.util.ToastUtils;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;

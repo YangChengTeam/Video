@@ -29,7 +29,7 @@ import com.video.newqu.util.SharedPreferencesUtil;
 import com.video.newqu.util.TextViewTopicSpan;
 import com.video.newqu.util.ToastUtils;
 import java.util.List;
-import static com.video.newqu.util.FaceConversionUtil.getInstace;
+import static com.video.newqu.util.attach.FaceConversionUtil.getInstace;
 
 
 /**
