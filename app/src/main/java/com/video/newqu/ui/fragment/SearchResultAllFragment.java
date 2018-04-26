@@ -524,6 +524,9 @@ public class SearchResultAllFragment extends BaseFragment<FragmentSearchLayoutBi
         if(null!=mvideo_list)mvideo_list.clear(); mvideo_list=null;
         if(null!=mUser_list)mUser_list.clear(); mUser_list=null;
         if(null!=mSearchHistoeyList)mSearchHistoeyList.clear(); mSearchHistoeyList=null;
+        if(null!=mSearchVideoListAdapter) mSearchVideoListAdapter.setNewData(null);
+        if(null!=mHistorySearchAdapter) mHistorySearchAdapter.setNewData(null);
+        if(null!=mHorUserListAdapter) mHorUserListAdapter.setNewData(null);
         mHistorySearchAdapter=null;mSearchVideoListAdapter=null;mHorUserListAdapter=null;
         headerLayoutBinding=null;
         mPresenter =null;searchKey=null;mCanelLayoutBinding=null;

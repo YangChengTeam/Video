@@ -37,16 +37,12 @@ import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
 import com.video.newqu.view.layout.MineDataChangeMarginView;
 import com.video.newqu.view.widget.SwipeLoadingProgress;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-
 
 /**
  * TinyHung@outlook.com
@@ -73,9 +69,7 @@ public class HomeLikeVideoFragment extends BaseFragment<MineFragmentRecylerBindi
             }
 
             @Override
-            public void onHideFinlish() {
-
-            }
+            public void onHideFinlish() {}
         });
     }
 
@@ -87,7 +81,6 @@ public class HomeLikeVideoFragment extends BaseFragment<MineFragmentRecylerBindi
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        EventBus.getDefault().register(this);
         mPresenter = new FollowListPresenter(getActivity());
         mPresenter.attachView(this);
         initAdapter();
@@ -436,42 +429,12 @@ public class HomeLikeVideoFragment extends BaseFragment<MineFragmentRecylerBindi
         }
     }
 
-    /**
-     * 订阅播放结果，以刷新界面
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(ChangingViewEvent event) {
-        if(null==event) return;
-        if(Constant.FRAGMENT_TYPE_LIKE!=event.getFragmentType())return;
-
-        if(null!=mVideoListAdapter&&null!=mGridLayoutManager){
-            mPage=event.getPage();
-            if(event.isFixedPosition()){
-                int poistion = event.getPoistion();
-                if(null!=mVideoListAdapter.getData()&&mVideoListAdapter.getData().size()>(poistion-1)){
-                    mGridLayoutManager.scrollToPosition(poistion);
-                }
-            }else{
-                List<FollowVideoList.DataBean.ListsBean> listsBeanList = event.getListsBeanList();
-                mVideoListAdapter.setNewData(listsBeanList);
-            }
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if(null!=mVideoListAdapter){
-            mVideoListAdapter.setNewData(null);
-            mVideoListAdapter=null;
-        }
-        mEmptyViewbindView=null;
-    }
-
     @Override
     public void onDestroy() {
-        EventBus.getDefault().unregister(this);
         ApplicationManager.getInstance().removeObserver(this);//移除订阅者
+        if(null!=mVideoListAdapter)mVideoListAdapter.setNewData(null);
+        if(null!=mEmptyViewbindView) mEmptyViewbindView.emptyView.onDestroy();
+        mEmptyViewbindView=null;     mVideoListAdapter=null;
         super.onDestroy();
     }
 
@@ -503,6 +466,18 @@ public class HomeLikeVideoFragment extends BaseFragment<MineFragmentRecylerBindi
                             loadFollowVideoList();
                         }
                         break;
+                }
+            }else if(arg instanceof ChangingViewEvent){
+                ChangingViewEvent changingViewEvent= (ChangingViewEvent) arg;
+                if(Constant.FRAGMENT_TYPE_LIKE==changingViewEvent.getFragmentType()&&null!=mVideoListAdapter&&null!=mGridLayoutManager){
+                    List<FollowVideoList.DataBean.ListsBean> listsBeanList = changingViewEvent.getListsBeanList();
+                    mPage=changingViewEvent.getPage();
+                    if(null!=listsBeanList){
+                        mVideoListAdapter.setNewData(listsBeanList);
+                    }
+                    if(null!= mVideoListAdapter.getData()&& mVideoListAdapter.getData().size()>(changingViewEvent.getPoistion()-1)){
+                        mGridLayoutManager.scrollToPosition(changingViewEvent.getPoistion());
+                    }
                 }
             }
         }

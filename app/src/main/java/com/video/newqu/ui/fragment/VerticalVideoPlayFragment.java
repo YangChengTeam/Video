@@ -31,15 +31,14 @@ import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
 import com.video.newqu.view.widget.VerticalViewPager;
 import com.xinqu.videoplayer.full.WindowVideoPlayer;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * TinyHung@Outlook.com
@@ -47,7 +46,7 @@ import java.util.Map;
  * 视频播放竖直滑动列表
  */
 
-public class VerticalVideoPlayFragment extends BaseFragment<FragmentVideoPlayListBinding,SlideVideoPlayerPresenter> implements SlideVideoPlayerContract.View {
+public class VerticalVideoPlayFragment extends BaseFragment<FragmentVideoPlayListBinding,SlideVideoPlayerPresenter> implements SlideVideoPlayerContract.View, Observer {
 
     private int mItemPoistion;
     private int mPage;
@@ -118,6 +117,7 @@ public class VerticalVideoPlayFragment extends BaseFragment<FragmentVideoPlayLis
             try{
                 mListsBeanList = new Gson().fromJson(mDataJson, FollowVideoList.class).getData().getLists();
                 if(null!= mListsBeanList && mListsBeanList.size()>0){
+                    ApplicationManager.getInstance().addObserver(this);
                     listSize= mListsBeanList.size();//实时记录当前已经加载的视频数量，用来加载更多判断
                     //初始化界面适配器
                     mVerticalPagerAdapter = new PlayListVerticalPagerAdapter();
@@ -142,7 +142,7 @@ public class VerticalVideoPlayFragment extends BaseFragment<FragmentVideoPlayLis
                             changingViewEvent.setFragmentType(mRootViewType);
                             changingViewEvent.setPage(mPage);
                             changingViewEvent.setPoistion(mItemPoistion);
-                            ApplicationManager.getInstance().observerUpdataToMusic(changingViewEvent);
+                            ApplicationManager.getInstance().observerUpdata(changingViewEvent);
                             //加载更多
                             if(mItemPoistion>=(listSize-1)){
                                 loadVideoList();
@@ -274,7 +274,7 @@ public class VerticalVideoPlayFragment extends BaseFragment<FragmentVideoPlayLis
     }
 
     /**
-     * 及时发送消息给用户信息界面，更新用户ID，和还原所有数据位初始状态
+     * 及时通知用户信息界面更新界面数据和状态
      * @param itemPoistion
      */
     private void sendUpdataUserDataMessage(int itemPoistion) {
@@ -286,7 +286,7 @@ public class VerticalVideoPlayFragment extends BaseFragment<FragmentVideoPlayLis
                 messageEvent.setPoistion(itemPoistion);
                 messageEvent.setUserCover(listsBean.getLogo());
                 messageEvent.setUserName(listsBean.getNickname());
-                EventBus.getDefault().post(messageEvent);
+                ApplicationManager.getInstance().observerUpdata(messageEvent);
             }
         }
     }
@@ -330,65 +330,6 @@ public class VerticalVideoPlayFragment extends BaseFragment<FragmentVideoPlayLis
         }
     }
 
-    /**
-     * 订阅刷新源数据的Event
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(VideoEventMessage event) {
-        //刷新
-        if(null!=event&&TextUtils.equals(Constant.EVENT_VIDEO_PLAY_PAGE_UPDATA,event.getMessage())){
-            FollowVideoList.DataBean.ListsBean mewListsBean = event.getListsBean();
-            if(null!=mewListsBean){
-                if(null!=mListsBeanList&&mListsBeanList.size()>0){
-                    int poistion = event.getPoistion();
-                    mListsBeanList.remove(poistion);
-                    mListsBeanList.add(poistion,mewListsBean);
-                }
-            }
-        //删除某个元素,后重新初始化界面
-        }else if(null!=event&&TextUtils.equals(Constant.EVENT_TOPIC_VIDEO_PLAY_PAGE_DETELE,event.getMessage())){
-            FollowVideoList.DataBean.ListsBean listsBean = event.getListsBean();
-            if(null!=listsBean){
-                if(null!=mListsBeanList&&mListsBeanList.size()>0){
-                    if(null!=mVerticalPagerAdapter){
-                        mListsBeanList.remove(event.getPoistion());
-                        mVerticalPagerAdapter.notifyDataSetChanged();
-                        bindingView.verticalViewPager.setAdapter(null);
-                        bindingView.verticalViewPager.setAdapter(mVerticalPagerAdapter);
-                        if(null!=mListsBeanList&&mListsBeanList.size()>0){
-                            listSize=mListsBeanList.size();
-                            mItemPoistion=0;
-                            sendUpdataUserDataMessage(mItemPoistion);
-                        }else{
-                            if(null!=mActivityWeakReference&&null!=mActivityWeakReference.get()){
-                                mActivityWeakReference.get().onBackPressed();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        updataGroupList(false);
-        //这里只需要通知首页的热门列表刷新界面即可
-        ChangingViewEvent changingViewEvent=new ChangingViewEvent();
-        changingViewEvent.setFragmentType(mRootViewType);
-        changingViewEvent.setPage(mPage);
-        changingViewEvent.setPoistion(mItemPoistion);
-        changingViewEvent.setListsBeanList(mListsBeanList);
-        ApplicationManager.getInstance().observerUpdataToMusic(changingViewEvent);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
 
     @Override
     public void onResume() {
@@ -415,6 +356,7 @@ public class VerticalVideoPlayFragment extends BaseFragment<FragmentVideoPlayLis
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        ApplicationManager.getInstance().removeObserver(this);
         onLifeChange(mItemPoistion,CHANGE_ODE_DESTROY);
         updataGroupList(true);
         if(null!=mHandler){
@@ -491,7 +433,7 @@ public class VerticalVideoPlayFragment extends BaseFragment<FragmentVideoPlayLis
         changingViewEvent.setPage(mPage);
         changingViewEvent.setPoistion(mItemPoistion);
         changingViewEvent.setListsBeanList(mListsBeanList);
-        ApplicationManager.getInstance().observerUpdataToMusic(changingViewEvent);
+        ApplicationManager.getInstance().observerUpdata(changingViewEvent);
     }
 
     /**
@@ -499,13 +441,14 @@ public class VerticalVideoPlayFragment extends BaseFragment<FragmentVideoPlayLis
      * @param fixedPosition 是否需要定位
      */
     private void updataGroupList(boolean fixedPosition) {
+        //这里只需要通知首页的热门列表刷新界面即可
         ChangingViewEvent changingViewEvent=new ChangingViewEvent();
         changingViewEvent.setFragmentType(mRootViewType);
-        changingViewEvent.setPage(mPage);
         changingViewEvent.setFixedPosition(fixedPosition);
+        changingViewEvent.setPage(mPage);
         changingViewEvent.setPoistion(mItemPoistion);
         changingViewEvent.setListsBeanList(mListsBeanList);
-        EventBus.getDefault().post(changingViewEvent);
+        ApplicationManager.getInstance().observerUpdata(changingViewEvent);
     }
 
     @Override
@@ -571,6 +514,49 @@ public class VerticalVideoPlayFragment extends BaseFragment<FragmentVideoPlayLis
         ToastUtils.showCenterToast(data);
         if(mPage >0){
             mPage--;
+        }
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if(null!=arg){
+            if(arg instanceof  VideoEventMessage){
+                VideoEventMessage data= (VideoEventMessage) arg;
+                //刷新
+                if(null!=data&&TextUtils.equals(Constant.EVENT_VIDEO_PLAY_PAGE_UPDATA,data.getMessage())){
+                    FollowVideoList.DataBean.ListsBean mewListsBean = data.getListsBean();
+                    if(null!=mewListsBean){
+                        if(null!=mListsBeanList&&mListsBeanList.size()>0){
+                            int poistion = data.getPoistion();
+                            mListsBeanList.remove(poistion);
+                            mListsBeanList.add(poistion,mewListsBean);
+                        }
+                    }
+                    //删除某个元素,后重新初始化界面
+                }else if(null!=data&&TextUtils.equals(Constant.EVENT_TOPIC_VIDEO_PLAY_PAGE_DETELE,data.getMessage())){
+                    FollowVideoList.DataBean.ListsBean listsBean = data.getListsBean();
+                    if(null!=listsBean){
+                        if(null!=mListsBeanList&&mListsBeanList.size()>0){
+                            if(null!=mVerticalPagerAdapter){
+                                mListsBeanList.remove(data.getPoistion());
+                                mVerticalPagerAdapter.notifyDataSetChanged();
+                                bindingView.verticalViewPager.setAdapter(null);
+                                bindingView.verticalViewPager.setAdapter(mVerticalPagerAdapter);
+                                if(null!=mListsBeanList&&mListsBeanList.size()>0){
+                                    listSize=mListsBeanList.size();
+                                    mItemPoistion=0;
+                                    sendUpdataUserDataMessage(mItemPoistion);
+                                }else{
+                                    if(null!=mActivityWeakReference&&null!=mActivityWeakReference.get()){
+                                        mActivityWeakReference.get().onBackPressed();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                updataGroupList(false);
+            }
         }
     }
 }

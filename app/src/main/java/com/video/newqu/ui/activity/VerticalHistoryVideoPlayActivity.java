@@ -15,7 +15,6 @@ import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.VerticalPagerAdapter;
 import com.video.newqu.base.BaseActivity;
-import com.video.newqu.bean.ChangingViewEvent;
 import com.video.newqu.bean.UserPlayerVideoHistoryList;
 import com.video.newqu.bean.VideoEventMessage;
 import com.video.newqu.manager.ApplicationManager;
@@ -23,20 +22,18 @@ import com.video.newqu.contants.Constant;
 import com.video.newqu.databinding.ActivityVideoPlayerBinding;
 import com.video.newqu.manager.ActivityCollectorManager;
 import com.video.newqu.ui.contract.UserHistoryContract;
-import com.video.newqu.ui.dialog.LoadingProgressView;
 import com.video.newqu.ui.pager.VerticalHistoryVidepPlayViewPager;
 import com.video.newqu.ui.presenter.UserHistoryPresenter;
 import com.video.newqu.util.ToastUtils;
 import com.video.newqu.view.widget.VerticalViewPager;
 import com.xinqu.videoplayer.full.WindowVideoPlayer;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * TinyHung@outlook.com
@@ -44,15 +41,13 @@ import java.util.Map;
  * 历史播放记录界面的可滑动详情列表
  */
 
-public class VerticalHistoryVideoPlayActivity extends BaseActivity<ActivityVideoPlayerBinding> implements UserHistoryContract.View {
+public class VerticalHistoryVideoPlayActivity extends BaseActivity<ActivityVideoPlayerBinding> implements UserHistoryContract.View, Observer {
 
 
     private  List<UserPlayerVideoHistoryList> mListsBeanList;
     private int mVideoPoistion=0;//默认的现实第几个
     private Map<Integer,VerticalHistoryVidepPlayViewPager> playerViews=new HashMap<>();//存放界面View的集合
     private PlayListVerticalPagerAdapter mPagerAdapter;
-    protected LoadingProgressView mLoadingProgressedView;
-    private int mFragmentType;
     private UserHistoryPresenter mUserHistoryPresenter;
     private Handler mHandler;
 
@@ -111,7 +106,6 @@ public class VerticalHistoryVideoPlayActivity extends BaseActivity<ActivityVideo
             return;
         }
         mVideoPoistion = intent.getIntExtra(Constant.KEY_POISTION, 0);
-        mFragmentType = intent.getIntExtra(Constant.KEY_FRAGMENT_TYPE, 0x9);
         initAdapter();
     }
 
@@ -122,7 +116,7 @@ public class VerticalHistoryVideoPlayActivity extends BaseActivity<ActivityVideo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
         showToolBar(false);
-        EventBus.getDefault().register(this);
+        ApplicationManager.getInstance().addObserver(this);
     }
 
     private void initAdapter() {
@@ -166,6 +160,7 @@ public class VerticalHistoryVideoPlayActivity extends BaseActivity<ActivityVideo
         if(null==mHandler) mHandler=new Handler();
         mHandler.postAtTime(new PlayVideoRunnable(waitPoistion), SystemClock.uptimeMillis()+misTime);//设置延缓任务
     }
+
 
     /**
      * 这个Runnable用来执行延缓任务，记录要执行的延缓任务，只有当前显示的viewPager cureenItem与当时提交的cureenItem相等才允许播放
@@ -294,25 +289,6 @@ public class VerticalHistoryVideoPlayActivity extends BaseActivity<ActivityVideo
     }
 
 
-    /**
-     * 订阅刷新源数据的Event
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(VideoEventMessage event) {
-        if(null!=event&& TextUtils.equals(Constant.EVENT_HISTORY_VIDEO_PLAY_PAGE_UPDATA,event.getMessage())){
-            UserPlayerVideoHistoryList data = event.getData();
-            if(null!=data){
-                if(null!=mListsBeanList&&mListsBeanList.size()>0){
-                    int poistion = event.getPoistion();
-                    mListsBeanList.remove(poistion);
-                    mListsBeanList.add(poistion,data);
-                    ApplicationManager.getInstance().getUserPlayerDB().updatePlayerHistoryInfo(data);
-                }
-            }
-        }
-    }
-
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -371,29 +347,37 @@ public class VerticalHistoryVideoPlayActivity extends BaseActivity<ActivityVideo
     @Override
     public void onDestroy() {
         WindowVideoPlayer.releaseAllVideos();
-        onChildDestroyView(mVideoPoistion);
+        ApplicationManager.getInstance().removeObserver(this);
         if(null!=mUserHistoryPresenter) mUserHistoryPresenter.detachView();
-        if(null!=mListsBeanList&&mListsBeanList.size()>0){
-            //将观看的结果发送至跳转者(订阅方),订阅方需要刷新观看进度
-            ChangingViewEvent changingViewEvent=new ChangingViewEvent();
-            changingViewEvent.setFragmentType(mFragmentType);
-//            changingViewEvent.setPage(mPage);
-            changingViewEvent.setPoistion(mVideoPoistion);
-            EventBus.getDefault().post(changingViewEvent);
-            mListsBeanList.clear();
-            mListsBeanList=null;
-        }
-        if(null!=playerViews){
-            playerViews.clear();
-            playerViews=null;
-        }
+        onChildDestroyView(mVideoPoistion);
         if(null!=mHandler){
             mHandler.removeMessages(0);//这句话可以移除所有的延缓任务
             mHandler=null;
         }
-        WindowVideoPlayer.releaseAllVideos();
+        if(null!=mListsBeanList) mListsBeanList.clear();
+        if(null!=playerViews)playerViews.clear();
+        mListsBeanList=null;mListsBeanList=null;
         super.onDestroy();
         ActivityCollectorManager.removeActivity(this);
-        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if(null!=arg){
+            if(arg instanceof VideoEventMessage){
+                VideoEventMessage data= (VideoEventMessage) arg;
+                if(null!=data&& TextUtils.equals(Constant.EVENT_HISTORY_VIDEO_PLAY_PAGE_UPDATA,data.getMessage())){
+                    UserPlayerVideoHistoryList dataList = data.getData();
+                    if(null!=data){
+                        if(null!=mListsBeanList&&mListsBeanList.size()>0){
+                            int poistion = data.getPoistion();
+                            mListsBeanList.remove(poistion);
+                            mListsBeanList.add(poistion,dataList);
+                            ApplicationManager.getInstance().getUserPlayerDB().updatePlayerHistoryInfo(dataList);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

@@ -33,12 +33,11 @@ import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
 import com.video.newqu.view.layout.DataChangeView;
 import com.video.newqu.view.refresh.SwipePullRefreshLayout;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * TinyHung@outlook.com
@@ -46,7 +45,7 @@ import java.util.List;
  * 话题列表视频
  */
 
-public class TopicVideoListFragment extends BaseFragment<FragmentRecylerBinding,TopicVideoPresenter> implements  TopicVideoContract.View {
+public class TopicVideoListFragment extends BaseFragment<FragmentRecylerBinding,TopicVideoPresenter> implements  TopicVideoContract.View, Observer {
 
     private int mPage=0;
     private String mTopicID;
@@ -95,6 +94,7 @@ public class TopicVideoListFragment extends BaseFragment<FragmentRecylerBinding,
         mPresenter = new TopicVideoPresenter(getActivity());
         mPresenter.attachView(this);
         if(!TextUtils.isEmpty(mTopicID)){
+            ApplicationManager.getInstance().addObserver(this);
             mTopicID=Utils.slipTopic(mTopicID);
             initAdapter();
             bindingView.swiperefreshLayout.postDelayed(new Runnable() {
@@ -127,7 +127,10 @@ public class TopicVideoListFragment extends BaseFragment<FragmentRecylerBinding,
 
     @Override
     public void onDestroy() {
+        ApplicationManager.getInstance().removeObserver(this);
+        if(null!=mVideoListAdapter) mVideoListAdapter.setNewData(null);
         if(null!=mEmptyViewbindView) mEmptyViewbindView.emptyView.onDestroy();
+        mVideoListAdapter=null;mEmptyViewbindView=null;
         super.onDestroy();
     }
 
@@ -338,55 +341,39 @@ public class TopicVideoListFragment extends BaseFragment<FragmentRecylerBinding,
     public void showReportVideoResult(String data) {}
 
     @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
-    /**
-     * 订阅播放结果，以刷新界面
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(ChangingViewEvent event) {
-        if(null==event) return;
-        if(Constant.FRAGMENT_TYPE_TOPIC_LIST!=event.getFragmentType())return;
-        if(null!=mVideoListAdapter&&null!=mGridLayoutManager){
-            mPage=event.getPage();
-            if(event.isFixedPosition()){
-                int poistion = event.getPoistion();
-                if(null!= mVideoListAdapter.getData()&& mVideoListAdapter.getData().size()>(poistion-1)){
-                    mGridLayoutManager.scrollToPosition(poistion);
-                }
-            }else{
-                List<FollowVideoList.DataBean.ListsBean> listsBeanList = event.getListsBeanList();
-                if(null!=listsBeanList&&listsBeanList.size()>0){
-                    List<TopicVideoList.DataBean.VideoListBean> data =new ArrayList<>();
-                    for (FollowVideoList.DataBean.ListsBean video : listsBeanList) {
-                        TopicVideoList.DataBean.VideoListBean videoListBean=new TopicVideoList.DataBean.VideoListBean();
-                        videoListBean.setVideo_id(video.getVideo_id());
-                        videoListBean.setUser_id(video.getUser_id());
-                        videoListBean.setIs_interest(video.getIs_interest());
-                        videoListBean.setPath(video.getPath());
-                        videoListBean.setType(video.getType());
-                        videoListBean.setComment_times(video.getComment_count());
-                        videoListBean.setIs_follow(video.getIs_follow());
-                        videoListBean.setCollect_times(video.getCollect_times());
-                        videoListBean.setCover(video.getCover());
-                        videoListBean.setAdd_time(video.getAdd_time());
-                        videoListBean.setDesp(video.getDesp());
-                        videoListBean.setNickname(video.getNickname());
-                        videoListBean.setLogo(video.getLogo());
-                        videoListBean.setPlay_times(video.getPlay_times());
-                        videoListBean.setShare_times(video.getShare_times());
-                        data.add(videoListBean);
+    public void update(Observable o, Object arg) {
+        if(null!=arg){
+            if(arg instanceof ChangingViewEvent){
+                ChangingViewEvent changingViewEvent= (ChangingViewEvent) arg;
+                if(Constant.FRAGMENT_TYPE_TOPIC_LIST==changingViewEvent.getFragmentType()&&null!=mVideoListAdapter&&null!=mGridLayoutManager){
+                    mPage=changingViewEvent.getPage();
+                    List<FollowVideoList.DataBean.ListsBean> listsBeanList = changingViewEvent.getListsBeanList();
+                    if(null!=listsBeanList&&listsBeanList.size()>0){
+                        List<TopicVideoList.DataBean.VideoListBean> data =new ArrayList<>();
+                        for (FollowVideoList.DataBean.ListsBean video : listsBeanList) {
+                            TopicVideoList.DataBean.VideoListBean videoListBean=new TopicVideoList.DataBean.VideoListBean();
+                            videoListBean.setVideo_id(video.getVideo_id());
+                            videoListBean.setUser_id(video.getUser_id());
+                            videoListBean.setIs_interest(video.getIs_interest());
+                            videoListBean.setPath(video.getPath());
+                            videoListBean.setType(video.getType());
+                            videoListBean.setComment_times(video.getComment_count());
+                            videoListBean.setIs_follow(video.getIs_follow());
+                            videoListBean.setCollect_times(video.getCollect_times());
+                            videoListBean.setCover(video.getCover());
+                            videoListBean.setAdd_time(video.getAdd_time());
+                            videoListBean.setDesp(video.getDesp());
+                            videoListBean.setNickname(video.getNickname());
+                            videoListBean.setLogo(video.getLogo());
+                            videoListBean.setPlay_times(video.getPlay_times());
+                            videoListBean.setShare_times(video.getShare_times());
+                            data.add(videoListBean);
+                        }
+                        mVideoListAdapter.setNewData(data);
+                        if(null!= mVideoListAdapter.getData()&& mVideoListAdapter.getData().size()>(changingViewEvent.getPoistion()-1)){
+                            mGridLayoutManager.scrollToPosition(changingViewEvent.getPoistion());
+                        }
                     }
-                    mVideoListAdapter.setNewData(data);
                 }
             }
         }

@@ -47,7 +47,6 @@ import com.video.newqu.view.widget.GlideCircleTransform;
 import com.video.newqu.view.widget.VideoGroupRelativeLayout;
 import com.xinqu.videoplayer.full.WindowVideoPlayer;
 import com.xinqu.videoplayer.full.WindowVideoPlayerStandard;
-import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
@@ -753,7 +752,7 @@ public class VerticalHistoryVidepPlayViewPager extends BasePager<PagerVideoPlaye
                     videoEventMessage.setMessage(Constant.EVENT_HISTORY_VIDEO_PLAY_PAGE_UPDATA);
                     videoEventMessage.setData(mVideoBean);
                     videoEventMessage.setPoistion(mPoistion);
-                    EventBus.getDefault().post(videoEventMessage);//通知持有者刷新界面
+                    ApplicationManager.getInstance().observerUpdata(videoEventMessage);
                 }
                 ApplicationManager.getInstance().observerUpdata(Constant.OBSERVABLE_ACTION_FOLLOW_VIDEO_CHANGED);
             }else{
@@ -793,7 +792,7 @@ public class VerticalHistoryVidepPlayViewPager extends BasePager<PagerVideoPlaye
                         videoEventMessage.setMessage(Constant.EVENT_HISTORY_VIDEO_PLAY_PAGE_UPDATA);
                         videoEventMessage.setData(mVideoBean);
                         videoEventMessage.setPoistion(mPoistion);
-                        EventBus.getDefault().post(videoEventMessage);//通知持有者刷新界面
+                        ApplicationManager.getInstance().observerUpdata(videoEventMessage);
                     }
                     ApplicationManager.getInstance().observerUpdata(Constant.OBSERVABLE_ACTION_FOLLOW_USER_CHANGED);
                 }else{

@@ -163,6 +163,9 @@ public class SearchActivity extends BaseActivity<ActivitySearchBinding> implemen
         if(null!=mSearchPresenter){
             mSearchPresenter.detachView();
         }
+        if(null!=mAutoCompletSearchAdapter)mAutoCompletSearchAdapter.setNewData(null);
+        if(null!=mSearchAutoResults) mSearchAutoResults.clear();
+        mSearchAutoResults=null; mAutoCompletSearchAdapter=null;
         Runtime.getRuntime().gc();
     }
 

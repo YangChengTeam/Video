@@ -371,6 +371,8 @@ public class SearchResultUserFragment extends BaseFragment<FragmentSearchLayoutB
     @Override
     public void onDestroy() {
         if(null!=mUser_list) mUser_list.clear();mUser_list=null;
+        if(null!=mSearchResultUserAdapter)mSearchResultUserAdapter.setNewData(null);
+        if(null!=mHistorySearchAdapter)mHistorySearchAdapter.setNewData(null);
         if(null!=mSearchHistoeyList) mSearchHistoeyList.clear();mSearchHistoeyList=null;
         mSearchResultUserAdapter=null;mHistorySearchAdapter=null;searchKey=null;
         mPresenter =null;mCanelLayoutBinding=null;

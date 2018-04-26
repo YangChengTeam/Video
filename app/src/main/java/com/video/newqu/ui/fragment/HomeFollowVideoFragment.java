@@ -100,12 +100,9 @@ public class HomeFollowVideoFragment extends BaseFragment<FragmentVideoFollowBin
         }
     }
 
-
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        EventBus.getDefault().register(this);
         mPresenter = new FollowPresenter(getActivity());
         mPresenter.attachView(this);
         initAdapter();//初始化普通列表
@@ -418,32 +415,6 @@ public class HomeFollowVideoFragment extends BaseFragment<FragmentVideoFollowBin
     }
 
 
-    /**
-     * 订阅播放结果，以刷新界面
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(ChangingViewEvent event) {
-        if(null==event) return;
-        if(Constant.FRAGMENT_TYPE_FOLLOW!=event.getFragmentType())return;
-        if(null!=mVideoListAdapter&&null!=mGridLayoutManager){
-            mPage=event.getPage();
-            if(event.isFixedPosition()){
-                int poistion = event.getPoistion();
-                if(null!= mVideoListAdapter.getData()&& mVideoListAdapter.getData().size()>(poistion-1)){
-                    mGridLayoutManager.scrollToPosition(poistion);
-                }
-            }else{
-                List<FollowVideoList.DataBean.ListsBean> listsBeanList = event.getListsBeanList();
-                mVideoListAdapter.setNewData(listsBeanList);
-            }
-        }
-    }
-
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
 
     @Override
     public void onDetach() {
@@ -453,12 +424,12 @@ public class HomeFollowVideoFragment extends BaseFragment<FragmentVideoFollowBin
 
     @Override
     public void onDestroy() {
-        EventBus.getDefault().unregister(this);
+        ApplicationManager.getInstance().removeObserver(this);
         if(null!=mVideoListAdapter) mVideoListAdapter.setNewData(null);
         if(null!=mEmptyViewbindView) mEmptyViewbindView.emptyView.onDestroy();
+        mVideoListAdapter=null;mEmptyViewbindView=null;
         super.onDestroy();
     }
-
 
     /**
      * 来自外界的刷新命令
@@ -529,6 +500,19 @@ public class HomeFollowVideoFragment extends BaseFragment<FragmentVideoFollowBin
                             loadVideoList();
                         }
                         break;
+                }
+            //播放进度观察
+            }else if(arg instanceof ChangingViewEvent){
+                ChangingViewEvent changingViewEvent= (ChangingViewEvent) arg;
+                if(Constant.FRAGMENT_TYPE_FOLLOW==changingViewEvent.getFragmentType()&&null!=mVideoListAdapter&&null!=mGridLayoutManager){
+                    List<FollowVideoList.DataBean.ListsBean> listsBeanList = changingViewEvent.getListsBeanList();
+                    mPage=changingViewEvent.getPage();
+                    if(null!=listsBeanList){
+                        mVideoListAdapter.setNewData(listsBeanList);
+                    }
+                    if(null!= mVideoListAdapter.getData()&& mVideoListAdapter.getData().size()>(changingViewEvent.getPoistion()-1)){
+                        mGridLayoutManager.scrollToPosition(changingViewEvent.getPoistion());
+                    }
                 }
             }
         }

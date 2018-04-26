@@ -53,9 +53,6 @@ import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
 import com.video.newqu.view.layout.DataChangeMarginView;
 import com.video.newqu.view.widget.GlideCircleTransform;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.Serializable;
@@ -64,6 +61,8 @@ import java.lang.ref.WeakReference;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * TinyHung@Outlook.com
@@ -71,7 +70,7 @@ import java.util.List;
  * 垂直的滑动列表用户中心界面
  */
 
-public class VerticalAuthorDetailsFragment extends BaseFragment<ActivityAuthorDetailsBinding,AuthorDetailPresenter> implements AuthorDetailContract.View,OnUserVideoListener {
+public class VerticalAuthorDetailsFragment extends BaseFragment<ActivityAuthorDetailsBinding,AuthorDetailPresenter> implements AuthorDetailContract.View,OnUserVideoListener, Observer {
 
     private GroupVideoListAdapter mExpandedVideoListAdapter;
     private UserVideoListAdapter mVideoListAdapter;//九宫格
@@ -231,6 +230,7 @@ public class VerticalAuthorDetailsFragment extends BaseFragment<ActivityAuthorDe
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ApplicationManager.getInstance().addObserver(this);
         initAdapter();
         mPresenter = new AuthorDetailPresenter(getActivity());
         mPresenter.attachView(this);
@@ -266,50 +266,6 @@ public class VerticalAuthorDetailsFragment extends BaseFragment<ActivityAuthorDe
             }
         }
     }
-
-
-    /**
-     * 接收播放器界面的通知,还原所有数据
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(VerticalPlayMessageEvent event) {
-        if(null!=event){
-            this.mAuthorID=event.getAuthorID();
-            mInfoBean=null;
-            if(null!=mGroupList) mGroupList.clear();
-            mGroupList=null;
-            mPage=0;//还原页数
-            initUserData();//还原所有View数据为初始状态
-            if(null!=mVideoListAdapter) mVideoListAdapter.setNewData(null);
-            if(null!= mExpandedVideoListAdapter) mExpandedVideoListAdapter.setNewData(null);//还原视频列表为空
-            if (null!= mEmptyViewbindView) mEmptyViewbindView.emptyView.showLoadingView();
-            //悬浮的
-            mCurrentPosition=0;//还原悬浮的头部
-            bindingView.tvHeaderView.setText("--");
-            bindingView.tvHeaderView.setVisibility(View.GONE);
-            //强制还原显示模式为九宫格样式
-            isExpanded=false;
-            setContentViewExpanedState(isExpanded);
-            //最后设置用户昵称、头像基本信息
-            bindingView.tvTitleUserName.setText(TextUtils.isEmpty(event.getUserName()) ? "火星人" : event.getUserName());
-            bindingView.tvSubtitleUserName.setText(TextUtils.isEmpty(event.getUserName()) ? "火星人" : event.getUserName());
-            //展开AppBarlayout
-            bindingView.appBarLayout.setExpanded(true);
-            //作者头像
-            Glide.with(this)
-                    .load(TextUtils.isEmpty(event.getUserCover())?R.drawable.iv_mine:Utils.imageUrlChange(event.getUserCover()))
-                    .error(R.drawable.iv_mine)
-                    .crossFade()//渐变
-                    .thumbnail(0.1f)
-                    .animate(R.anim.item_alpha_in)//加载中动画
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存源资源和转换后的资源
-                    .centerCrop()//中心点缩放
-                    .skipMemoryCache(true)//跳过内存缓存
-                    .transform(new GlideCircleTransform(getActivity()))
-                    .into(bindingView.ivUserIcon);
-        }
-    }
-
 
     @Override
     protected void onInvisible() {
@@ -954,34 +910,20 @@ public class VerticalAuthorDetailsFragment extends BaseFragment<ActivityAuthorDe
         startTargetActivity(Constant.KEY_FRAGMENT_TYPE_FANS_LIST,title,mAuthorID,type);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        if(null!=mGroupList) mGroupList.clear();
-        mGroupList=null;
-        if(null!=mActivityWeakReference){
-            mActivityWeakReference.clear();
-        }
-        if(null!=bindingView) bindingView.recyerView.setAdapter(null);
-        mVideoListAdapter=null;mExpandedVideoListAdapter=null;
-        mCurrentPosition=0;isExpanded=false;mAuthorID=null;mInfoBean=null;
-    }
 
     @Override
     public void onDestroy() {
+        ApplicationManager.getInstance().removeObserver(this);
+        if(null!=mGroupList) mGroupList.clear();
+        if(null!=mVideoListAdapter) mVideoListAdapter.setNewData(null);
+        if(null!=mExpandedVideoListAdapter) mExpandedVideoListAdapter.setNewData(null);
+        if(null!=mEmptyViewbindView) mEmptyViewbindView.emptyView.onDestroy();
+        mGroupList=null;
+        if(null!=mActivityWeakReference) mActivityWeakReference.clear();
+        if(null!=bindingView) bindingView.recyerView.setAdapter(null);
+        mVideoListAdapter=null;mExpandedVideoListAdapter=null;
+        mCurrentPosition=0;isExpanded=false;mAuthorID=null;mInfoBean=null;
         super.onDestroy();
     }
 
@@ -1196,5 +1138,47 @@ public class VerticalAuthorDetailsFragment extends BaseFragment<ActivityAuthorDe
             }
         }
         return videoGroupLists;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if(null!=arg){
+            if(arg instanceof VerticalPlayMessageEvent){
+                VerticalPlayMessageEvent data= (VerticalPlayMessageEvent) arg;
+                mInfoBean=null;
+                if(null!=mGroupList) mGroupList.clear();
+                mGroupList=null;
+                this.mAuthorID=data.getAuthorID();
+                mPage=0;//还原页数
+                initUserData();//还原所有View数据为初始状态
+                if(null!=mVideoListAdapter) mVideoListAdapter.setNewData(null);
+                if(null!= mExpandedVideoListAdapter) mExpandedVideoListAdapter.setNewData(null);//还原视频列表为空
+                if (null!= mEmptyViewbindView) mEmptyViewbindView.emptyView.showLoadingView();
+                //悬浮的
+                mCurrentPosition=0;//还原悬浮的头部
+                bindingView.tvHeaderView.setText("--");
+                bindingView.tvHeaderView.setVisibility(View.GONE);
+                //强制还原显示模式为九宫格样式
+                isExpanded=false;
+                setContentViewExpanedState(isExpanded);
+                //最后设置用户昵称、头像基本信息
+                bindingView.tvTitleUserName.setText(TextUtils.isEmpty(data.getUserName()) ? "火星人" : data.getUserName());
+                bindingView.tvSubtitleUserName.setText(TextUtils.isEmpty(data.getUserName()) ? "火星人" : data.getUserName());
+                //展开AppBarlayout
+                bindingView.appBarLayout.setExpanded(true);
+                //作者头像
+                Glide.with(this)
+                        .load(TextUtils.isEmpty(data.getUserCover())?R.drawable.iv_mine:Utils.imageUrlChange(data.getUserCover()))
+                        .error(R.drawable.iv_mine)
+                        .crossFade()//渐变
+                        .thumbnail(0.1f)
+                        .animate(R.anim.item_alpha_in)//加载中动画
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存源资源和转换后的资源
+                        .centerCrop()//中心点缩放
+                        .skipMemoryCache(true)//跳过内存缓存
+                        .transform(new GlideCircleTransform(getActivity()))
+                        .into(bindingView.ivUserIcon);
+            }
+        }
     }
 }

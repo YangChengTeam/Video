@@ -27,7 +27,6 @@ import com.video.newqu.ui.activity.VerticalVideoPlayActivity;
 import com.video.newqu.ui.activity.VideoDetailsActivity;
 import com.video.newqu.ui.contract.HotVideoContract;
 import com.video.newqu.ui.presenter.HotVideoPresenter;
-import com.video.newqu.util.Logger;
 import com.video.newqu.util.SharedPreferencesUtil;
 import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
@@ -46,7 +45,6 @@ import java.util.Observer;
 
 public class HomeHotVideoFragment extends BaseFragment<FragmentHotRecylerBinding,HotVideoPresenter> implements  HotVideoContract.View, Observer {
 
-    private static final String TAG = "HomeHotVideoFragment";
     private HomeVideoListAdapter mVideoListAdapter;
     private int mPage=0;//当前页数
     private GridLayoutManager mGridLayoutManager;
@@ -65,7 +63,6 @@ public class HomeHotVideoFragment extends BaseFragment<FragmentHotRecylerBinding
         mPresenter.attachView(this);
         initAdapter();
         ApplicationManager.getInstance().addObserver(this);
-        ApplicationManager.getInstance().addObserverToMusic(this);
         //第一次使用弹出使用提示
         if(1!=SharedPreferencesUtil.getInstance().getInt(Constant.TIPS_HOT_CODE)&&null!= mVideoListAdapter &&null!= mVideoListAdapter.getData()&& mVideoListAdapter.getData().size()>0){
             bindingView.tvTipsMessage.setVisibility(View.VISIBLE);
@@ -344,9 +341,9 @@ public class HomeHotVideoFragment extends BaseFragment<FragmentHotRecylerBinding
     @Override
     public void onDestroy() {
         ApplicationManager.getInstance().removeObserver(this);
-        ApplicationManager.getInstance().removeObserverToMusic(this);
         if(null!=mVideoListAdapter) mVideoListAdapter.setNewData(null);
         if(null!=mEmptyViewbindView) mEmptyViewbindView.emptyView.onDestroy();
+        mVideoListAdapter=null;mEmptyViewbindView=null;
         super.onDestroy();
     }
 
@@ -369,7 +366,7 @@ public class HomeHotVideoFragment extends BaseFragment<FragmentHotRecylerBinding
                 }
             }else if(arg instanceof ChangingViewEvent){
                 ChangingViewEvent changingViewEvent= (ChangingViewEvent) arg;
-                if(null!=changingViewEvent&&Constant.FRAGMENT_TYPE_HOT==changingViewEvent.getFragmentType()&&null!=mVideoListAdapter&&null!=mGridLayoutManager){
+                if(Constant.FRAGMENT_TYPE_HOT==changingViewEvent.getFragmentType()&&null!=mVideoListAdapter&&null!=mGridLayoutManager){
                     List<FollowVideoList.DataBean.ListsBean> listsBeanList = changingViewEvent.getListsBeanList();
                     mPage=changingViewEvent.getPage();
                     if(null!=listsBeanList){

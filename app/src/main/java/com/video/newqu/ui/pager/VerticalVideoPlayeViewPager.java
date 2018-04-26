@@ -435,7 +435,7 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
                         videoEventMessage.setMessage(Constant.EVENT_VIDEO_PLAY_PAGE_UPDATA);
                         videoEventMessage.setListsBean(mVideoBean);
                         videoEventMessage.setPoistion(mPoistion);
-                        EventBus.getDefault().post(videoEventMessage);//通知持有者刷新界面
+                        ApplicationManager.getInstance().observerUpdata(videoEventMessage);
                     }
                 }
 
@@ -1280,7 +1280,7 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
                         videoEventMessage.setMessage(Constant.EVENT_VIDEO_PLAY_PAGE_UPDATA);
                         videoEventMessage.setListsBean(mVideoBean);
                         videoEventMessage.setPoistion(mPoistion);
-                        EventBus.getDefault().post(videoEventMessage);//通知持有者刷新界面
+                        ApplicationManager.getInstance().observerUpdata(videoEventMessage);
                     }
                     ApplicationManager.getInstance().observerUpdata(Constant.OBSERVABLE_ACTION_FOLLOW_VIDEO_CHANGED);
                 }else{
@@ -1321,7 +1321,7 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
                         videoEventMessage.setMessage(Constant.EVENT_VIDEO_PLAY_PAGE_UPDATA);
                         videoEventMessage.setListsBean(mVideoBean);
                         videoEventMessage.setPoistion(mPoistion);
-                        EventBus.getDefault().post(videoEventMessage);//通知持有者刷新界面
+                        ApplicationManager.getInstance().observerUpdata(videoEventMessage);
                     }
                     ApplicationManager.getInstance().observerUpdata(Constant.OBSERVABLE_ACTION_FOLLOW_USER_CHANGED);
                 }else{
@@ -1423,7 +1423,7 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
                                 videoEventMessage.setMessage(Constant.EVENT_TOPIC_VIDEO_PLAY_PAGE_DETELE);
                                 videoEventMessage.setListsBean(mVideoBean);
                                 videoEventMessage.setPoistion(mPoistion);
-                                EventBus.getDefault().post(videoEventMessage);
+                                ApplicationManager.getInstance().observerUpdata(videoEventMessage);
                             }
                             ApplicationManager.getInstance().observerUpdata(Constant.OBSERVABLE_ACTION_VIDEO_CHANGED);
                         }else{
@@ -1466,7 +1466,7 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
                                 videoEventMessage.setMessage(Constant.EVENT_TOPIC_VIDEO_PLAY_PAGE_UPDATA);
                                 videoEventMessage.setListsBean(mVideoBean);
                                 videoEventMessage.setPoistion(mPoistion);
-                                EventBus.getDefault().post(videoEventMessage);//通知持有者刷新界面
+                                ApplicationManager.getInstance().observerUpdata(videoEventMessage);
                             }
                             ApplicationManager.getInstance().observerUpdata(Constant.OBSERVABLE_ACTION_VIDEO_CHANGED);
                         }else{
@@ -1509,7 +1509,7 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
                                 videoEventMessage.setMessage(Constant.EVENT_TOPIC_VIDEO_PLAY_PAGE_UPDATA);
                                 videoEventMessage.setListsBean(mVideoBean);
                                 videoEventMessage.setPoistion(mPoistion);
-                                EventBus.getDefault().post(videoEventMessage);//通知持有者刷新界面
+                                ApplicationManager.getInstance().observerUpdata(videoEventMessage);
                             }
                             ApplicationManager.getInstance().observerUpdata(Constant.OBSERVABLE_ACTION_VIDEO_CHANGED);
                         }else{
@@ -1551,7 +1551,7 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
                 videoEventMessage.setMessage(Constant.EVENT_TOPIC_VIDEO_PLAY_PAGE_UPDATA);
                 videoEventMessage.setListsBean(mVideoBean);
                 videoEventMessage.setPoistion(mPoistion);
-                EventBus.getDefault().post(videoEventMessage);//通知持有者刷新界面
+                ApplicationManager.getInstance().observerUpdata(videoEventMessage);
             }
         }
     }
