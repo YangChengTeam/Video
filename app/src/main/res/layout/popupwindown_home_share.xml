@@ -34,10 +34,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="12dp"
-                        android:text="上传成功，点击对应平台分享视频"
+                        android:text="上传成功，请点击对应平台分享视频"
                         android:textColor="@color/black"
                         android:layout_centerInParent="true"
-                        android:textSize="14sp"
+                        android:textSize="15sp"
                         android:layout_gravity="center_horizontal"/>
                 </RelativeLayout>
                 <android.support.v7.widget.RecyclerView

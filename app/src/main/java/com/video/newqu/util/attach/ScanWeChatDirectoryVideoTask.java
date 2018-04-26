@@ -10,7 +10,6 @@ import com.video.newqu.contants.Constant;
 import com.video.newqu.manager.ApplicationManager;
 import com.video.newqu.manager.DBScanWeiCacheManager;
 import com.video.newqu.ui.dialog.WinXinVideoListDialog;
-import com.video.newqu.util.Logger;
 import com.video.newqu.util.ScanWeixin;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,7 +19,7 @@ import java.util.List;
 /**
  * TinyHung@Outlook.com
  * 2017/7/17 11:13
- * 微信视频扫描
+ * 微信视频扫描，异步扫描Task，扫描结果全局弹出提供用户选择上传
  */
 
 public class ScanWeChatDirectoryVideoTask extends AsyncTask<String,Void,List<WeiXinVideo>> {

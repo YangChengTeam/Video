@@ -237,81 +237,6 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding,MainPresenter
         checkedUploadTake(false);
     }
 
-
-
-    //===========================================视频合并============================================
-
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        EventBus.getDefault().register(this);
-//    }
-//
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//        EventBus.getDefault().unregister(this);
-//    }
-
-    /**
-     * 订阅视频合并，视频合并任务和上传任务在一起显示
-     */
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onMessageEvent(final UploadVideoInfo data) {
-//        if (null != data) {
-//            switch (data.getComposeState()) {
-//                //合并开始
-//                case Constant.VIDEO_COMPOSE_STARTED:
-//                    updataProgress(data);
-//                    break;
-//                //合并进度
-//                case Constant.VIDEO_COMPOSE_PROGRESS:
-//                    updataProgress(data);
-//                    break;
-//                //合并完成
-//                case Constant.VIDEO_COMPOSE_FINLISHED:
-//                    data.setItemType(1);
-//                    updataProgress(data);
-//                    break;
-//                //开始上传,加入上传队列中
-//                case Constant.VIDEO_UPLOAD_STARTED:
-//                    VideoApplication.videoComposeFinlish=false;
-//                    data.setItemType(0);
-//                    data.setUploadType(100);
-//                    updataProgress(data);
-//                    //接入的是WIFI
-//                    if(1==Utils.getNetworkType()){
-//                        VideoUploadTaskManager.getInstance().setUploadListener(this).addUploadTaskAndExcute(data);
-//                        //不是WIFI网络
-//                    }else {
-//                        //用户刚刚最新添加了任务
-//                        if(Utils.isCheckNetwork()){
-//                            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity())
-//                                    .setTitle("视频上传提示")
-//                                    .setMessage("您的设备未接入WIFI网络，继续使用移动网络上传可能会产生额外的流量费用，是否继续上传?");
-//                            builder.setPositiveButton("继续上传",
-//                                    new DialogInterface.OnClickListener() {
-//                                        @Override
-//                                        public void onClick(DialogInterface dialog, int which) {
-//                                            dialog.dismiss();
-//                                            VideoUploadTaskManager.getInstance().setUploadListener(HomeFragment.this).addUploadTaskAndExcute(data);
-//                                        }
-//                                    });
-//                            builder.setNegativeButton("WIFI下自动上传", null);
-//                            builder.setCancelable(false);
-//                            builder.show();
-//                        //不是WIFI也未接入网络
-//                        }else{
-//                            //没有网络
-//                            showErrorToast(null,null,"没有可用的网络连接");
-//                        }
-//                    }
-//                    break;
-//            }
-//        }
-//    }
-
-
     //===========================================视频上传============================================
 
     private TreeMap<Long,UploadVideoInfo> mUploadVideoInfoMap=new TreeMap<>();//用来存放上传的任务列表，为了解决上传进度条错乱问题
@@ -602,7 +527,6 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding,MainPresenter
         }
     }
 
-
     /**
      * 刷新上传进度条
      * @param data
@@ -615,63 +539,6 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding,MainPresenter
         message.obj=data;
         mHandler.sendMessage(message);
     }
-
-//    /**
-//     * 刷新适配器,包含上传任何和合并任务,
-//     * @param videoInfo
-//     */
-//    private synchronized void updataProgress(UploadVideoInfo videoInfo) {
-//        if(null!=mUploadLayoutManager&&null!=mUploadVideoListAdapter&&!getActivity().isFinishing()){
-//            List<Long> keyList = mUploadVideoListAdapter.getKeyList();
-//            //找出哪一个条目需要刷新
-//            if(null!=keyList&&keyList.size()>0){
-//                int poistion=0;
-//                for (int i = 0; i < keyList.size(); i++) {
-//                    if(videoInfo.getId()==keyList.get(i)){
-//                        poistion=i;
-//                        break;
-//                    }
-//                }
-//                try {
-//                    int firstVisibleItemPosition = mUploadLayoutManager.findFirstVisibleItemPosition();
-//                    if(poistion-firstVisibleItemPosition>=0){
-//                        View childAt = bindingView.uploadRecylerView.getChildAt(poistion-firstVisibleItemPosition);
-//                        if(null!=childAt){
-//                            HomeUploadVideoListAdapter.VideoHolder childViewHolder = (HomeUploadVideoListAdapter.VideoHolder) bindingView.uploadRecylerView.getChildViewHolder(childAt);
-//                            if(null!=childViewHolder){
-//                                childViewHolder.tv_item_title.setTextColor(CommonUtils.getColor(R.color.white));
-//                                if(1==videoInfo.getItemType()){
-//                                    //合并的任务
-//                                    childViewHolder.tv_item_title.setText("合并中");
-//                                    childViewHolder.circleProgressbar.setProgress(videoInfo.getComposeProgress());
-//                                }else{
-//                                    //上传的任务
-//                                    childViewHolder.tv_item_title.setText("上传中");
-//                                    childViewHolder.circleProgressbar.setProgress(videoInfo.getUploadProgress());
-//                                }
-//                            }else{
-//                                mUploadVideoListAdapter.setNewData(mUploadVideoInfoMap);
-//                                mUploadVideoListAdapter.notifyDataSetChanged();//备用的
-//                            }
-//                        }else{
-//                            mUploadVideoListAdapter.setNewData(mUploadVideoInfoMap);
-//                            mUploadVideoListAdapter.notifyDataSetChanged();
-//                        }
-//                    }else{
-//                        mUploadVideoListAdapter.setNewData(mUploadVideoInfoMap);
-//                        mUploadVideoListAdapter.notifyDataSetChanged();
-//                    }
-//                }catch (Exception e){
-//                    mUploadVideoListAdapter.setNewData(mUploadVideoInfoMap);
-//                    mUploadVideoListAdapter.notifyDataSetChanged();
-//                }
-//            }else{
-//                mUploadVideoListAdapter.setNewData(mUploadVideoInfoMap);
-//                mUploadVideoListAdapter.notifyDataSetChanged();
-//            }
-//        }
-//    }
-
 
     /**
      * 刷新适配器,包含上传任何和合并任务,
@@ -811,6 +678,7 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding,MainPresenter
         VideoComposeProcessor.getInstance().onDestory();
     }
 
+    //=======================================登录登出、视频合并=======================================
     /**
      * 观察者更新界面
      * @param o
@@ -846,7 +714,7 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding,MainPresenter
                             break;
                         //合并失败
                         case Constant.VIDEO_UPLOAD_ERROR:
-                            ToastUtils.showCenterToast("合并失败！源文件不受支持");
+                            showErrorToast(null,null,"合并失败！源文件不受支持");
                             if(null!=mUploadVideoInfoMap){
                                 mUploadVideoInfoMap.remove(data.getId());
                                 if(null!=mUploadVideoListAdapter){
