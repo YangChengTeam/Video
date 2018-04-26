@@ -22,7 +22,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -72,6 +71,7 @@ import com.umeng.socialize.UMShareConfig;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.XinQuFragmentPagerAdapter;
+import com.video.newqu.base.TopBaseActivity;
 import com.video.newqu.bean.CaptionsInfo;
 import com.video.newqu.bean.MediaFilterInfo;
 import com.video.newqu.bean.MediaSoundFilter;
@@ -144,7 +144,7 @@ import rx.functions.Action1;
  * 集成金山云的短视频编辑界面
  */
 
-public class MediaEditActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, MediaEditContract.View,OnMediaStickerListener {
+public class MediaEditActivity extends TopBaseActivity implements ActivityCompat.OnRequestPermissionsResultCallback, MediaEditContract.View,OnMediaStickerListener {
 
     //onOutputConfirmClick 视频输出
     private  final int FILTER_DISABLE = 0;//默认的无滤镜
@@ -1305,19 +1305,6 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
         startActivityForResult(intent, Constant.INTENT_LOGIN_EQUESTCODE);
         overridePendingTransition( R.anim.menu_enter,0);//进场动画
     }
-
-    /**
-     * 绑定手机号码
-     */
-    private void binDingPhoneNumber() {
-        Intent intent = new Intent(MediaEditActivity.this, PhoneChangedActivity.class);
-        intent.putExtra(Constant.KEY_TITLE,"绑定手机号码");
-        intent.putExtra(Constant.KEY_FRAGMENT_TYPE,Constant.FRAGMENT_TYPE_PHONE_BINDING);
-        intent.putExtra(Constant.KEY_CONTENT_EXTRA,getResources().getString(R.string.binding_phone_tips));
-        startActivityForResult(intent,Constant.MEDIA_BINDING_PHONE_REQUEST);
-        overridePendingTransition(R.anim.menu_enter, 0);//进场动画
-    }
-
     /**
      * 选中本地背景音乐后返回结果处理
      */
@@ -1364,7 +1351,7 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
                 //登录成功,判断用户有没有绑定手机号码
                 if (booleanExtra&&null!=VideoApplication.getInstance().getUserData()) {
                     if(!VideoApplication.getInstance().userIsBinDingPhone()){
-                        binDingPhoneNumber();
+                        binDingPhoneNumber("绑定手机号码",Constant.FRAGMENT_TYPE_PHONE_BINDING,getResources().getString(R.string.binding_phone_tips));
                         return;
                     }
                 }else{
@@ -1660,11 +1647,10 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
                 onOutputConfirmClick();
                 return;
             }else{
-                binDingPhoneNumber();
+                binDingPhoneNumber("绑定手机号码",Constant.FRAGMENT_TYPE_PHONE_BINDING,getResources().getString(R.string.binding_phone_tips));
             }
         }
     }
-
     /**
      *  视频输出
      */

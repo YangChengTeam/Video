@@ -962,7 +962,7 @@ public class VideoDetailsActivity extends BaseActivity<ActivityVideoDetailsBindi
                 if(booleanExtra){
                     getVideoInfo();//刷新
                     if (null!=VideoApplication.getInstance().getUserData()&&!VideoApplication.getInstance().userIsBinDingPhone()) {
-                        binDingPhoneNumber();
+                        binDingPhoneNumber("绑定手机号码",Constant.FRAGMENT_TYPE_PHONE_BINDING,"发布视频需要验证手机号");
                     }
                 }
             }

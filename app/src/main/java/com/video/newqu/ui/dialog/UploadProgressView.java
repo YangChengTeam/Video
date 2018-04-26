@@ -15,7 +15,7 @@ import com.video.newqu.util.Utils;
 public class UploadProgressView extends BaseDialog <DialogLoadProgressLayoutBinding>{
     private boolean isBack=false;
     public UploadProgressView(Activity context, boolean isShowProgress) {
-        super(context, R.style.SpinKitViewSaveFileDialogAnimation);
+        super(context, R.style.CommendDialogStyle);
         setContentView(R.layout.dialog_load_progress_layout);
         if(isShowProgress){
             bindingView.circleProgressbar.setVisibility(View.VISIBLE);

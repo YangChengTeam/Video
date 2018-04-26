@@ -1,19 +1,27 @@
-package com.video.newqu.ui.fragment;
+package com.video.newqu.ui.dialog;
 
+import android.app.Activity;
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
 import com.video.newqu.R;
 import com.video.newqu.adapter.LocationVideoListAdapter;
-import com.video.newqu.base.BaseDialogFragment;
+import com.video.newqu.base.BaseDialog;
 import com.video.newqu.bean.VideoInfos;
 import com.video.newqu.bean.WeiChactVideoInfo;
 import com.video.newqu.bean.WeiXinVideo;
 import com.video.newqu.contants.Constant;
-import com.video.newqu.databinding.FragmentWeixinVideoBinding;
+import com.video.newqu.databinding.DialogWeixinVideoBinding;
 import com.video.newqu.listener.OnItemClickListener;
 import com.video.newqu.manager.DBBatchVideoUploadManager;
-import com.video.newqu.ui.presenter.MainPresenter;
 import com.video.newqu.util.FileUtils;
 import com.video.newqu.util.SharedPreferencesUtil;
 import com.video.newqu.util.VideoUtils;
@@ -26,20 +34,34 @@ import java.util.List;
  * 微信文件夹下面的视频列表，多选，上传
  */
 
-public class WinXinVideoListFragment extends BaseDialogFragment<FragmentWeixinVideoBinding,MainPresenter> {
+public class WinXinVideoListDialog extends BaseDialog<DialogWeixinVideoBinding> {
 
-    private static List<WeiXinVideo> mData;
     private LocationVideoListAdapter mListAdapter;
 
-    public static WinXinVideoListFragment newInstance(List<WeiXinVideo> weiXinVideos) {
-        WinXinVideoListFragment fragment=new WinXinVideoListFragment();
-        mData=weiXinVideos;
-        return fragment;
+    public WinXinVideoListDialog(@NonNull Activity context) {
+        super(context,R.style.CommendDialogStyle);
+        setContentView(R.layout.dialog_weixin_video);
+        initLayoutParams();
     }
 
-    @Override
-    public int getLayoutId() {
-        return R.layout.fragment_weixin_video;
+    private void initLayoutParams() {
+        Window window = getWindow();
+        WindowManager.LayoutParams attributes = window.getAttributes();//得到布局管理者
+        WindowManager systemService = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);//得到窗口管理者
+        DisplayMetrics displayMetrics=new DisplayMetrics();//创建设备屏幕的管理者
+        systemService.getDefaultDisplay().getMetrics(displayMetrics);//得到屏幕的宽高
+        int hight= FrameLayout.LayoutParams.WRAP_CONTENT;//取出布局的高度
+        attributes.height= hight;
+        attributes.width= systemService.getDefaultDisplay().getWidth();
+        attributes.gravity= Gravity.BOTTOM;
+        ViewTreeObserver viewTreeObserver = bindingView.bottomSheet.getViewTreeObserver();
+        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener(){
+            @Override
+            public void onGlobalLayout() {
+                bindingView.contentBg.getLayoutParams().height=bindingView.bottomSheet.getHeight();
+                bindingView.bottomSheet.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
     }
 
     @Override
@@ -59,9 +81,8 @@ public class WinXinVideoListFragment extends BaseDialogFragment<FragmentWeixinVi
         };
         bindingView.btnSubmit.setOnClickListener(onClickListener);
         bindingView.btnCancle.setOnClickListener(onClickListener);
-
         bindingView.recyerView.setLayoutManager(new GridLayoutManager(getContext(),3,GridLayoutManager.VERTICAL,false));
-        mListAdapter = new LocationVideoListAdapter(mData, new OnItemClickListener() {
+        mListAdapter = new LocationVideoListAdapter(null, new OnItemClickListener() {
             @Override
             public void OnItemClick(int position) {
                 //更新底部按钮
@@ -82,12 +103,17 @@ public class WinXinVideoListFragment extends BaseDialogFragment<FragmentWeixinVi
             }
         });
         bindingView.recyerView.setAdapter(mListAdapter);
-        if(null!=mData&&mData.size()>0){
-            bindingView.btnSubmit.setText("分享 "+mData.size()+"/"+mData.size());
-        }
-//        SharedPreferencesUtil.getInstance().putBoolean(Constant.SETTING_DAY,true);
     }
 
+    public void setData(List<WeiXinVideo> data){
+        if(null!=mListAdapter&&isShowing()){
+            mListAdapter.setNewData(data);
+            if(null!=data&&data.size()>0){
+                bindingView.btnSubmit.setText("分享 "+data.size()+"/"+data.size());
+            }
+            SharedPreferencesUtil.getInstance().putBoolean(Constant.SETTING_DAY,true);//标记为已扫描状态
+        }
+    }
 
     /**
      * 点击了上传按钮
@@ -168,10 +194,8 @@ public class WinXinVideoListFragment extends BaseDialogFragment<FragmentWeixinVi
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if(null!=mData) mData.clear();
-        if(null!=mListAdapter) mListAdapter.setNewData(null);
-        mListAdapter =null;mOnDialogUploadListener=null;mData=null;
+    protected void onStop() {
+        super.onStop();
+        if(null!=mListAdapter) mListAdapter.setNewData(null);mListAdapter =null;
     }
 }

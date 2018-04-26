@@ -28,7 +28,7 @@ public class CommonMenuDialog extends BottomSheetDialog {
     private VideoDetailsMenuAdapter mVideoDetailsMenuAdapter;
 
     public CommonMenuDialog(Activity context) {
-        super(context, R.style.SpinKitViewSaveFileDialogAnimation);
+        super(context, R.style.CommendDialogStyle);
         setContentView(R.layout.dialog_video_details_menu);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         this.context=context;

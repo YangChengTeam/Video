@@ -19,7 +19,7 @@ public class FollowWeiXnDialog extends BaseDialog<DialogFollowWeixinLayoutBindin
     private String tips="免费送红包啦！！关注微信公众号就有机会领取微信红包哦!";
 
     public FollowWeiXnDialog(@NonNull Activity context) {
-        super(context,R.style.SpinKitViewSaveFileDialogAnimation);
+        super(context,R.style.CommendDialogStyle);
         setContentView(R.layout.dialog_follow_weixin_layout);
         Utils.setDialogWidth(this);
     }

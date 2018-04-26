@@ -21,8 +21,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-
-import com.blankj.utilcode.util.LogUtils;
 import com.tencent.bugly.Bugly;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.UMShareAPI;
@@ -49,7 +47,6 @@ import com.video.newqu.ui.fragment.MineFragment;
 import com.video.newqu.ui.presenter.MainPresenter;
 import com.video.newqu.upload.manager.BatchFileUploadManager;
 import com.video.newqu.util.DateParseUtil;
-import com.video.newqu.util.Logger;
 import com.video.newqu.util.attach.ScanWeChatDirectoryVideoTask;
 import com.video.newqu.util.SharedPreferencesUtil;
 import com.video.newqu.util.SystemUtils;
@@ -213,8 +210,7 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
                 //如果微信聊天文件夹存在
                 if(filePath.exists()){
                     weixinScaning=true;
-                    ToastUtils.showCenterToast("开始扫描本地视频文件");
-                    new ScanWeChatDirectoryVideoTask(MainActivity.this,12).execute(filePath.getAbsolutePath());
+                    new ScanWeChatDirectoryVideoTask(getApplicationContext(), 9).execute(filePath.getAbsolutePath());
                     //不存在微信文件夹，检查更新
                 }else{
                     checkedUploadVideoEvent();//检查上传任务
@@ -544,7 +540,7 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
                 }
                 //登录成功,判断用户有没有绑定手机号码
                 if (null!=VideoApplication.getInstance().getUserData()&&!VideoApplication.getInstance().userIsBinDingPhone()) {
-                    binDingPhoneNumber();
+                    binDingPhoneNumber("绑定手机号码",Constant.FRAGMENT_TYPE_PHONE_BINDING,"发布视频需要验证手机号");
                 }
             }
         }else if(requestCode==0xa1){
@@ -582,11 +578,6 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
                     }
                 }
                 checkedUploadVideoEvent();
-//                //金山云鉴权
-//                if(!AuthInfoManager.getInstance().getAuthState()){
-//                    //在这里与金山云通信获得授权
-//                    KSYAuthorPermissionsUtil.init();
-//                }
             }
         }
     }

@@ -1,14 +1,16 @@
 package com.video.newqu.util.attach;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+import com.video.newqu.VideoApplication;
 import com.video.newqu.bean.WeiXinVideo;
 import com.video.newqu.contants.Constant;
 import com.video.newqu.manager.ApplicationManager;
 import com.video.newqu.manager.DBScanWeiCacheManager;
-import com.video.newqu.ui.activity.MainActivity;
-import com.video.newqu.ui.fragment.WinXinVideoListFragment;
+import com.video.newqu.ui.dialog.WinXinVideoListDialog;
+import com.video.newqu.util.Logger;
 import com.video.newqu.util.ScanWeixin;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,10 +26,10 @@ import java.util.List;
 public class ScanWeChatDirectoryVideoTask extends AsyncTask<String,Void,List<WeiXinVideo>> {
 
     private  int mMaxVideoNum=9;//一次最大展示扫描结果视频长度
-    private  MainActivity mContext;
+    private Context mContext;
     private ScanWeixin mScanWeixin;
 
-    public ScanWeChatDirectoryVideoTask(MainActivity context, int maxVideoNum){
+    public ScanWeChatDirectoryVideoTask(Context context, int maxVideoNum){
         this.mContext=context;
         this.mMaxVideoNum=maxVideoNum;
     }
@@ -110,9 +112,10 @@ public class ScanWeChatDirectoryVideoTask extends AsyncTask<String,Void,List<Wei
     protected void onPostExecute(List<WeiXinVideo> weiXinVideos) {
         super.onPostExecute(weiXinVideos);
         if(null!=weiXinVideos&&weiXinVideos.size()>0){
-            if(null!=mContext){
-                WinXinVideoListFragment fragment = WinXinVideoListFragment.newInstance(weiXinVideos);
-                fragment.setOnDialogUploadListener(new WinXinVideoListFragment.OnDialogUploadListener() {
+            Activity activity = VideoApplication.getInstance().getRunActivity();
+            if(null!=activity&&!activity.isFinishing()){
+                WinXinVideoListDialog dialog =new WinXinVideoListDialog(activity);
+                dialog.setOnDialogUploadListener(new WinXinVideoListDialog.OnDialogUploadListener() {
                     @Override
                     public void onUpload() {
                         //用户确定了上传事件
@@ -122,12 +125,11 @@ public class ScanWeChatDirectoryVideoTask extends AsyncTask<String,Void,List<Wei
                     }
                     @Override
                     public void onDissmiss() {
-                        ApplicationManager.getInstance().observerUpdata(Constant.OBSERVABLE_ACTION_SCANWEIXIN_VIDEO_FINLISH);
+                        ApplicationManager.getInstance().observerUpdata(Constant.OBSERVABLE_ACTION_SCANWEIXIN_VIDEO_FINLISH);//告诉首页，弹窗已经关闭了
                     }
                 });
-
-                FragmentManager supportFragmentManager = mContext.getSupportFragmentManager();
-                fragment.show(supportFragmentManager,"winxin_video");
+                dialog.show();
+                dialog.setData(weiXinVideos);
             }
         }
     }

@@ -18,7 +18,6 @@ import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -56,6 +55,7 @@ import com.ksyun.media.streamer.logstats.StatsLogReport;
 import com.umeng.analytics.MobclickAgent;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
+import com.video.newqu.base.TopBaseActivity;
 import com.video.newqu.bean.MediaFilterInfo;
 import com.video.newqu.bean.MediaMVInfo;
 import com.video.newqu.bean.MediaSoundFilter;
@@ -72,7 +72,6 @@ import com.video.newqu.camera.util.FileUtils;
 import com.video.newqu.camera.view.CameraHintView;
 import com.video.newqu.comadapter.BaseQuickAdapter;
 import com.video.newqu.comadapter.listener.OnItemClickListener;
-import com.video.newqu.event.MessageEvent;
 import com.video.newqu.manager.ApplicationManager;
 import com.video.newqu.contants.Constant;
 import com.video.newqu.listener.PerfectClickViewListener;
@@ -103,10 +102,9 @@ import java.util.Map;
  * 集成金山云的短视频录制界面
  */
 
-public class MediaRecordActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
+public class MediaRecordActivity extends TopBaseActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private  final int MESSAGE_COMPLETED = 100;//视频合并完成
-
     private final  int PERMISSION_REQUEST_CAMERA_AUDIOREC = 1;   //摄像头、麦克风请求授权的请求码
     private  final int REQUEST_CODE = 10010;
     private  final int AUDIO_FILTER_DISABLE = 0;  //不使用音频滤镜的类型标志

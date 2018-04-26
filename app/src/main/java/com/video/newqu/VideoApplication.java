@@ -1,7 +1,9 @@
 package com.video.newqu;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 import com.blankj.utilcode.util.Utils;
@@ -46,6 +48,15 @@ public class VideoApplication extends Application {
     public static int mToday=0;
     public static int mBuildChanleType=0;
     private String[] mLocations=new String[]{"39","116"};//默认是北京坐标
+    private Activity mActivity=null;
+
+    public Activity getRunActivity() {
+        return mActivity;
+    }
+
+    public void setActivity(Activity activity) {
+        mActivity = activity;
+    }
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -73,7 +84,6 @@ public class VideoApplication extends Application {
         mToday = Integer.parseInt(CommonDateParseUtil.getNowDay());
         int pid = android.os.Process.myPid();
         String pName = SystemUtils.getProcessName(getApplicationContext(),pid);
-        Logger.d("VideoApplication","onCreate,ProcessID="+pid+",ProcessName="+pName);
         if(!TextUtils.isEmpty(pName)){
             //主进程
             if(TextUtils.equals("com.video.newqu",pName)){
@@ -99,6 +109,34 @@ public class VideoApplication extends Application {
         //极光消息推送
         JPushInterface.setDebugMode(false);
         JPushInterface.init(mInstance);
+        //注册监听所有的Activity生命周期,用在全局的弹窗上面，任意界面都可以弹窗
+        this.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {}
+
+            @Override
+            public void onActivityStarted(Activity activity) {}
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+                setActivity(activity);
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+                setActivity(null);
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {}
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {}
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {}
+        });
+
         new Thread(){
             @Override
             public void run() {

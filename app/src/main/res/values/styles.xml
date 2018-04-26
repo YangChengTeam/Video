@@ -100,7 +100,7 @@ colorAccent:主题色，如输入框，系统的自定义空间等
     </style>
 
     <!--弹窗的点击外部可关闭的Dialog样式-->
-    <style name="SpinKitViewSaveFileDialogAnimation" parent="android:style/Theme.Dialog">
+    <style name="CommendDialogStyle" parent="android:style/Theme.Dialog">
         <!-- 是否有标题-->
         <item name="android:windowNoTitle">true</item>
         <!--背景颜色及透明程度-->
@@ -109,20 +109,6 @@ colorAccent:主题色，如输入框，系统的自定义空间等
         <item name="android:windowIsFloating">true</item>
         <!--是否模糊-->
         <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:windowCloseOnTouchOutside">true</item>
-        <item name="android:windowAnimationStyle">@style/HomeItemPopupAnimation</item>
-    </style>
-
-    <style name="NoBgDialogStyle" parent="android:style/Theme.Dialog">
-        <!-- 是否有标题-->
-        <item name="android:windowNoTitle">true</item>
-        <!--背景颜色及透明程度-->
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <!--是否浮现在activity之上-->
-        <!--是否浮现在activity之上-->
-        <item name="android:windowIsFloating">true</item>
-        <!--是否模糊-->
-        <item name="android:backgroundDimEnabled">false</item>
         <item name="android:windowCloseOnTouchOutside">true</item>
         <item name="android:windowAnimationStyle">@style/HomeItemPopupAnimation</item>
     </style>

@@ -28,7 +28,7 @@ import java.util.List;
 public class ShareDialog extends BottomSheetDialog {
 
     public ShareDialog(AppCompatActivity context,String title) {
-        super(context, R.style.SpinKitViewSaveFileDialogAnimation);
+        super(context, R.style.CommendDialogStyle);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         setContentView(R.layout.dialog_share);
         initLayoutParams();

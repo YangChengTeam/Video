@@ -19,6 +19,7 @@ import com.video.newqu.bean.ShareInfo;
 import com.video.newqu.bean.ShareMenuItemInfo;
 import com.video.newqu.contants.Constant;
 import com.video.newqu.listener.OnShareFinlishListener;
+import com.video.newqu.ui.activity.MediaEditActivity;
 import com.video.newqu.ui.activity.PhoneChangedActivity;
 import com.video.newqu.ui.dialog.ShareDialog;
 import com.video.newqu.listener.ShareFinlishListener;
@@ -256,13 +257,15 @@ public class TopBaseActivity extends AppCompatActivity implements ShareContract.
     }
 
     /**
-     * 绑定手机号码
+     * @param title 绑定手机号码
+     * @param fragmentType Constant.FRAGMENT_TYPE_PHONE_BINDING
+     * @param extra getResources().getString(R.string.binding_phone_tips)
      */
-    public void binDingPhoneNumber() {
+    public void binDingPhoneNumber(String title,int fragmentType,String extra) {
         Intent intent = new Intent(TopBaseActivity.this, PhoneChangedActivity.class);
-        intent.putExtra(Constant.KEY_TITLE,"绑定手机号码");
-        intent.putExtra(Constant.KEY_FRAGMENT_TYPE,Constant.FRAGMENT_TYPE_PHONE_BINDING);
-        intent.putExtra(Constant.KEY_CONTENT_EXTRA,"发布视频需要验证手机号");
+        intent.putExtra(Constant.KEY_TITLE,title);
+        intent.putExtra(Constant.KEY_FRAGMENT_TYPE,fragmentType);
+        intent.putExtra(Constant.KEY_CONTENT_EXTRA,extra);
         startActivityForResult(intent,Constant.MEDIA_BINDING_PHONE_REQUEST);
         overridePendingTransition(R.anim.menu_enter, 0);//进场动画
     }

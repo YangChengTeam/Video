@@ -51,7 +51,7 @@ public class InputKeyBoardDialog extends BaseDialog<DialogInputKeyboardLayoutBin
     private boolean faceIsForbidden;//表情面板是否禁用
 
     public InputKeyBoardDialog(@NonNull Activity context) {
-        super(context, R.style.SpinKitViewSaveFileDialogAnimation);
+        super(context, R.style.CommendDialogStyle);
         setContentView(R.layout.dialog_input_keyboard_layout);
         initLayoutParams();
         initEmotionData();

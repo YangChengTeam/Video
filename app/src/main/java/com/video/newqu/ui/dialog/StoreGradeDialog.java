@@ -17,7 +17,7 @@ import com.video.newqu.databinding.DialogStoreGradeLayoutBinding;
 public class StoreGradeDialog extends BaseDialog<DialogStoreGradeLayoutBinding> {
 
     public StoreGradeDialog(@NonNull Activity context) {
-        super(context,R.style.SpinKitViewSaveFileDialogAnimation);
+        super(context,R.style.CommendDialogStyle);
         setContentView(R.layout.dialog_store_grade_layout);
     }
 

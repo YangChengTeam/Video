@@ -31,4 +31,9 @@ public abstract class BaseDialog<V extends ViewDataBinding> extends Dialog {
         initViews();
     }
     public abstract void initViews();
+
+    @Override
+    public void dismiss() {
+        super.dismiss();
+    }
 }

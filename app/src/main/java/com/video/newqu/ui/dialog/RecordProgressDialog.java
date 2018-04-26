@@ -1,17 +1,13 @@
 package com.video.newqu.ui.dialog;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.TextView;
+
 import com.video.newqu.R;
 import com.video.newqu.base.BaseDialog;
 import com.video.newqu.databinding.DialogTranscodingBinding;
 import com.video.newqu.util.Utils;
-import com.video.newqu.view.widget.CircleProgressView;
-import com.video.newqu.view.widget.ProgressWheel;
 
 /**
  * TinyHung@outlook.com
@@ -31,7 +27,7 @@ public class RecordProgressDialog extends BaseDialog<DialogTranscodingBinding> {
     }
 
     public RecordProgressDialog(Activity context) {
-        super(context, R.style.SpinKitViewSaveFileDialogAnimation);
+        super(context, R.style.CommendDialogStyle);
         setContentView(R.layout.dialog_transcoding);
         Utils.setDialogWidth(this);
         setCancelable(false);

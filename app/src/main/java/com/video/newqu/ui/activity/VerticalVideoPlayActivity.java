@@ -256,7 +256,7 @@ public class VerticalVideoPlayActivity extends BaseActivity<ActivityVerticalVide
         if (Constant.INTENT_LOGIN_EQUESTCODE == requestCode && resultCode == Constant.INTENT_LOGIN_RESULTCODE) {
             if (null != data) {
                 if (null!=VideoApplication.getInstance().getUserData()&&!VideoApplication.getInstance().userIsBinDingPhone()) {
-                    binDingPhoneNumber();
+                    binDingPhoneNumber("绑定手机号码",Constant.FRAGMENT_TYPE_PHONE_BINDING,"发布视频需要验证手机号");
                 }
             }
         }
