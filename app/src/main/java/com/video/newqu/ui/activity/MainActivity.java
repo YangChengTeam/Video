@@ -21,6 +21,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.blankj.utilcode.util.LogUtils;
 import com.tencent.bugly.Bugly;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.UMShareAPI;
@@ -47,6 +49,7 @@ import com.video.newqu.ui.fragment.MineFragment;
 import com.video.newqu.ui.presenter.MainPresenter;
 import com.video.newqu.upload.manager.BatchFileUploadManager;
 import com.video.newqu.util.DateParseUtil;
+import com.video.newqu.util.Logger;
 import com.video.newqu.util.attach.ScanWeChatDirectoryVideoTask;
 import com.video.newqu.util.SharedPreferencesUtil;
 import com.video.newqu.util.SystemUtils;
@@ -210,6 +213,7 @@ public class MainActivity extends TopBaseActivity implements MainContract.View, 
                 //如果微信聊天文件夹存在
                 if(filePath.exists()){
                     weixinScaning=true;
+                    ToastUtils.showCenterToast("开始扫描本地视频文件");
                     new ScanWeChatDirectoryVideoTask(MainActivity.this,12).execute(filePath.getAbsolutePath());
                     //不存在微信文件夹，检查更新
                 }else{

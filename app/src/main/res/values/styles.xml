@@ -20,12 +20,19 @@ colorAccent:主题色，如输入框，系统的自定义空间等
         <item name="android:activityOpenExitAnimation">@anim/screen_zoom_out</item>
         <item name="android:activityCloseExitAnimation">@anim/screen_zoom_out</item>
         <item name="android:activityCloseEnterAnimation">@anim/screen_zoom_in</item>
-        <!--<item name="android:activityOpenEnterAnimation">@anim/slide_in_from_right</item>-->
-        <!--<item name="android:activityOpenExitAnimation">@anim/slide_out_to_left</item>-->
-        <!--<item name="android:activityCloseExitAnimation">@anim/slide_out_to_right</item>-->
-        <!--<item name="android:activityCloseEnterAnimation">@anim/slide_in_from_left</item>-->
     </style>
 
+    <style name="XinQu.Animation26" parent="@android:style/Animation.Translucent">
+        <item name="android:activityOpenEnterAnimation">@anim/screen_zoom_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/screen_zoom_out</item>
+        <item name="android:activityCloseExitAnimation">@anim/screen_zoom_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/screen_zoom_in</item>
+    </style>
+
+    <!--<item name="android:activityOpenEnterAnimation">@anim/slide_in_from_right</item>-->
+    <!--<item name="android:activityOpenExitAnimation">@anim/slide_out_to_left</item>-->
+    <!--<item name="android:activityCloseExitAnimation">@anim/slide_out_to_right</item>-->
+    <!--<item name="android:activityCloseEnterAnimation">@anim/slide_in_from_left</item>-->
     <!-- Base application theme. -->
     <style name="LoginTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->

@@ -387,7 +387,6 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding,MainPresenter
         closeProgressDialog();
         if(null!=uploadDeteleTaskInfo){
             if(uploadDeteleTaskInfo.isCancel()){
-                ToastUtils.showCenterToast(uploadDeteleTaskInfo.getMessage());
                 removeUploadListAdapterItem(data,0);
                 return;
             }else{
@@ -844,6 +843,17 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding,MainPresenter
                         case Constant.VIDEO_COMPOSE_FINLISHED:
                             data.setItemType(1);
                             updataProgress(data);
+                            break;
+                        //合并失败
+                        case Constant.VIDEO_UPLOAD_ERROR:
+                            ToastUtils.showCenterToast("合并失败！源文件不受支持");
+                            if(null!=mUploadVideoInfoMap){
+                                mUploadVideoInfoMap.remove(data.getId());
+                                if(null!=mUploadVideoListAdapter){
+                                    mUploadVideoListAdapter.setNewData(mUploadVideoInfoMap);
+                                    mUploadVideoListAdapter.notifyDataSetChanged();
+                                }
+                            }
                             break;
                         //开始上传,加入上传队列中
                         case Constant.VIDEO_UPLOAD_STARTED:

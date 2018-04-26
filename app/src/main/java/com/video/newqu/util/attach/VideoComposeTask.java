@@ -1,6 +1,8 @@
 package com.video.newqu.util.attach;
 
 import android.content.Intent;
+
+import com.blankj.utilcode.util.LogUtils;
 import com.ksyun.media.shortvideo.kit.KSYEditKit;
 import com.ksyun.media.shortvideo.utils.ShortVideoConstants;
 import com.video.newqu.VideoApplication;
@@ -10,7 +12,6 @@ import com.video.newqu.contants.Constant;
 import com.video.newqu.util.FileUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.ref.WeakReference;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -24,16 +25,16 @@ public class VideoComposeTask extends Thread {
 
     public static final String TAG=VideoComposeTask.class.getSimpleName();
     private UploadVideoInfo mComposeTaskInfo;
-    private final WeakReference<KSYEditKit> mEditKtiWeakReference;
+    private KSYEditKit mKSYEditKit;
     private Timer mTimer;
 
     public KSYEditKit getEditKti() {
-        return mEditKtiWeakReference.get();
+        return mKSYEditKit;
     }
 
     public VideoComposeTask(UploadVideoInfo composeTaskInfo, KSYEditKit editKit) {
         this.mComposeTaskInfo=composeTaskInfo;
-        mEditKtiWeakReference = new WeakReference<KSYEditKit>(editKit);
+        this.mKSYEditKit=editKit;
     }
 
     /**
@@ -41,56 +42,87 @@ public class VideoComposeTask extends Thread {
      */
     public void execute() {
         if(null!=mComposeTaskInfo){
-            if(null!= mEditKtiWeakReference.get()){
+            Intent intent=new Intent();
+            intent.setAction(Constant.ACTION_XINQU_VIDEO_COMPOSE);
+            intent.putExtra("action_type",0);
+            VideoApplication.getInstance().sendBroadcast(intent,Constant.PERMISSION_VIDEO_COMPOSE);
+
+            if(null!= mKSYEditKit){
                 //监听合并的进度
-                mEditKtiWeakReference.get().setOnInfoListener(new KSYEditKit.OnInfoListener() {
+                mKSYEditKit.setOnInfoListener(new KSYEditKit.OnInfoListener() {
                     @Override
                     public Object onInfo(int type, String... strings) {
+                        LogUtils.i(TAG,"合并状态："+type);
                         switch (type) {
                             //开始合并文件
                             case ShortVideoConstants.SHORTVIDEO_COMPOSE_START: {
+                                LogUtils.i(TAG,"开始合并："+mComposeTaskInfo.getResoucePath());
                                 composeStarted();
                                 return null;
                             }
                             //文件合并文成
                             case ShortVideoConstants.SHORTVIDEO_COMPOSE_FINISHED: {
-                                composeFilished();
+                                LogUtils.i(TAG,"合并完成："+strings.toString());
+                                composeSuccess();
                                 return null;
                             }
                             default:
-                                composeFilished();
+                                LogUtils.i(TAG,"合并失败：onInfo："+strings.toString());
+                                composeError();
                                 return null;
                         }
                     }
                 });
                 //监听合成的错误情况
-                mEditKtiWeakReference.get().setOnErrorListener(new KSYEditKit.OnErrorListener() {
+                mKSYEditKit.setOnErrorListener(new KSYEditKit.OnErrorListener() {
                     @Override
                     public void onError(int type, long l) {
+                        LogUtils.i(TAG,"合并失败："+type+",long="+l);
                         switch (type) {
                             case ShortVideoConstants.SHORTVIDEO_ERROR_COMPOSE_FAILED_UNKNOWN:
                             case ShortVideoConstants.SHORTVIDEO_ERROR_COMPOSE_FILE_CLOSE_FAILED:
                             case ShortVideoConstants.SHORTVIDEO_ERROR_COMPOSE_FILE_FORMAT_NOT_SUPPORTED:
                             case ShortVideoConstants.SHORTVIDEO_ERROR_COMPOSE_FILE_OPEN_FAILED:
                             case ShortVideoConstants.SHORTVIDEO_ERROR_COMPOSE_FILE_WRITE_FAILED:
-                                composeFilished();
+                                composeError();
                                 break;
                             case ShortVideoConstants.SHORTVIDEO_ERROR_SDK_AUTHFAILED:
-                                composeFilished();
+                                composeError();
                                 break;
                             case ShortVideoConstants.SHORTVIDEO_EDIT_PREVIEW_PLAYER_ERROR:
-                                composeFilished();
+                                composeError();
                             default:
-                                composeFilished();
+                                composeError();
                                 break;
                         }
                     }
                 });
                 //开始合并
-                if(null!=mComposeTaskInfo){
-                    mEditKtiWeakReference.get().startCompose(mComposeTaskInfo.getCompostOutFilePath());
+                if(null!=mKSYEditKit&&null!=mComposeTaskInfo){
+                    mKSYEditKit.startCompose(mComposeTaskInfo.getCompostOutFilePath());
                 }
             }
+        }
+    }
+
+    /**
+     * 合并失败
+     */
+    private void composeError() {
+        if(null!=mTimer){
+            mTimer.cancel();
+            mTimer=null;
+        }
+        onDestory();
+        //进程通知任务合并失败
+        if(null!=mComposeTaskInfo){
+            VideoComposeProcessor.getInstance().removeComposeTaskList(mComposeTaskInfo);
+            mComposeTaskInfo.setComposeState(Constant.VIDEO_UPLOAD_ERROR);
+            Intent intent=new Intent();
+            intent.putExtra("video_info",mComposeTaskInfo);
+            intent.setAction(Constant.ACTION_XINQU_VIDEO_COMPOSE);
+            intent.putExtra("action_type",1);
+            VideoApplication.getInstance().sendBroadcast(intent,Constant.PERMISSION_VIDEO_COMPOSE);
         }
     }
 
@@ -110,8 +142,8 @@ public class VideoComposeTask extends Thread {
             mTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    if(null!=mEditKtiWeakReference.get()){
-                        final int progress =mEditKtiWeakReference.get().getProgress();
+                    if(null!=mKSYEditKit){
+                        final int progress =mKSYEditKit.getProgress();
                         updateProgress(progress);
                     }
                 }
@@ -138,8 +170,7 @@ public class VideoComposeTask extends Thread {
     /**
      * 合并完成
      */
-    private void composeFilished() {
-
+    private void composeSuccess() {
         if(null!=mTimer){
             mTimer.cancel();
             mTimer=null;
@@ -161,10 +192,9 @@ public class VideoComposeTask extends Thread {
     }
 
     public void onDestory() {
-        if(null!=mEditKtiWeakReference.get()){
-            mEditKtiWeakReference.get().stopCompose();
-            mEditKtiWeakReference.get().release();
-            mEditKtiWeakReference.clear();
+        if(null!=mKSYEditKit){
+            mKSYEditKit.stopCompose();
+            mKSYEditKit.release();
         }
     }
 
@@ -183,7 +213,6 @@ public class VideoComposeTask extends Thread {
         composeTaskInfo.setItemType(0);
         composeTaskInfo.setVideoName(new File(composeTaskInfo.getFilePath()).getName());
         boolean insertVideoInfo = ApplicationManager.getInstance().getVideoUploadDB().insertNewUploadVideoInfo(composeTaskInfo);
-
         if (insertVideoInfo) {
             composeTaskInfo.setComposeState(Constant.VIDEO_UPLOAD_STARTED);
             Intent intent=new Intent();
@@ -192,7 +221,6 @@ public class VideoComposeTask extends Thread {
             intent.putExtra("action_type",1);
             VideoApplication.getInstance().sendBroadcast(intent,Constant.PERMISSION_VIDEO_COMPOSE);
             mComposeTaskInfo=null;
-//            System.exit(0);//强制结束自己，调用可释放所有内存，但是第二次开启视频编辑，又会重新初始化
             return;
         }
     }

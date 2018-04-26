@@ -14,6 +14,7 @@ import com.alibaba.sdk.android.oss.common.auth.OSSFederationCredentialProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSFederationToken;
 import com.alibaba.sdk.android.oss.model.AbortMultipartUploadRequest;
 import com.alibaba.sdk.android.oss.model.AbortMultipartUploadResult;
+import com.blankj.utilcode.util.LogUtils;
 import com.kk.securityhttp.net.utils.OKHttpUtil;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.bean.UploadVideoInfo;
@@ -25,7 +26,9 @@ import com.video.newqu.upload.PauseableUploadTask;
 import com.video.newqu.upload.bean.UploadDeteleTaskInfo;
 import com.video.newqu.upload.bean.UploadParamsConfig;
 import com.video.newqu.upload.listener.VideoUploadListener;
+import com.video.newqu.util.Logger;
 import com.video.newqu.util.SystemUtils;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.File;
@@ -46,7 +49,7 @@ import okhttp3.Response;
 
 public class VideoUploadTaskManager {
 
-    public static final String TAG = VideoUploadTaskManager.class.getSimpleName();
+    public static final String TAG = "VideoUploadTaskManager";
     private static VideoUploadTaskManager mInstance;
     private UploadParamsConfig uploadParamsConfig;
     private OSS oss;
@@ -340,6 +343,7 @@ public class VideoUploadTaskManager {
         //执行上传任务
         public void execute() {
             if(null!=mUploadInfo){
+                LogUtils.i(TAG,"文件地址："+mUploadInfo.getFilePath());
                 //上传构造请求
                 PauseableUploadRequest request = new PauseableUploadRequest(Constant.STS_BUCKET, "Video/"+mUploadInfo.getVideoFileKey()+".mp4", mUploadInfo.getFilePath(), PART_SIZE);
                 //上传进度监听
@@ -381,18 +385,22 @@ public class VideoUploadTaskManager {
                      */
                     @Override
                     public void onFailure(PauseableUploadRequest request, ClientException clientException, ServiceException serviceException) {
-//                        if(null!=serviceException){
-//                            Logger.d(TAG,"getErrorCode="+serviceException.getErrorCode());
-//                            Logger.d(TAG,"getHostId="+serviceException.getHostId());
-//                            Logger.d(TAG,"getRawMessage="+serviceException.getRawMessage());
-//                            Logger.d(TAG,"getRequestId="+serviceException.getRequestId());
-//                            Logger.d(TAG,"getMessage="+serviceException.getMessage());
-//                            Logger.d(TAG,"getLocalizedMessage="+serviceException.getLocalizedMessage());
-//                            Logger.d(TAG,"getStatusCode="+serviceException.getStatusCode());
-//                        }
+                        if(null!=serviceException){
+                            LogUtils.i(TAG,"getErrorCode="+serviceException.getErrorCode());
+                            LogUtils.i(TAG,"getHostId="+serviceException.getHostId());
+                            LogUtils.i(TAG,"getRawMessage="+serviceException.getRawMessage());
+                            LogUtils.i(TAG,"getRequestId="+serviceException.getRequestId());
+                            LogUtils.i(TAG,"getMessage="+serviceException.getMessage());
+                            LogUtils.i(TAG,"getLocalizedMessage="+serviceException.getLocalizedMessage());
+                            LogUtils.i(TAG,"getStatusCode="+serviceException.getStatusCode());
+                        }
+                        if(null!=clientException){
+                            LogUtils.i(TAG,"ClientException--getMessage="+clientException.getMessage());
+                        }
                         //移除上传任务
                         if(null!=ossTaskMap&&ossTaskMap.size()>0)ossTaskMap.remove(mUploadInfo.getId());
                         File file = new File(mUploadInfo.getFilePath());
+                        LogUtils.i(TAG,"上传失败--文件地址："+mUploadInfo.getFilePath());
                         if(null!=file&&file.exists()&&file.isFile()){
                             if(null!=clientException){
                                 if(null!=mVideoUploadListener){

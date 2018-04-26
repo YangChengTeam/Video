@@ -61,14 +61,14 @@ public class LoginXinQuPresenter extends RxPresenter<LoginXinQuContract.View> im
                 if(!TextUtils.isEmpty(data)){
                     try {
                         JSONObject jsonObject=new JSONObject(data);
-
                         if(null!=jsonObject&&jsonObject.length()>0){
                             if(null!=jsonObject&&1==jsonObject.getInt("code")){
                                 MineUserInfo mineUserInfo = new Gson().fromJson(data, MineUserInfo.class);
                                 if(null!=mineUserInfo&&null!=mineUserInfo.getData()&&null!=mineUserInfo.getData().getInfo()){
+
                                     if(null!=mView) mView.showLoginFinlish(mineUserInfo);
                                 }else{
-                                    if(null!=mView) mView.showLoginError("登录失败");
+                                    if(null!=mView) mView.showLoginError(mineUserInfo.getMsg());
                                 }
                             }else{
                                 if(null!=mView) mView.showLoginError(jsonObject.getString("msg"));

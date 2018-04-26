@@ -47,10 +47,11 @@ public class VideoComposeProcessor {
         }
         Intent intent=new Intent();
         intent.setAction(Constant.ACTION_XINQU_VIDEO_COMPOSE);
-        intent.putExtra("action_type",1);
+        intent.putExtra("action_type",0);
         VideoApplication.getInstance().sendBroadcast(intent,Constant.PERMISSION_VIDEO_COMPOSE);
 //        ApplicationManager.getInstance().observerUpdata(Constant.OBSERVABLE_ACTION_ADD_VIDEO_TASK);//通知切换到HomeFragment界面
         VideoComposeTask videoComposeTask = new VideoComposeTask(composeTaskInfo, editKit);
+        if(null==cVideoComposeTaskMap)
         if(null!=cVideoComposeTaskMap){
             cVideoComposeTaskMap.put(composeTaskInfo.getId(),videoComposeTask);
         }

@@ -117,7 +117,7 @@ import com.video.newqu.util.TextViewTopicSpan;
 import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
 import com.video.newqu.util.VideoUtils;
-import com.video.newqu.util.attach.VideoComposeProcessor;
+import com.video.newqu.util.attach.VideoComposeTask;
 import com.video.newqu.view.widget.ColorPickerView;
 import com.video.newqu.view.widget.EffectsButton;
 import com.video.newqu.view.widget.MultiDirectionSlidingDrawer;
@@ -632,7 +632,6 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
                 //进入贴纸编辑状态，需要先暂停预览播放
                 pausePreview();
                 if(null!=mSectionView) mSectionView.startSeek(index);
-                // TODO: 2017/11/25 选中了某个字幕字幕
                 if(!TextUtils.isEmpty(text)){
                     if(TextUtils.equals("点击修改",text)){
                         showCaptionsTextInputView(true,false,"");
@@ -653,8 +652,6 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
                 mKSYStickerView.setCurrentText("");
             }
         });
-
-
         SeekBar.OnSeekBarChangeListener onSeekBarChangelistener=new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -770,7 +767,6 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
      * @param showFaceBoard 是否显示表情面板
      */
     private void showInputKeyBoardDialog(boolean showKeyboard,boolean showFaceBoard) {
-
         final InputKeyBoardDialog inputKeyBoardDialog = new InputKeyBoardDialog(MediaEditActivity.this);
         inputKeyBoardDialog.setInputText(mVideoDespContent.getText().toString());
         inputKeyBoardDialog.setParams(showKeyboard,showFaceBoard);
@@ -1735,8 +1731,11 @@ public class MediaEditActivity extends AppCompatActivity implements ActivityComp
                         uploadVideoInfo.setSourceType(mSourceType);
                         uploadVideoInfo.setResoucePath(mVideoPath);
                         obiectIsRecyler=false;
-                        VideoComposeProcessor.getInstance().addVideoComposeTask(uploadVideoInfo,mEditKit);//调整为添加至后台合成视频
+                        VideoComposeTask videoComposeTask = new VideoComposeTask(uploadVideoInfo, mEditKit);
+                        videoComposeTask.execute();//直接单个任务进行，不支持暂停、取消等操作
                         ActivityCollectorManager.finlishAllActivity();
+                        //ApplicationManager.getInstance().observerUpdata(Constant.OBSERVABLE_ACTION_ADD_VIDEO_TASK);//通知切换到HomeFragment界面
+                        //VideoComposeProcessor.getInstance().addVideoComposeTask(null,null);//支持暂停、取消任务的Task
                     //金山云权限不够,去检查和重新获取权限
                     }else{
                         //暂停预览

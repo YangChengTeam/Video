@@ -277,6 +277,7 @@ public interface Constant {
     int VIDEO_COMPOSE_PROGRESS = 11;
     int VIDEO_COMPOSE_FINLISHED = 12;
     int VIDEO_UPLOAD_STARTED = 13;
+    int VIDEO_UPLOAD_ERROR = 14;
 
     String KEY_INTENT_MEDIA_THUBM = "thbum_seek_time";
     String INTENT_BINDING_TIPS ="intent_binding_tips" ;

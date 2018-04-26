@@ -85,7 +85,7 @@ public class WinXinVideoListFragment extends BaseDialogFragment<FragmentWeixinVi
         if(null!=mData&&mData.size()>0){
             bindingView.btnSubmit.setText("分享 "+mData.size()+"/"+mData.size());
         }
-        SharedPreferencesUtil.getInstance().putBoolean(Constant.SETTING_DAY,true);
+//        SharedPreferencesUtil.getInstance().putBoolean(Constant.SETTING_DAY,true);
     }
 
 
