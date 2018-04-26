@@ -357,19 +357,16 @@ public class VerticalVideoPlayFragment extends BaseFragment<FragmentVideoPlayLis
     public void onDestroyView() {
         super.onDestroyView();
         ApplicationManager.getInstance().removeObserver(this);
+        WindowVideoPlayer.releaseAllVideos();
         onLifeChange(mItemPoistion,CHANGE_ODE_DESTROY);
-        updataGroupList(true);
         if(null!=mHandler){
             mHandler.removeMessages(0);
             mHandler=null;
         }
-        WindowVideoPlayer.releaseAllVideos();
-        if(null!=playerViews){
-            playerViews.clear();
-            playerViews=null;
-        }
+        if(null!=playerViews) playerViews.clear();
+        if(null!=mListsBeanList) mListsBeanList.clear();
+        playerViews=null;mListsBeanList=null;
     }
-
 
     /**
      * 垂直列表适配器

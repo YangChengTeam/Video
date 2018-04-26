@@ -62,7 +62,6 @@ public class VerticalHistoryVideoPlayActivity extends BaseActivity<ActivityVideo
         context.startActivity(intent);
     }
 
-
     @Override
     public void initViews() {
         mUserHistoryPresenter = new UserHistoryPresenter();
