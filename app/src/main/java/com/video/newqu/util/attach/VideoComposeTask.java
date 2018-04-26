@@ -1,8 +1,6 @@
 package com.video.newqu.util.attach;
 
 import android.content.Intent;
-
-import com.blankj.utilcode.util.LogUtils;
 import com.ksyun.media.shortvideo.kit.KSYEditKit;
 import com.ksyun.media.shortvideo.utils.ShortVideoConstants;
 import com.video.newqu.VideoApplication;
@@ -23,7 +21,6 @@ import java.util.TimerTask;
 
 public class VideoComposeTask extends Thread {
 
-    public static final String TAG=VideoComposeTask.class.getSimpleName();
     private UploadVideoInfo mComposeTaskInfo;
     private KSYEditKit mKSYEditKit;
     private Timer mTimer;
@@ -52,22 +49,18 @@ public class VideoComposeTask extends Thread {
                 mKSYEditKit.setOnInfoListener(new KSYEditKit.OnInfoListener() {
                     @Override
                     public Object onInfo(int type, String... strings) {
-                        LogUtils.i(TAG,"合并状态："+type);
                         switch (type) {
                             //开始合并文件
                             case ShortVideoConstants.SHORTVIDEO_COMPOSE_START: {
-                                LogUtils.i(TAG,"开始合并："+mComposeTaskInfo.getResoucePath());
                                 composeStarted();
                                 return null;
                             }
                             //文件合并文成
                             case ShortVideoConstants.SHORTVIDEO_COMPOSE_FINISHED: {
-                                LogUtils.i(TAG,"合并完成："+strings.toString());
                                 composeSuccess();
                                 return null;
                             }
                             default:
-                                LogUtils.i(TAG,"合并失败：onInfo："+strings.toString());
                                 composeError();
                                 return null;
                         }
@@ -77,7 +70,6 @@ public class VideoComposeTask extends Thread {
                 mKSYEditKit.setOnErrorListener(new KSYEditKit.OnErrorListener() {
                     @Override
                     public void onError(int type, long l) {
-                        LogUtils.i(TAG,"合并失败："+type+",long="+l);
                         switch (type) {
                             case ShortVideoConstants.SHORTVIDEO_ERROR_COMPOSE_FAILED_UNKNOWN:
                             case ShortVideoConstants.SHORTVIDEO_ERROR_COMPOSE_FILE_CLOSE_FAILED:
