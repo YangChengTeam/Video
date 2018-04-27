@@ -79,7 +79,6 @@ import com.video.newqu.model.HorzontalSpacesItemDecoration;
 import com.video.newqu.ui.dialog.LoadingProgressView;
 import com.video.newqu.manager.ActivityCollectorManager;
 import com.video.newqu.util.AnimationUtil;
-import com.video.newqu.util.Logger;
 import com.video.newqu.util.ScreenUtils;
 import com.video.newqu.util.SharedPreferencesUtil;
 import com.video.newqu.util.SystemUtils;
@@ -385,7 +384,6 @@ public class MediaRecordActivity extends TopBaseActivity implements ActivityComp
                 }
             }
         };
-
         mRecordView.setOnClickListener(perfectClickListener);
         mBackView.setOnClickListener(perfectClickListener);
         mNextView.setOnClickListener(perfectClickListener);
@@ -402,13 +400,19 @@ public class MediaRecordActivity extends TopBaseActivity implements ActivityComp
         mRecordProgressCtl.setRecordingLengthChangedListener(mRecordLengthChangedListener);
         mRecordProgressCtl.start();
         mBackView.setChecked(false);
-
-
         //录制变速
         mBottomMenu = (RadioGroup) findViewById(R.id.bottomMenu);
         mBottomMenu.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, @IdRes int id) {
+                if(null!=Build.BRAND&&TextUtils.equals("Xiaomi",Build.BRAND)){
+                    ToastUtils.showCenterToast("您的设备暂不支持速度调节！");
+                    RadioButton  radioButton =(RadioButton) findViewById(id);
+                    radioButton.setChecked(false);
+                    RadioButton  radioButton3 =(RadioButton) findViewById(R.id.rb_item3);
+                    radioButton3.setChecked(true);
+                    return;
+                }
                 switch (id) {
                     case R.id.rb_item1:
                         onSpeedClick(0.5f);
@@ -1283,8 +1287,7 @@ public class MediaRecordActivity extends TopBaseActivity implements ActivityComp
         if (encodeMethod == StreamerConstants.ENCODE_METHOD_HARDWARE) {
             mHWEncoderUnsupported = true;
             if (mSWEncoderUnsupported) {
-                mKSYRecordKit.setEncodeMethod(
-                        StreamerConstants.ENCODE_METHOD_SOFTWARE_COMPAT);
+                mKSYRecordKit.setEncodeMethod(StreamerConstants.ENCODE_METHOD_SOFTWARE_COMPAT);
             } else {
                 mKSYRecordKit.setEncodeMethod(StreamerConstants.ENCODE_METHOD_SOFTWARE);
             }
@@ -1347,14 +1350,13 @@ public class MediaRecordActivity extends TopBaseActivity implements ActivityComp
                     ToastUtils.showCenterToast("录制失败，请检查USB存储器");
                     stopRecord(false);
                     rollBackClipForError();
-                    startRecord();
                     break;
                 case StreamerConstants.KSY_STREAMER_VIDEO_ENCODER_ERROR_UNSUPPORTED:
                 case StreamerConstants.KSY_STREAMER_VIDEO_ENCODER_ERROR_UNKNOWN: {
                     handleEncodeError();
                     stopRecord(false);
                     rollBackClipForError();
-                    startRecord();
+                    ToastUtils.showCenterToast("编码已切换，请重试");
                 }
                 break;
                 default:

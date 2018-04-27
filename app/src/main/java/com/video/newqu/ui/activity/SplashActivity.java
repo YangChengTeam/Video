@@ -48,7 +48,7 @@ public class SplashActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bindingView = DataBindingUtil.setContentView(this, R.layout.activity_splash);
-        bindingView.ivLogo.setImageResource(R.drawable.splash);
+        bindingView.ivLogo.setImageResource(R.drawable.ic_launcher);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         if (Build.VERSION.SDK_INT < 23) {
             goToNextActivity();
@@ -224,11 +224,11 @@ public class SplashActivity extends AppCompatActivity{
      * 启动到下到下一页
      */
     private void startNextActivity(){
-        Class clazz=null;
+        Class clazz;
         if(SharedPreferencesUtil.getInstance().getBoolean(Constant.SETTING_FIRST_START)){
             clazz=MainActivity.class;
         }else{
-            clazz=GuideActivity.class;
+            clazz=MainActivity.class;
         }
         Intent intent=new Intent(SplashActivity.this,clazz);
         startActivity(intent);

@@ -1279,9 +1279,7 @@ public class Utils {
             if(content.length()<start||content.length()<end){
                 return content;
             }
-            String substring = content.substring(start, end);
-            Logger.d("Utils--getSubstringContent==","substring="+substring);
-            return substring;
+            return content.substring(start, end);
         }
         return content;
     }

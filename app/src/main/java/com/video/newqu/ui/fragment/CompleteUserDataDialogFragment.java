@@ -75,7 +75,6 @@ import rx.functions.Action1;
 
 public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentDialogCompleteUserdataBinding,UserEditPresenter> implements UserEditContract.View {
 
-    private static final String TAG = "CompleteUserDataDialogFragment";
     private MineUserInfo.DataBean.InfoBean mUserData;
     private File mFilePath=null;
     private String mTitle="补全用户资料";
@@ -85,7 +84,7 @@ public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentD
     private final int content_charMaxNum = 100;
     //用户位置信息
     private String mProvince, mCity,district="市辖区";
-    private String mBirthday;//用户生日
+    private String mBirthday="19900001";//用户生日
     private CityPickerView mPickerView;
 
     @Override
@@ -114,7 +113,9 @@ public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentD
             if(null!=mUserData){
                 mProvince =TextUtils.isEmpty(mUserData.getProvince())?"湖北省":mUserData.getProvince();
                 mCity =TextUtils.isEmpty(mUserData.getCity())?"武汉市":mUserData.getCity();
-                mBirthday=null!=mUserData.getBirthday()&&mUserData.getBirthday().length()>=7?mUserData.getBirthday():"19900001";
+                if(null!=mUserData.getBirthday()&&mUserData.getBirthday().length()==8){
+                    mBirthday=mUserData.getBirthday();
+                }
             }
         }
     }
@@ -261,12 +262,11 @@ public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentD
      */
     private void setUserData() {
         if(null==mUserData) return;
-        bindingView.etUserName.setHint(TextUtils.isEmpty(mUserData.getNickname())?"火星人":mUserData.getNickname());
-        bindingView.tvUserSex.setText(TextUtils.isEmpty(mUserData.getGender())?"未知":mUserData.getGender());
-        //设置性别
-        bindingView.ivUserSex.setImageResource(TextUtils.isEmpty(mUserData.getGender())?R.drawable.ic_sex_not_know:TextUtils.equals("女",mUserData.getGender())?R.drawable.iv_icon_sex_women:TextUtils.equals("男",mUserData.getGender())?R.drawable.iv_icon_sex_man:R.drawable.ic_sex_not_know);
-
         try {
+            bindingView.etUserName.setHint(TextUtils.isEmpty(mUserData.getNickname())?"火星人":mUserData.getNickname());
+            bindingView.tvUserSex.setText(TextUtils.isEmpty(mUserData.getGender())?"未知":mUserData.getGender());
+            //设置性别
+            bindingView.ivUserSex.setImageResource(TextUtils.isEmpty(mUserData.getGender())?R.drawable.ic_sex_not_know:TextUtils.equals("女",mUserData.getGender())?R.drawable.iv_icon_sex_women:TextUtils.equals("男",mUserData.getGender())?R.drawable.iv_icon_sex_man:R.drawable.ic_sex_not_know);
             String decode = URLDecoder.decode(mUserData.getSignature(), "UTF-8");
             bindingView.etUserDesp.setHint(TextUtils.isEmpty(decode)?"本宝宝暂时没有个性签名":decode);
         } catch (UnsupportedEncodingException e) {
@@ -312,7 +312,7 @@ public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentD
         }
         if(TextUtils.isEmpty(nikeName)) nikeName=mUserData.getNickname();
         if(TextUtils.isEmpty(encodeDesp)) encodeDesp=mUserData.getSignature();
-        if(TextUtils.isEmpty(encodeDesp)) encodeDesp=mUserData.getSignature();
+        if(TextUtils.isEmpty(sex)) sex=mUserData.getGender();
         if(TextUtils.equals(nikeName,mUserData.getNickname())&&TextUtils.equals(sex,mUserData.getGender())&&TextUtils.equals(encodeDesp,mUserData.getSignature())
                 &&TextUtils.equals(mProvince,mUserData.getProvince())&&TextUtils.equals(mCity,mUserData.getCity())&&TextUtils.equals(mBirthday,mUserData.getBirthday())&&null==mFilePath){
             ToastUtils.showCenterToast("未做任何修改");
@@ -417,7 +417,6 @@ public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentD
         intentFromGallery.setAction(Intent.ACTION_GET_CONTENT);
         getActivity().startActivityForResult(intentFromGallery, INTENT_CODE_GALLERY_REQUEST);
     }
-
 
     // 启动相机拍摄照片
     private void headImageFromCameraCap() {
@@ -550,7 +549,6 @@ public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentD
         intent.putExtra("clipCircle",true);
         getActivity().startActivityForResult(intent, Constant.REQUEST_CLIP_IMAGE);
     }
-
 
     @Override
     public void showErrorView() {

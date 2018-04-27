@@ -10,8 +10,8 @@ import com.video.newqu.R;
 public class Cheeses {
 
     public int[] createGUIDE_IMAGE() {
-        return new int[]{R.drawable.guide_1,R.drawable.guide_2,R.drawable.guide_3};
-//        return new int[]{0,0,0};
+//        return new int[]{R.drawable.guide_1,R.drawable.guide_2,R.drawable.guide_3};
+        return new int[]{0,0,0};
     }
 
     public String[] createAboveBGS(){
