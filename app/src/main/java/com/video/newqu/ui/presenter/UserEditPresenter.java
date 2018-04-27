@@ -29,6 +29,12 @@ public class UserEditPresenter extends RxPresenter<UserEditContract.View> implem
         this.context=context;
     }
 
+    private boolean isLoading=false;
+
+    public boolean isLoading() {
+        return isLoading;
+    }
+
     /**
      * 提交用户基本信息
      * @param userID
@@ -37,18 +43,28 @@ public class UserEditPresenter extends RxPresenter<UserEditContract.View> implem
      * @param desp
      */
     @Override
-    public void onPostUserData(String userID, String nikeName, String sex, String desp) {
+    public void onPostUserData(final String userID, String nikeName, String sex, String desp, String province, String city, String birthday, final File file) {
+        if(isLoading) return;
+        isLoading=true;
         Map<String,String> params=new HashMap<>();
         params.put("id",userID);
         params.put("nickname",nikeName);
         params.put("gender",sex);
         params.put("signature",desp);
-
-        Subscription subscribe = HttpCoreEngin.get(context).rxpost(NetContants.BASE_HOST + "user_edit", String.class, params,true,true,true).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<String>() {
+        params.put("province",province);
+        params.put("city",city);
+        params.put("birthday",birthday);
+        final Subscription subscribe = HttpCoreEngin.get(context).rxpost(NetContants.BASE_HOST + "user_edit", String.class, params,true,true,true).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<String>() {
             @Override
             public void call(String data) {
+                isLoading=false;
                 if(!TextUtils.isEmpty(data)){
-                    if(null!=mView) mView.showPostUserDataResult(data);
+                    if(null!=file&&file.exists()){
+                        //继续上传用户头像
+                        onPostImagePhoto(userID,file.getAbsolutePath());
+                    }else{
+                        if(null!=mView) mView.showPostUserDataResult(data);
+                    }
                 }else{
                     if(null!=mView) mView.showErrorView();
                 }
@@ -64,10 +80,14 @@ public class UserEditPresenter extends RxPresenter<UserEditContract.View> implem
      */
     @Override
     public void onPostImagePhoto(String userID,String filePath) {
+        if(isLoading) return;
+        isLoading=true;
         Map<String,String> params=new HashMap<>();
         params.put("user_id",userID);
         new CompressAsyncTask(params).execute(filePath);
     }
+
+
 
     /**
      * 异步裁剪图片，并上传
@@ -96,32 +116,11 @@ public class UserEditPresenter extends RxPresenter<UserEditContract.View> implem
             Subscription subscribe = HttpCoreEngin.get(context).rxuploadFile(NetContants.BASE_HOST + "user_logo",String.class, upFileInfo, params, true).subscribe(new Action1<String>() {
                 @Override
                 public void call(String data) {
-                    if(null!=mView) mView.showPostImagePhotoResult(data);
+                    isLoading=false;
+                    if(null!=mView) mView.showPostUserDataResult(data);
                 }
             });
             addSubscrebe(subscribe);
-
-//            UploadUtil uploadUtil = UploadUtil.getInstance();
-//            String key = Md5.md5(Utils.getFileName(filePath));
-//            uploadUtil.uploadFile(filePath,key,NetContants.BASE_HOST + "user_logo",params);
-//            uploadUtil.setOnUploadProcessListener(new UploadUtil.OnUploadProcessListener() {
-//                @Override
-//                public void onUploadDone(int responseCode, String response) {
-//                    if(responseCode==UploadUtil.UPLOAD_SUCCESS_CODE){
-//                        Log.d(TAG, "onUploadDone: 上传成功");
-//                    }
-//                }
-//
-//                @Override
-//                public void onUploadProcess(int uploadSize) {
-//
-//                }
-//
-//                @Override
-//                public void initUpload(int fileSize) {
-//
-//                }
-//            });
         }
     }
 }

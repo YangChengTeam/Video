@@ -38,7 +38,6 @@ import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
 import com.video.newqu.view.layout.MineDataChangeMarginView;
 import com.video.newqu.view.widget.SwipeLoadingProgress;
-import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.Serializable;

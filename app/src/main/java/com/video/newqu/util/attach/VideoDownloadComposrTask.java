@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import com.danikula.videocache.HttpProxyCacheServer;
-import com.ksyun.media.shortvideo.utils.AuthInfoManager;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.contants.Constant;
 import com.video.newqu.ui.dialog.DownloadProgressDialog;
@@ -27,7 +26,6 @@ public class VideoDownloadComposrTask {
     private DownloadProgressDialog mUploadProgressView;
     private final Activity mContext;
     private final String mFileNetPath;
-    private boolean isKSYPermission=true;//是否获得金山云授权
 
     public VideoDownloadComposrTask(Activity context, String fileNetPath) {
         if(context instanceof Activity){
@@ -59,6 +57,7 @@ public class VideoDownloadComposrTask {
         //先判断添加水印之后的视频中是否存在将要下载的视频文件
         if(watermarkFilePath.exists()&&watermarkFilePath.isFile()){
             if(null!=mContext) ToastUtils.showFinlishToast((AppCompatActivity)mContext,null,null,"已保存至本地:"+Constant.DOWNLOAD_WATERMARK_VIDEO_PATH);
+            closeDownloadProgress();
         }else{
             //文件地址可能不是.mp4结尾的，需要判断下 rexVideoPath(name);
             File filePath=new File(Constant.DOWNLOAD_PATH,Utils.rexVideoPath(Utils.getFileName(mFileNetPath)));
@@ -128,22 +127,13 @@ public class VideoDownloadComposrTask {
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
             if(null!=aBoolean&&aBoolean){
-                if(isKSYPermission){
-                    File file=new File(mOutFilePath);
-                    if(file.exists()&&file.isFile()){
-
-                        startCompos(mOutFilePath, Constant.DOWNLOAD_WATERMARK_VIDEO_PATH);
-                    }else{
-
-                        startDownloadTask();
-                    }
+                File file=new File(mOutFilePath);
+                if(file.exists()&&file.isFile()){
+                    startCompos(mOutFilePath, Constant.DOWNLOAD_WATERMARK_VIDEO_PATH);
                 }else{
-                    isKSYPermission=true;
-                    ToastUtils.showCenterToast("下载完成，可以分享啦！");
+                    startDownloadTask();
                 }
-
             }else{
-
                 startDownloadTask();
             }
         }
@@ -183,7 +173,7 @@ public class VideoDownloadComposrTask {
 
             @Override
             public void downloadError(String errorMessage) {
-                clodeDownloadProgress();
+                closeDownloadProgress();
                 ToastUtils.showCenterToast(errorMessage);
             }
         }).execute(mFileNetPath);
@@ -193,48 +183,42 @@ public class VideoDownloadComposrTask {
      * 开始合并
      */
     private void startCompos(String resourceFilePath, String outPutPath) {
-        //判断是否取得授权，若未取得授权，直接复制文件到目录中去
-        if(AuthInfoManager.getInstance().getAuthState()){
-            VideoWatermarkProcessor.getInstance().addVideoComposeTask(mContext,resourceFilePath, outPutPath, new VideoWatermarkProcessor.OnComposeTaskListener() {
-                @Override
-                public void onComposeStart() {
+        VideoWatermarkProcessor.getInstance().addVideoComposeTask(mContext,resourceFilePath, outPutPath, new VideoWatermarkProcessor.OnComposeTaskListener() {
+            @Override
+            public void onComposeStart() {
 
-                    showDownloadTips("保存至本地中..");
-                }
+                showDownloadTips("保存至本地中..");
+            }
 
-                @Override
-                public void onComposeProgress(int progress) {
-                    if(null!=mUploadProgressView&&mUploadProgressView.isShowing()){
-                        mUploadProgressView.setProgress(progress);
-                    }
+            @Override
+            public void onComposeProgress(int progress) {
+                if(null!=mUploadProgressView&&mUploadProgressView.isShowing()){
+                    mUploadProgressView.setProgress(progress);
                 }
+            }
 
-                @Override
-                public void onComposeFinlish(String outPath) {
-                    if(null!=mUploadProgressView&&mUploadProgressView.isShowing()){
-                        mUploadProgressView.setTipsMessage("保存完成");
-                    }
-                    clodeDownloadProgress();
-                    Uri localUri = Uri.parse("file://"+ outPath);
-                    Intent localIntent = new Intent("android.intent.action.MEDIA_SCANNER_SCAN_FILE");
-                    localIntent.setData(localUri);
-                    mContext.sendBroadcast(localIntent);
-                    if(null!=mContext) ToastUtils.showFinlishToast((AppCompatActivity)mContext,null,null,"已保存至本地:"+Constant.DOWNLOAD_WATERMARK_VIDEO_PATH);
+            @Override
+            public void onComposeFinlish(String outPath) {
+                if(null!=mUploadProgressView&&mUploadProgressView.isShowing()){
+                    mUploadProgressView.setTipsMessage("保存完成");
                 }
+                closeDownloadProgress();
+                Uri localUri = Uri.parse("file://"+ outPath);
+                Intent localIntent = new Intent("android.intent.action.MEDIA_SCANNER_SCAN_FILE");
+                localIntent.setData(localUri);
+                mContext.sendBroadcast(localIntent);
+                if(null!=mContext) ToastUtils.showFinlishToast((AppCompatActivity)mContext,null,null,"已保存至本地:"+Constant.DOWNLOAD_WATERMARK_VIDEO_PATH);
+            }
 
-                @Override
-                public void onComposeError(String errorMsg) {
-                    if(null!=mUploadProgressView&&mUploadProgressView.isShowing()){
-                        mUploadProgressView.setTipsMessage("errorMsg");
-                    }
-                    clodeDownloadProgress();
-                    ToastUtils.showCenterToast(errorMsg);
+            @Override
+            public void onComposeError(String errorMsg) {
+                if(null!=mUploadProgressView&&mUploadProgressView.isShowing()){
+                    mUploadProgressView.setTipsMessage("errorMsg");
                 }
-            });
-        }else{
-            isKSYPermission=false;
-            startCopyFile(resourceFilePath,outPutPath);
-        }
+                closeDownloadProgress();
+                ToastUtils.showCenterToast(errorMsg);
+            }
+        });
     }
 
 
@@ -264,7 +248,7 @@ public class VideoDownloadComposrTask {
     /**
      * 关闭下载\合并 进度条
      */
-    private void clodeDownloadProgress(){
+    private void closeDownloadProgress(){
         if(null!=mUploadProgressView&&mUploadProgressView.isShowing()){
             mUploadProgressView.dismiss();
             mUploadProgressView=null;

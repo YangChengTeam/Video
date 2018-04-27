@@ -64,7 +64,7 @@ public class SplashActivity extends AppCompatActivity{
             if(SharedPreferencesUtil.getInstance().getBoolean(Constant.SETTING_FIRST_START)){
                 clazz=MainActivity.class;
             }else{
-                clazz=GuideActivity.class;//GuideActivity
+                clazz=MainActivity.class;//GuideActivity
             }
             Intent intent=new Intent(SplashActivity.this,clazz);
             startActivity(intent);

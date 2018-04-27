@@ -11,6 +11,7 @@ public class Cheeses {
 
     public int[] createGUIDE_IMAGE() {
         return new int[]{R.drawable.guide_1,R.drawable.guide_2,R.drawable.guide_3};
+//        return new int[]{0,0,0};
     }
 
     public String[] createAboveBGS(){
@@ -60,4 +61,7 @@ public class Cheeses {
                 "舞蹈","音乐","乡下人","混血","萝莉","萌萌哒"
         };
     }
+
+    public static int[] MEMBER_STAR_DATE = new int[] { 20, 19, 21, 20, 21, 22, 23, 23, 23, 24, 23, 22 };
+    public  static String[] MEMBER_STAR = new String[] { "摩羯座", "水瓶座", "双鱼座", "白羊座", "金牛座", "双子座", "巨蟹座", "狮子座", "处女座", "天秤座", "天蝎座", "射手座", "摩羯座" };
 }

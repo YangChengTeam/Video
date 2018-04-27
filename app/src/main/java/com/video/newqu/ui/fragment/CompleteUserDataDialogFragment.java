@@ -2,6 +2,7 @@ package com.video.newqu.ui.fragment;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,13 +19,21 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.DatePicker;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.lljjcoder.Interface.OnCityItemClickListener;
+import com.lljjcoder.bean.CityBean;
+import com.lljjcoder.bean.DistrictBean;
+import com.lljjcoder.bean.ProvinceBean;
+import com.lljjcoder.citywheel.CityConfig;
+import com.lljjcoder.style.citypickerview.CityPickerView;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.video.newqu.R;
 import com.video.newqu.base.BaseDialogFragment;
@@ -39,7 +48,6 @@ import com.video.newqu.ui.contract.UserEditContract;
 import com.video.newqu.ui.dialog.CommonMenuDialog;
 import com.video.newqu.ui.presenter.UserEditPresenter;
 import com.video.newqu.util.AndroidNFileUtils;
-import com.video.newqu.util.CommonUtils;
 import com.video.newqu.util.FileUtils;
 import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
@@ -67,6 +75,7 @@ import rx.functions.Action1;
 
 public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentDialogCompleteUserdataBinding,UserEditPresenter> implements UserEditContract.View {
 
+    private static final String TAG = "CompleteUserDataDialogFragment";
     private MineUserInfo.DataBean.InfoBean mUserData;
     private File mFilePath=null;
     private String mTitle="补全用户资料";
@@ -74,10 +83,10 @@ public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentD
     private boolean change=false;
     private CharSequence content_temp;//监听前的文本
     private final int content_charMaxNum = 100;
-    //用户生日和地理位置信息
-    private int year=2018,month=4,day=1;
-    private String province="湖北省",city="武汉市",district="洪山区";
-//    private CityPickerView mPickerView;
+    //用户位置信息
+    private String mProvince, mCity,district="市辖区";
+    private String mBirthday;//用户生日
+    private CityPickerView mPickerView;
 
     @Override
     public int getLayoutId() {
@@ -102,6 +111,11 @@ public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentD
             mUserData = (MineUserInfo.DataBean.InfoBean) arguments.getSerializable("user_data");
             mTitle = arguments.getString("title");
             mAction_mode = arguments.getInt("action_mode",1);
+            if(null!=mUserData){
+                mProvince =TextUtils.isEmpty(mUserData.getProvince())?"湖北省":mUserData.getProvince();
+                mCity =TextUtils.isEmpty(mUserData.getCity())?"武汉市":mUserData.getCity();
+                mBirthday=null!=mUserData.getBirthday()&&mUserData.getBirthday().length()>=7?mUserData.getBirthday():"19900001";
+            }
         }
     }
 
@@ -110,8 +124,8 @@ public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentD
         super.onViewCreated(view, savedInstanceState);
         EventBus.getDefault().register(this);
 //        getView().findViewById(R.id.view_state_bar).setVisibility(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M?View.VISIBLE:View.GONE);
-//        mPickerView = new CityPickerView();
-//        mPickerView.init(getActivity());
+        mPickerView = new CityPickerView();
+        mPickerView.init(getActivity());
     }
 
     @Override
@@ -124,7 +138,6 @@ public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentD
                     case R.id.iv_back:
                         CompleteUserDataDialogFragment.this.dismiss();
                         break;
-
                     case R.id.btn_submit:
                         submitData();
                         break;
@@ -137,37 +150,46 @@ public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentD
                         showSexSelector();
                         break;
                     //生日选择
-//                    case R.id.btn_user_date:
-//                        DatePickerDialog dialog=new DatePickerDialog(getActivity(), R.style.DatePickerDialogTheme, new DatePickerDialog.OnDateSetListener() {
-//                            @Override
-//                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-//                                bindingView.tvUserDate.setText(Html.fromHtml("<font color='#FF7044'>"+year+"</font>-<font color='#FF7044'>"+(month+1)+"</font>-<font color='#FF7044'>"+dayOfMonth+"</font>"));
-//                                CompleteUserDataDialogFragment.this.year=year;CompleteUserDataDialogFragment.this.month=month;CompleteUserDataDialogFragment.this.day=dayOfMonth;
-//                            }
-//                        }, year, month, day);
-//                        dialog.show();
-//                        break;
+                    case R.id.btn_user_date:
+                        int year=Integer.parseInt(Utils.getSubstringContent(mBirthday,0,4));
+                        int month=Integer.parseInt(Utils.getSubstringContent(mBirthday,4,6));
+                        int day=Integer.parseInt(Utils.getSubstringContent(mBirthday,6,8));
+                        DatePickerDialog dialog=new DatePickerDialog(getActivity(), R.style.DatePickerDialogTheme, new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                //补位处理
+                                String monthStr=month+"";
+                                String dayOfMonthStr=dayOfMonth+"";
+                                if(monthStr.length()<2)monthStr="0"+monthStr;
+                                if(dayOfMonthStr.length()<2)dayOfMonthStr="0"+dayOfMonthStr;
+                                bindingView.tvUserDate.setText(Html.fromHtml("<font color='#FF7044'>"+year+"</font>-<font color='#FF7044'>"+(month+1)+"</font>-<font color='#FF7044'>"+dayOfMonth+"</font>"));
+                                mBirthday=year+monthStr+dayOfMonthStr;
+                            }
+                        }, year, month, day);
+                        dialog.show();
+                        break;
                     //城市选择
-//                    case R.id.btn_user_city:
-//                        if(null!=mPickerView){
-//                            CityConfig cityConfig = new CityConfig.Builder().title("选择所在城市").cancelText("取消").cancelTextColor("#666666").confirmText("确认").confirTextColor("#FF5000").setShowGAT(true).build();
-//                            cityConfig.setProvinceCyclic(false);
-//                            cityConfig.setCityCyclic(false);
-//                            cityConfig.setDistrictCyclic(false);
-//                            cityConfig.setDefaultProvinceName(province);
-//                            cityConfig.setDefaultCityName(city);
-//                            cityConfig.setDefaultDistrict(district);
-//                            mPickerView.setConfig(cityConfig);
-//                            mPickerView.setOnCityItemClickListener(new OnCityItemClickListener() {
-//                                @Override
-//                                public void onSelected(ProvinceBean province, CityBean city, DistrictBean district) {
-//                                    super.onSelected(province, city, district);
-//                                    bindingView.tvUserCity.setText(Html.fromHtml("<font color='#FF7044'>"+province.getName()+"</font>-<font color='#FF7044'>"+city.getName()+"</font>-<font color='#FF7044'>"+district.getName()+"</font>"));
-//                                }
-//                            });
-//                            mPickerView.showCityPicker();
-//                        }
-//                        break;
+                    case R.id.btn_user_city:
+                        if(null!=mPickerView){
+                            CityConfig cityConfig = new CityConfig.Builder().title("选择所在城市").cancelText("取消").cancelTextColor("#666666").confirmText("确认").confirTextColor("#FF5000").setShowGAT(true).build();
+                            cityConfig.setProvinceCyclic(false);
+                            cityConfig.setCityCyclic(false);
+                            cityConfig.setDistrictCyclic(false);
+                            cityConfig.setDefaultProvinceName(mProvince);
+                            cityConfig.setDefaultCityName(mCity);
+                            cityConfig.setDefaultDistrict(district);
+                            mPickerView.setConfig(cityConfig);
+                            mPickerView.setOnCityItemClickListener(new OnCityItemClickListener() {
+                                @Override
+                                public void onSelected(ProvinceBean province, CityBean city, DistrictBean district) {
+                                    super.onSelected(province, city, district);
+                                    mProvince=province.getName();mCity=city.getName();
+                                    bindingView.tvUserCity.setText(Html.fromHtml("<font color='#FF7044'>"+province.getName()+"</font>-<font color='#FF7044'>"+city.getName()+"</font>-<font color='#FF7044'>"+district.getName()+"</font>"));
+                                }
+                            });
+                            mPickerView.showCityPicker();
+                        }
+                        break;
                     //复制ID
                     case R.id.btn_user_id:
                         Utils.copyString(bindingView.tvUserId.getText().toString().trim());
@@ -182,12 +204,17 @@ public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentD
         bindingView.ivBack.setOnClickListener(onClickListener);
         bindingView.btnUserSex.setOnClickListener(onClickListener);
         bindingView.btnUserId.setOnClickListener(onClickListener);
-//        bindingView.btnUserDate.setOnClickListener(onClickListener);
-//        bindingView.btnUserCity.setOnClickListener(onClickListener);
+        bindingView.btnUserDate.setOnClickListener(onClickListener);
+        bindingView.btnUserCity.setOnClickListener(onClickListener);
         mPresenter = new UserEditPresenter(getActivity());
         mPresenter.attachView(this);
-//        bindingView.tvUserDate.setText(Html.fromHtml("<font color='#FF7044'>"+year+"</font>-<font color='#FF7044'>"+(month+1)+"</font>-<font color='#FF7044'>"+day+"</font>"));
-//        bindingView.tvUserCity.setText(Html.fromHtml("<font color='#FF7044'>"+province+"</font>-<font color='#FF7044'>"+city+"</font>-<font color='#FF7044'>"+district+"</font>"));
+        if(null!=mBirthday){
+            int year=Integer.parseInt(Utils.getSubstringContent(mBirthday,0,4));
+            int month=Integer.parseInt(Utils.getSubstringContent(mBirthday,4,6));
+            int day=Integer.parseInt(Utils.getSubstringContent(mBirthday,6,8));
+            bindingView.tvUserDate.setText(Html.fromHtml("<font color='#FF7044'>"+year+"</font>-<font color='#FF7044'>"+(month+1)+"</font>-<font color='#FF7044'>"+day+"</font>"));
+            bindingView.tvUserCity.setText(Html.fromHtml("<font color='#FF7044'>"+ mProvince +"</font>-<font color='#FF7044'>"+ mCity +"</font>-<font color='#FF7044'>"+district+"</font>"));
+        }
         bindingView.tvTitle.setText(mTitle);
         if(mAction_mode==Constant.MODE_USER_COMPLETE){
             bindingView.ivBack.setVisibility(View.GONE);
@@ -270,7 +297,7 @@ public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentD
     }
 
     /**
-     * 提交资料
+     * 提交用户基本信息资料
      */
     private void submitData() {
         if(null==mUserData) return;
@@ -280,22 +307,20 @@ public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentD
         String encodeDesp=null;
         try {
             encodeDesp= URLEncoder.encode(desp, "UTF-8");
-
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        //只传头像,或者什么都没改
-        if(TextUtils.isEmpty(nikeName)&&TextUtils.isEmpty(encodeDesp)&&TextUtils.equals(sex,mUserData.getGender())){
-            if(null!=mFilePath&&mFilePath.exists()&&mFilePath.isFile()){
-                showProgressDialog("补全用户信息中，请稍后...",true);
-                mPresenter.onPostImagePhoto(mUserData.getId(),mFilePath.getAbsolutePath());
-            }else{
-                ToastUtils.showCenterToast("基本信息未作修改~!");
-            }
-            //有其他信息修改
-        }else{
-            showProgressDialog("补全用户信息中，请稍后...",true);
-            mPresenter.onPostUserData(mUserData.getId(),nikeName,sex,encodeDesp);
+        if(TextUtils.isEmpty(nikeName)) nikeName=mUserData.getNickname();
+        if(TextUtils.isEmpty(encodeDesp)) encodeDesp=mUserData.getSignature();
+        if(TextUtils.isEmpty(encodeDesp)) encodeDesp=mUserData.getSignature();
+        if(TextUtils.equals(nikeName,mUserData.getNickname())&&TextUtils.equals(sex,mUserData.getGender())&&TextUtils.equals(encodeDesp,mUserData.getSignature())
+                &&TextUtils.equals(mProvince,mUserData.getProvince())&&TextUtils.equals(mCity,mUserData.getCity())&&TextUtils.equals(mBirthday,mUserData.getBirthday())&&null==mFilePath){
+            ToastUtils.showCenterToast("未做任何修改");
+            return;
+        }
+        if(null!=mPresenter&&!mPresenter.isLoading()){
+            showProgressDialog("基本信息提交中...",true,false);
+            mPresenter.onPostUserData(mUserData.getId(),nikeName,sex,encodeDesp,mProvince,mCity,mBirthday,mFilePath);
         }
     }
 
@@ -529,7 +554,6 @@ public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentD
 
     @Override
     public void showErrorView() {
-        change=false;
         closeProgressDialog();
     }
 
@@ -544,15 +568,9 @@ public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentD
                 JSONObject jsonObject=new JSONObject(data);
                 //修改基本信息成功
                 if(1==jsonObject.getInt("code")){
-                    //还需要上传头像
-                    if(null!=mFilePath&&mFilePath.exists()&&mFilePath.isFile()){
-                        setProgressDialogMessage("基本信息修改成功，正在上传头像中...");
-                        mPresenter.onPostImagePhoto(mUserData.getId(),mFilePath.getAbsolutePath());
-                    }else{
-                        closeProgressDialog();
-                        ToastUtils.showCenterToast("修改个人信息成功！");
-                        CompleteUserDataDialogFragment.this.dismiss();
-                    }
+                    closeProgressDialog();
+                    ToastUtils.showCenterToast("修改个人信息成功！");
+                    CompleteUserDataDialogFragment.this.dismiss();
                 }else{
                     closeProgressDialog();
                     ToastUtils.showCenterToast(jsonObject.getString("msg"));
@@ -565,35 +583,6 @@ public class CompleteUserDataDialogFragment extends BaseDialogFragment<FragmentD
         }
     }
 
-    @Override
-    public void showPostImagePhotoResult(String data) {
-        change=true;
-        if(!TextUtils.isEmpty(data)){
-            try {
-                JSONObject jsonObject=new JSONObject(data);
-                if(1==jsonObject.getInt("code")&&TextUtils.equals(jsonObject.getString("msg"),Constant.UPLOAD_USER_PHOTO_SUCCESS)){
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mLoadingProgressedView.setResultsCompletes("修改头像成功", CommonUtils.getColor(R.color.app_style),true,Constant.PROGRESS_CLOSE_DELYAED_TIE);
-                            mLoadingProgressedView.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                @Override
-                                public void onDismiss(DialogInterface dialog) {
-                                    CompleteUserDataDialogFragment.this.dismiss();
-                                }
-                            });
-                        }
-                    });
-
-                }else{
-                    ToastUtils.showCenterToast(jsonObject.getString("msg"));
-                }
-            } catch (JSONException e) {
-                ToastUtils.showCenterToast("上传头像失败");
-                e.printStackTrace();
-            }
-        }
-    }
 
     @Override
     public void onDismiss(DialogInterface dialog) {

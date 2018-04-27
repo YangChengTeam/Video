@@ -86,7 +86,7 @@ public class VideoApplication extends Application {
         mToday = Integer.parseInt(CommonDateParseUtil.getNowDay());
         int pid = android.os.Process.myPid();
         String pName = SystemUtils.getProcessName(getApplicationContext(),pid);
-        LogUtils.DEBUG=false;//网络请求日志
+        LogUtils.DEBUG=true;//网络请求日志
         if(!TextUtils.isEmpty(pName)){
             //主进程
             if(TextUtils.equals("com.video.newqu",pName)){
@@ -187,6 +187,8 @@ public class VideoApplication extends Application {
                 //初始化全局异常拦截
                 //CrashHanlder.getInstance().init(VideoApplication.this);
                 //LeakCanary.install(VideoApplication.this);//内存泄漏检测
+                KSYHardwareDecodeWhiteList.getInstance().init(mInstance);
+                new KSYAuthorPermissionsUtil().init();
                 //初始化表情包
                 FaceConversionUtil.getInstace().getFileText(getApplicationContext());
             }

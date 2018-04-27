@@ -366,8 +366,6 @@ public class VerticalVideoPlayFragment extends BaseFragment<FragmentVideoPlayLis
         if(null!=mHandler)mHandler.removeMessages(0);
         onLifeChange(mItemPoistion,CHANGE_ODE_DESTROY);
         if(null!=playerViews) playerViews.clear();
-        if(null!=mListsBeanList) mListsBeanList.clear();
-        if(null!=mVerticalPagerAdapter) mVerticalPagerAdapter.notifyDataSetChanged();
         if(null!=mActivityWeakReference) mActivityWeakReference.clear();
         if(null!=bindingView) bindingView.verticalViewPager.setAdapter(null);
         playerViews=null;mListsBeanList=null;mHandler=null;mVerticalPagerAdapter=null;mRootViewType=0;mAuthorID=null;

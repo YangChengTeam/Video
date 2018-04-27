@@ -13,6 +13,7 @@ import android.view.animation.TranslateAnimation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.danikula.videocache.HttpProxyCacheServer;
+import com.ksyun.media.shortvideo.utils.AuthInfoManager;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
@@ -33,7 +34,9 @@ import com.video.newqu.manager.ApplicationManager;
 import com.video.newqu.ui.activity.AuthorDetailsActivity;
 import com.video.newqu.ui.activity.ContentFragmentActivity;
 import com.video.newqu.ui.activity.VerticalHistoryVideoPlayActivity;
+import com.video.newqu.ui.activity.VerticalVideoPlayActivity;
 import com.video.newqu.ui.contract.VideoDetailsContract;
+import com.video.newqu.ui.fragment.KsyAuthorizeSettingFragment;
 import com.video.newqu.ui.fragment.VerticalVideoCommentFragment;
 import com.video.newqu.ui.presenter.VideoDetailsPresenter;
 import com.video.newqu.util.AnimationUtil;
@@ -479,6 +482,14 @@ public class VerticalHistoryVidepPlayViewPager extends BasePager<PagerVideoPlaye
         if(null==mContext) return;
         if(null==mVideoBean||TextUtils.isEmpty(mVideoBean.getVideoPath()))  return;
         if(!mContext.isFinishing()){
+            //先检查金山云权限
+            if(!AuthInfoManager.getInstance().getAuthState()){
+                KsyAuthorizeSettingFragment fragment = KsyAuthorizeSettingFragment.newInstance();
+                VerticalHistoryVideoPlayActivity activity= (VerticalHistoryVideoPlayActivity) mContext;
+                FragmentManager supportFragmentManager =activity.getSupportFragmentManager();
+                fragment.show(supportFragmentManager,"ksy_authorize");
+                return;
+            }
             //检查SD读写权限
             RxPermissions.getInstance(mContext).request(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Boolean>() {
                 @Override

@@ -31,6 +31,7 @@ import com.video.newqu.bean.UserPlayerVideoHistoryList;
 import com.video.newqu.bean.VideoDetailsMenu;
 import com.video.newqu.bean.VideoGroupList;
 import com.video.newqu.comadapter.BaseQuickAdapter;
+import com.video.newqu.contants.Cheeses;
 import com.video.newqu.contants.ConfigSet;
 import com.video.newqu.contants.Constant;
 import com.video.newqu.databinding.ActivityAuthorDetailsBinding;
@@ -877,6 +878,17 @@ public class AuthorDetailsActivity extends BaseActivity<ActivityAuthorDetailsBin
             bindingView.tvFollowCount.setText(TextUtils.isEmpty(mInfoBean.getFollows())?"0关注":mInfoBean.getFollows()+"关注");
             bindingView.ivUserSex.setImageResource(TextUtils.isEmpty(mInfoBean.getGender())?R.drawable.ic_sex_not_know:TextUtils.equals("女",mInfoBean.getGender())?R.drawable.iv_icon_sex_women:TextUtils.equals("男",mInfoBean.getGender())?R.drawable.iv_icon_sex_man:R.drawable.ic_sex_not_know);
             bindingView.userVideoCount.setText(TextUtils.isEmpty(mInfoBean.getVideo_count())?"0作品":mInfoBean.getVideo_count()+"作品");
+            if(!TextUtils.isEmpty(mInfoBean.getBirthday())&&mInfoBean.getBirthday().length()>0||!TextUtils.isEmpty(mInfoBean.getProvince())&&mInfoBean.getProvince().length()>0||!TextUtils.isEmpty(mInfoBean.getCity())&&mInfoBean.getCity().length()>0){
+                bindingView.tvUserLoadtion.setVisibility(View.VISIBLE);
+                String star="";
+                if(!TextUtils.isEmpty(mInfoBean.getBirthday())){
+                    int month=Integer.parseInt(Utils.getSubstringContent(mInfoBean.getBirthday(),4,6))+1;
+                    star = Integer.parseInt(Utils.getSubstringContent(mInfoBean.getBirthday(),6,8)) < Cheeses.MEMBER_STAR_DATE[month-1]?Cheeses.MEMBER_STAR[month - 1]:Cheeses.MEMBER_STAR[month];
+                }
+                bindingView.tvUserLoadtion.setText(star+"  "+mInfoBean.getProvince()+" "+mInfoBean.getCity());
+            }else{
+                bindingView.tvUserLoadtion.setVisibility(View.GONE);
+            }
             //是否对该作者已关注
             switchIsFollow();
             setHeaderImageBG();

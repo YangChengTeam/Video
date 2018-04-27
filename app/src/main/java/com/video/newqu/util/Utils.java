@@ -1273,4 +1273,16 @@ public class Utils {
         }
         return "";
     }
+
+    public static String getSubstringContent(String content,int start,int end){
+        if(null!=content&&content.length()>0){
+            if(content.length()<start||content.length()<end){
+                return content;
+            }
+            String substring = content.substring(start, end);
+            Logger.d("Utils--getSubstringContent==","substring="+substring);
+            return substring;
+        }
+        return content;
+    }
 }

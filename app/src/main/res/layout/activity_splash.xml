@@ -5,11 +5,13 @@
         android:id="@+id/splash_rootview_rl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center">
+        android:gravity="center"
+        android:background="@color/white">
         <ImageView
             android:id="@+id/iv_logo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_centerInParent="true"
             android:scaleType="fitXY"/>
     </RelativeLayout>
 </layout>

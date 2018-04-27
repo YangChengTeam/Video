@@ -111,6 +111,15 @@ public class MineUserInfo implements Serializable {
             private String username;
             private String video_count;
             private int msgCount;
+            private String birthday;
+
+            public String getBirthday() {
+                return birthday;
+            }
+
+            public void setBirthday(String birthday) {
+                this.birthday = birthday;
+            }
 
             public int getMsgCount() {
                 return msgCount;

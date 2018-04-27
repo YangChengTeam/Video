@@ -17,6 +17,7 @@ import android.view.animation.TranslateAnimation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.danikula.videocache.HttpProxyCacheServer;
+import com.ksyun.media.shortvideo.utils.AuthInfoManager;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.umeng.analytics.MobclickAgent;
 import com.video.newqu.R;
@@ -44,6 +45,7 @@ import com.video.newqu.ui.activity.VerticalVideoPlayActivity;
 import com.video.newqu.ui.contract.VideoDetailsContract;
 import com.video.newqu.ui.dialog.CommonMenuDialog;
 import com.video.newqu.ui.dialog.FollowWeiXnDialog;
+import com.video.newqu.ui.fragment.KsyAuthorizeSettingFragment;
 import com.video.newqu.ui.fragment.VerticalVideoCommentFragment;
 import com.video.newqu.ui.presenter.VideoDetailsPresenter;
 import com.video.newqu.util.AnimationUtil;
@@ -370,6 +372,14 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
             });
             followWeiXnDialog.setTipMsg("成功关注[新趣小视频]公众号后开放下载功能噢~");
             followWeiXnDialog.show();
+            return;
+        }
+        //先检查金山云权限
+        if(!AuthInfoManager.getInstance().getAuthState()){
+            KsyAuthorizeSettingFragment fragment = KsyAuthorizeSettingFragment.newInstance();
+            VerticalVideoPlayActivity activity= (VerticalVideoPlayActivity) mContext;
+            FragmentManager supportFragmentManager =activity.getSupportFragmentManager();
+            fragment.show(supportFragmentManager,"ksy_authorize");
             return;
         }
         //检查SD读写权限

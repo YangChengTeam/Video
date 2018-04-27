@@ -31,6 +31,7 @@ import com.video.newqu.bean.ShareInfo;
 import com.video.newqu.bean.VideoDetailsMenu;
 import com.video.newqu.bean.VideoGroupList;
 import com.video.newqu.comadapter.BaseQuickAdapter;
+import com.video.newqu.contants.Cheeses;
 import com.video.newqu.contants.ConfigSet;
 import com.video.newqu.contants.Constant;
 import com.video.newqu.databinding.ActivityAuthorDetailsBinding;
@@ -47,6 +48,7 @@ import com.video.newqu.ui.contract.AuthorDetailContract;
 import com.video.newqu.ui.dialog.CommonMenuDialog;
 import com.video.newqu.ui.presenter.AuthorDetailPresenter;
 import com.video.newqu.util.CommonUtils;
+import com.video.newqu.util.Logger;
 import com.video.newqu.util.ScreenUtils;
 import com.video.newqu.util.TimeUtils;
 import com.video.newqu.util.ToastUtils;
@@ -586,6 +588,18 @@ public class VerticalAuthorDetailsFragment extends BaseFragment<ActivityAuthorDe
             bindingView.tvFollowCount.setText((TextUtils.isEmpty(mInfoBean.getFollows())?"0关注":mInfoBean.getFollows())+"关注");
             bindingView.userVideoCount.setText((TextUtils.isEmpty(mInfoBean.getVideo_count())?"0作品":mInfoBean.getVideo_count())+"作品");
             bindingView.ivUserSex.setImageResource(TextUtils.isEmpty(mInfoBean.getGender())?R.drawable.ic_sex_not_know:TextUtils.equals("女",mInfoBean.getGender())?R.drawable.iv_icon_sex_women:TextUtils.equals("男",mInfoBean.getGender())?R.drawable.iv_icon_sex_man:R.drawable.ic_sex_not_know);
+            Logger.d("用户中心","Birthday="+mInfoBean.getBirthday()+",Province="+mInfoBean.getProvince()+",City="+mInfoBean.getCity());
+            if(!TextUtils.isEmpty(mInfoBean.getBirthday())&&mInfoBean.getBirthday().length()>0||!TextUtils.isEmpty(mInfoBean.getProvince())&&mInfoBean.getProvince().length()>0||!TextUtils.isEmpty(mInfoBean.getCity())&&mInfoBean.getCity().length()>0){
+                bindingView.tvUserLoadtion.setVisibility(View.VISIBLE);
+                String star="";
+                if(!TextUtils.isEmpty(mInfoBean.getBirthday())){
+                    int month=Integer.parseInt(Utils.getSubstringContent(mInfoBean.getBirthday(),4,6))+1;
+                    star = Integer.parseInt(Utils.getSubstringContent(mInfoBean.getBirthday(),6,8)) < Cheeses.MEMBER_STAR_DATE[month-1]?Cheeses.MEMBER_STAR[month - 1]:Cheeses.MEMBER_STAR[month];
+                }
+                bindingView.tvUserLoadtion.setText(star+"  "+mInfoBean.getProvince()+" "+mInfoBean.getCity());
+            }else{
+                bindingView.tvUserLoadtion.setVisibility(View.GONE);
+            }
         }
         switchIsFollow();
         //设置背景封面和用户头像
@@ -1158,6 +1172,8 @@ public class VerticalAuthorDetailsFragment extends BaseFragment<ActivityAuthorDe
                 mCurrentPosition=0;//还原悬浮的头部
                 bindingView.tvHeaderView.setText("--");
                 bindingView.tvHeaderView.setVisibility(View.GONE);
+                bindingView.tvUserLoadtion.setText("");
+                bindingView.tvUserLoadtion.setVisibility(View.GONE);
                 //强制还原显示模式为九宫格样式
                 isExpanded=false;
                 setContentViewExpanedState(isExpanded);
