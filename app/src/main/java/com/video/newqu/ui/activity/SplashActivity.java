@@ -48,7 +48,7 @@ public class SplashActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bindingView = DataBindingUtil.setContentView(this, R.layout.activity_splash);
-        bindingView.ivLogo.setImageResource(R.drawable.ic_launcher);
+        bindingView.ivLogo.setImageResource(R.drawable.splash);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         if (Build.VERSION.SDK_INT < 23) {
             goToNextActivity();
@@ -64,7 +64,7 @@ public class SplashActivity extends AppCompatActivity{
             if(SharedPreferencesUtil.getInstance().getBoolean(Constant.SETTING_FIRST_START)){
                 clazz=MainActivity.class;
             }else{
-                clazz=MainActivity.class;//GuideActivity
+                clazz=GuideActivity.class;//GuideActivity
             }
             Intent intent=new Intent(SplashActivity.this,clazz);
             startActivity(intent);
