@@ -358,10 +358,9 @@ public class LoginGroupActivity extends BaseActivity<ActivityLoginGroupBinding> 
                     //新浪微博
                     if(platform== SHARE_MEDIA.SINA){
                         userDataInfo.setNickname(data.get("name"));
-                        userDataInfo.setCity(data.get("location"));
+                        userDataInfo.setProvince(data.get("location"));
                         userDataInfo.setFigureurl_qq_2(data.get("iconurl"));
                         userDataInfo.setGender(data.get("gender"));
-                        userDataInfo.setProvince(data.get("location"));
                         userDataInfo.setOpenid(data.get("id"));
                         userDataInfo.setImageBG(data.get("cover_image_phone"));
                     //微信、QQ
