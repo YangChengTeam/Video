@@ -34,6 +34,7 @@ import com.video.newqu.R;
 import com.video.newqu.VideoApplication;
 import com.video.newqu.adapter.XinQuFragmentPagerAdapter;
 import com.video.newqu.base.BaseFragment;
+import com.video.newqu.bean.ChangingViewEvent;
 import com.video.newqu.bean.MineTabInfo;
 import com.video.newqu.bean.MineUserInfo;
 import com.video.newqu.bean.NotifactionMessageInfo;
@@ -104,6 +105,7 @@ public class MineFragment extends BaseFragment<FragmentMineBinding,UserInfoPrese
         mPresenter = new UserInfoPresenter(getActivity());
         mPresenter.attachView(this);
         mUserInfo= (MineUserInfo.DataBean.InfoBean)ApplicationManager.getInstance().getCacheExample().getAsObject(Constant.CACHE_MINE_USER_DATA);
+        ApplicationManager.getInstance().addObserver(this);
         //菜单的元素
         mMineTabInfos=new ArrayList<>();
         mMineTabInfos.add(new MineTabInfo(getResources().getString(R.string.mine_fragment_works_title),0, true));
@@ -111,7 +113,6 @@ public class MineFragment extends BaseFragment<FragmentMineBinding,UserInfoPrese
         mMineTabInfos.add(new MineTabInfo(getResources().getString(R.string.mine_fragment_message_title),null==mUserInfo?0:mUserInfo.getMsgCount(), false));
         initTabAdapter();
         initUserData();
-        ApplicationManager.getInstance().addObserver(this);
     }
 
     @Override
@@ -770,7 +771,6 @@ public class MineFragment extends BaseFragment<FragmentMineBinding,UserInfoPrese
         }
     }
 
-
     /**
      * @param requestCode
      * @param resultCode
@@ -901,6 +901,11 @@ public class MineFragment extends BaseFragment<FragmentMineBinding,UserInfoPrese
                     case Constant.OBSERVABLE_ACTION_FOLLOW_USER_CHANGED:
                         getUserData();
                         break;
+                }
+            }else if(arg instanceof ChangingViewEvent){
+                ChangingViewEvent changingViewEvent= (ChangingViewEvent) arg;
+                if(Constant.FRAGMENT_TYPE_WORKS==changingViewEvent.getFragmentType()||Constant.FRAGMENT_TYPE_LIKE==changingViewEvent.getFragmentType()){
+                    if(null!=bindingView) bindingView.appBarLayout.setExpanded(false,false);
                 }
             }
         }

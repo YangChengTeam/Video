@@ -184,4 +184,5 @@
     <color name="user_name_color">#FF576A8D</color>
     <color name="user_blue_color">#FF0B5499</color>
     <color name="menu_text_color">#FF555555</color>
+    <drawable name="touch_bg_shape">#30000000</drawable>
 </resources>

@@ -64,13 +64,8 @@ public class FinlishView extends View implements ValueAnimator.AnimatorUpdateLis
      */
     private int mResultType = RESULT_WRONG;
 
-    int SUCCESSFUL_COLOR=Color.rgb(253,112,4);//成功颜色
+    int SUCCESSFUL_COLOR=Color.rgb(0,203,13);//默认的成功颜色
     int FAIL_COLOR=Color.rgb(255,78,92);//失败颜色
-
-
-
-    private int mMode=0;
-
 
     public FinlishView(Context context) {
         super(context);
@@ -115,7 +110,7 @@ public class FinlishView extends View implements ValueAnimator.AnimatorUpdateLis
         //实例化对象
         mCircleAnimator = ValueAnimator.ofFloat(0, 1);
         //设置时长为1000ms
-        mCircleAnimator.setDuration(1000);
+        mCircleAnimator.setDuration(1200);
         //开始动画
         mCircleAnimator.start();
         //设置动画监听
@@ -136,22 +131,11 @@ public class FinlishView extends View implements ValueAnimator.AnimatorUpdateLis
 
     @Override
     protected void onDraw(Canvas canvas) {
-
         super.onDraw(canvas);
-
         if (mResultType == RESULT_RIGHT) {
-            if(1==mMode){
-                mPaint.setColor(Color.WHITE);
-            }else{
-                mPaint.setColor(SUCCESSFUL_COLOR);
-            }
-
+            mPaint.setColor(SUCCESSFUL_COLOR);
         } else {
-            if(1==mMode){
-                mPaint.setColor(Color.WHITE);
-            }else{
-                mPaint.setColor(FAIL_COLOR);
-            }
+            mPaint.setColor(FAIL_COLOR);
         }
 
         //画圆
@@ -232,8 +216,8 @@ public class FinlishView extends View implements ValueAnimator.AnimatorUpdateLis
         }
     }
 
-    public void setmResultType(int mResultType) {
-        this.mResultType = mResultType;
+    public void setmResultType(int resultType) {
+        this.mResultType = resultType;
         invalidate();
     }
 
@@ -253,10 +237,7 @@ public class FinlishView extends View implements ValueAnimator.AnimatorUpdateLis
         setMeasuredDimension(dp2px(60), dp2px(60));
     }
 
-    /**
-     * 设置为白色主题
-     */
-    public void setMode(int mode) {
-        this.mMode=mode;
+    public void setColor(int color) {
+        this.SUCCESSFUL_COLOR=color;
     }
 }

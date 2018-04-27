@@ -1,5 +1,6 @@
 package com.video.newqu.ui.fragment;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -12,7 +13,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.View;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -33,7 +33,7 @@ import com.video.newqu.contants.Constant;
 import com.video.newqu.databinding.FragmentHomeBinding;
 import com.video.newqu.model.HomeHorzontalSpacesItemDecoration;
 import com.video.newqu.ui.activity.SearchActivity;
-import com.video.newqu.ui.dialog.HomeSharePopupWindow;
+import com.video.newqu.ui.dialog.UploadVideoFinlishDialog;
 import com.video.newqu.ui.presenter.MainPresenter;
 import com.video.newqu.upload.bean.UploadDeteleTaskInfo;
 import com.video.newqu.upload.listener.VideoUploadListener;
@@ -572,7 +572,6 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding,MainPresenter
                 }
                 //上传完成，展示分享面板
                 if(1==msg.arg1){
-                    ToastUtils.showCenterToast("上传成功！");
                     ApplicationManager.getInstance().observerUpdata(Constant.OBSERVABLE_ACTION_VIDEO_CHANGED);//通知观察者准备刷新
                     UploadVideoInfo data = (UploadVideoInfo) msg.obj;
                     if(null!=data&&!TextUtils.isEmpty(data.getServiceVideoId())){
@@ -598,45 +597,48 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding,MainPresenter
      */
     private void showShareViewState(UploadVideoInfo data) {
         if(null!=data){
-            HomeSharePopupWindow sharePopupWindow=new HomeSharePopupWindow(getActivity(),data);
-            sharePopupWindow.setOnItemClickListener(new HomeSharePopupWindow.OnItemClickListener() {
-                @Override
-                public void onItemClick(ShareMenuItemInfo shareMenuItemInfo, UploadVideoInfo uploadVideoInfo) {
-                    if(null!=shareMenuItemInfo&&null!=uploadVideoInfo){
-                        if(uploadVideoInfo.getIsPrivate()){
-                            ToastUtils.showCenterToast(getResources().getString(R.string.home_share_error_tips));
-                            return;
-                        }
-                        ShareInfo shareInfo=new ShareInfo();
-                        String desp="";
-                        if(!TextUtils.isEmpty(uploadVideoInfo.getVideoDesp())){
-                            try {
-                                desp=URLDecoder.decode(uploadVideoInfo.getVideoDesp(),"UTF-8");
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
+            final Activity runActivity = VideoApplication.getInstance().getRunActivity();
+            if(null!=runActivity&&!runActivity.isFinishing()){
+                UploadVideoFinlishDialog sharePopupWindow=new UploadVideoFinlishDialog(runActivity,data);
+                sharePopupWindow.setOnItemClickListener(new UploadVideoFinlishDialog.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(ShareMenuItemInfo shareMenuItemInfo, UploadVideoInfo uploadVideoInfo) {
+                        if(null!=shareMenuItemInfo&&null!=uploadVideoInfo){
+                            if(uploadVideoInfo.getIsPrivate()){
+                                ToastUtils.showCenterToast(getResources().getString(R.string.home_share_error_tips));
+                                return;
+                            }
+                            ShareInfo shareInfo=new ShareInfo();
+                            String desp="";
+                            if(!TextUtils.isEmpty(uploadVideoInfo.getVideoDesp())){
+                                try {
+                                    desp=URLDecoder.decode(uploadVideoInfo.getVideoDesp(),"UTF-8");
+                                } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            shareInfo.setDesp(getResources().getString(R.string.share_home_tips)+(TextUtils.isEmpty(desp)?"":"["+desp+"]"));
+                            shareInfo.setTitle(VideoApplication.getInstance().getUserData().getNickname()+"@你，我的新趣视频更新啦");
+                            String url = "http://app.nq6.com/home/show/index?id=" + uploadVideoInfo.getServiceVideoId();
+                            String token = MD5.hexdigest(url + "xinqu_123456");
+                            shareInfo.setUrl(url+"&token=" + token);//+"&share_type="+"1"
+                            shareInfo.setVideoID(uploadVideoInfo.getServiceVideoId());
+                            shareInfo.setVideoPath(uploadVideoInfo.getFilePath());
+                            if(SHARE_MEDIA.MORE==shareMenuItemInfo.getPlatform()){
+                                Intent intent=new Intent(Intent.ACTION_SEND);
+                                intent.setType("text/plain");
+                                intent.putExtra(Intent.EXTRA_SUBJECT,shareInfo.getTitle());
+                                intent.putExtra(Intent.EXTRA_TEXT, shareInfo.getUrl());
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                runActivity.startActivity(Intent.createChooser(intent, getResources().getString(R.string.shared_to)));
+                            }else{
+                                ShareUtils.share(runActivity,shareInfo,shareMenuItemInfo.getPlatform(),null);
                             }
                         }
-                        shareInfo.setDesp(getResources().getString(R.string.share_home_tips)+(TextUtils.isEmpty(desp)?"":"["+desp+"]"));
-                        shareInfo.setTitle(VideoApplication.getInstance().getUserData().getNickname()+"@你，我的新趣视频更新啦");
-                        String url = "http://app.nq6.com/home/show/index?id=" + uploadVideoInfo.getServiceVideoId();
-                        String token = MD5.hexdigest(url + "xinqu_123456");
-                        shareInfo.setUrl(url+"&token=" + token);//+"&share_type="+"1"
-                        shareInfo.setVideoID(uploadVideoInfo.getServiceVideoId());
-                        shareInfo.setVideoPath(uploadVideoInfo.getFilePath());
-                        if(SHARE_MEDIA.MORE==shareMenuItemInfo.getPlatform()){
-                            Intent intent=new Intent(Intent.ACTION_SEND);
-                            intent.setType("text/plain");
-                            intent.putExtra(Intent.EXTRA_SUBJECT,shareInfo.getTitle());
-                            intent.putExtra(Intent.EXTRA_TEXT, shareInfo.getUrl());
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(Intent.createChooser(intent, getResources().getString(R.string.shared_to)));
-                        }else{
-                            ShareUtils.share(getActivity(),shareInfo,shareMenuItemInfo.getPlatform(),null);
-                        }
                     }
-                }
-            });
-            sharePopupWindow.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.TOP,0,0);
+                });
+                sharePopupWindow.show();
+            }
         }
     }
 

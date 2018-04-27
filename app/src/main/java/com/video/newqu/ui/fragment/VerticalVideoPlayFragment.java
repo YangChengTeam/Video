@@ -354,18 +354,25 @@ public class VerticalVideoPlayFragment extends BaseFragment<FragmentVideoPlayLis
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        WindowVideoPlayer.releaseAllVideos();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         ApplicationManager.getInstance().removeObserver(this);
-        WindowVideoPlayer.releaseAllVideos();
+        if(null!=mHandler)mHandler.removeMessages(0);
         onLifeChange(mItemPoistion,CHANGE_ODE_DESTROY);
-        if(null!=mHandler){
-            mHandler.removeMessages(0);
-            mHandler=null;
-        }
         if(null!=playerViews) playerViews.clear();
         if(null!=mListsBeanList) mListsBeanList.clear();
-        playerViews=null;mListsBeanList=null;
+        if(null!=mVerticalPagerAdapter) mVerticalPagerAdapter.notifyDataSetChanged();
+        if(null!=mActivityWeakReference) mActivityWeakReference.clear();
+        if(null!=bindingView) bindingView.verticalViewPager.setAdapter(null);
+        playerViews=null;mListsBeanList=null;mHandler=null;mVerticalPagerAdapter=null;mRootViewType=0;mAuthorID=null;
+        mActivityWeakReference=null;mTopic=null;first=false;
+        Runtime.getRuntime().gc();
     }
 
     /**

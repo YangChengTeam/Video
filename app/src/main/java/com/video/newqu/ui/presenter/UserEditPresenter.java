@@ -43,6 +43,7 @@ public class UserEditPresenter extends RxPresenter<UserEditContract.View> implem
         params.put("nickname",nikeName);
         params.put("gender",sex);
         params.put("signature",desp);
+
         Subscription subscribe = HttpCoreEngin.get(context).rxpost(NetContants.BASE_HOST + "user_edit", String.class, params,true,true,true).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<String>() {
             @Override
             public void call(String data) {

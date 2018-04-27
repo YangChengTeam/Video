@@ -29,6 +29,7 @@ import com.video.newqu.ui.activity.VerticalVideoPlayActivity;
 import com.video.newqu.ui.activity.VideoDetailsActivity;
 import com.video.newqu.ui.contract.TopicVideoContract;
 import com.video.newqu.ui.presenter.TopicVideoPresenter;
+import com.video.newqu.util.Logger;
 import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
 import com.video.newqu.view.layout.DataChangeView;
@@ -47,6 +48,7 @@ import java.util.Observer;
 
 public class TopicVideoListFragment extends BaseFragment<FragmentRecylerBinding,TopicVideoPresenter> implements  TopicVideoContract.View, Observer {
 
+    private static final String TAG = "TopicVideoListFragment";
     private int mPage=0;
     private String mTopicID;
     private TopicVideoListAdapter mVideoListAdapter;
@@ -78,7 +80,6 @@ public class TopicVideoListFragment extends BaseFragment<FragmentRecylerBinding,
 
     @Override
     protected void initViews() {
-
         bindingView.swiperefreshLayout.setOnRefreshListener(new SwipePullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -227,7 +228,7 @@ public class TopicVideoListFragment extends BaseFragment<FragmentRecylerBinding,
                             }catch (Exception e){
 
                             }
-                            //单个
+                         //单个
                         }else{
                             TopicVideoList.DataBean.VideoListBean videoListBean = data.get(position);
                             if(null!=videoListBean&&!TextUtils.isEmpty(videoListBean.getVideo_id())){
@@ -347,6 +348,7 @@ public class TopicVideoListFragment extends BaseFragment<FragmentRecylerBinding,
                 ChangingViewEvent changingViewEvent= (ChangingViewEvent) arg;
                 if(Constant.FRAGMENT_TYPE_TOPIC_LIST==changingViewEvent.getFragmentType()&&null!=mVideoListAdapter&&null!=mGridLayoutManager){
                     mPage=changingViewEvent.getPage();
+                    Logger.d(TAG,"changingViewEvent.getPoistion()="+changingViewEvent.getPoistion()+",mPage="+mPage);
                     List<FollowVideoList.DataBean.ListsBean> listsBeanList = changingViewEvent.getListsBeanList();
                     if(null!=listsBeanList&&listsBeanList.size()>0){
                         List<TopicVideoList.DataBean.VideoListBean> data =new ArrayList<>();

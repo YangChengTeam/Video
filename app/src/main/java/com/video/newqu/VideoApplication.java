@@ -6,6 +6,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
+
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.Utils;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -84,6 +86,7 @@ public class VideoApplication extends Application {
         mToday = Integer.parseInt(CommonDateParseUtil.getNowDay());
         int pid = android.os.Process.myPid();
         String pName = SystemUtils.getProcessName(getApplicationContext(),pid);
+        LogUtils.DEBUG=false;//网络请求日志
         if(!TextUtils.isEmpty(pName)){
             //主进程
             if(TextUtils.equals("com.video.newqu",pName)){

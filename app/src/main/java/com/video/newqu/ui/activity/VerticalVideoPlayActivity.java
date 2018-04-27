@@ -3,18 +3,12 @@ package com.video.newqu.ui.activity;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewStub;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
@@ -27,7 +21,6 @@ import com.video.newqu.contants.Constant;
 import com.video.newqu.databinding.ActivityVerticalVideoPlayBinding;
 import com.video.newqu.ui.fragment.VerticalAuthorDetailsFragment;
 import com.video.newqu.ui.fragment.VerticalVideoPlayFragment;
-import com.video.newqu.util.CommonUtils;
 import com.video.newqu.util.SharedPreferencesUtil;
 import com.video.newqu.util.SystemUtils;
 import com.video.newqu.util.ToastUtils;
@@ -50,7 +43,7 @@ public class VerticalVideoPlayActivity extends BaseActivity<ActivityVerticalVide
 
     private List<Fragment> mFragments;
     private int mItemPoistion;
-
+    private XinQuFragmentPagerAdapter mXinQuFragmentPagerAdapter;
 //    /**
 //     * 首页，或其他界面跳转而来，需要传入fragmentType
 //     * @param activity 上下文
@@ -86,8 +79,6 @@ public class VerticalVideoPlayActivity extends BaseActivity<ActivityVerticalVide
     public void initData() {
         //检查SD卡权限
         RxPermissions.getInstance(VerticalVideoPlayActivity.this).request(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Boolean>() {
-
-
 
             @Override
             public void call(Boolean aBoolean) {
@@ -136,7 +127,8 @@ public class VerticalVideoPlayActivity extends BaseActivity<ActivityVerticalVide
                             }
                         }
                     });
-                    bindingView.viewPager.setAdapter(new XinQuFragmentPagerAdapter(getSupportFragmentManager(), mFragments));
+                    mXinQuFragmentPagerAdapter = new XinQuFragmentPagerAdapter(getSupportFragmentManager(), mFragments);
+                    bindingView.viewPager.setAdapter(mXinQuFragmentPagerAdapter);
                     showGuideView();
                 }else{
                     android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(VerticalVideoPlayActivity.this)
@@ -277,10 +269,11 @@ public class VerticalVideoPlayActivity extends BaseActivity<ActivityVerticalVide
 
     @Override
     public void onDestroy() {
-        WindowVideoPlayer.releaseAllVideos();
         super.onDestroy();
         if(null!=mFragments)mFragments.clear();
-        mFragments=null;
+        if(null!=mXinQuFragmentPagerAdapter) mXinQuFragmentPagerAdapter.notifyDataSetChanged();
+        bindingView.viewPager.setAdapter(null);
+        mFragments=null;mXinQuFragmentPagerAdapter=null;mItemPoistion=0;
         Runtime.getRuntime().gc();
     }
 

@@ -227,7 +227,6 @@ public class HomeTopicFragment extends BaseFragment<FragmentRecylerBinding,HomeT
                                 FollowVideoList followVideoList=new FollowVideoList();
                                 followVideoList.setData(followDataBean);
                                 String json = JSONArray.toJSON(followVideoList).toString();
-
                                 if(!TextUtils.isEmpty(json)){
                                     Intent intent=new Intent(getActivity(),VerticalVideoPlayActivity.class);
                                     intent.putExtra(Constant.KEY_FRAGMENT_TYPE,Constant.FRAGMENT_TYPE_HOME_TOPIC);

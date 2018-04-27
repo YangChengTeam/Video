@@ -79,6 +79,7 @@ import com.video.newqu.model.HorzontalSpacesItemDecoration;
 import com.video.newqu.ui.dialog.LoadingProgressView;
 import com.video.newqu.manager.ActivityCollectorManager;
 import com.video.newqu.util.AnimationUtil;
+import com.video.newqu.util.Logger;
 import com.video.newqu.util.ScreenUtils;
 import com.video.newqu.util.SharedPreferencesUtil;
 import com.video.newqu.util.SystemUtils;
@@ -1290,21 +1291,19 @@ public class MediaRecordActivity extends TopBaseActivity implements ActivityComp
         } else if (encodeMethod == StreamerConstants.ENCODE_METHOD_SOFTWARE) {
             mSWEncoderUnsupported = true;
             if (mHWEncoderUnsupported) {
-                mKSYRecordKit.setEncodeMethod(
-                        StreamerConstants.ENCODE_METHOD_SOFTWARE_COMPAT);
+                mKSYRecordKit.setEncodeMethod(StreamerConstants.ENCODE_METHOD_SOFTWARE_COMPAT);
             } else {
                 mKSYRecordKit.setEncodeMethod(StreamerConstants.ENCODE_METHOD_HARDWARE);
-
             }
         }
     }
 
+    //录制错误
     private KSYStreamer.OnErrorListener mOnErrorListener = new KSYStreamer.OnErrorListener() {
         @Override
         public void onError(int what, int msg1, int msg2) {
             switch (what) {
                 case StreamerConstants.KSY_STREAMER_ERROR_AV_ASYNC:
-
                     break;
                 case StreamerConstants.KSY_STREAMER_VIDEO_ENCODER_ERROR_UNSUPPORTED:
                     break;
@@ -1345,22 +1344,17 @@ public class MediaRecordActivity extends TopBaseActivity implements ActivityComp
                 case StreamerConstants.KSY_STREAMER_FILE_PUBLISHER_OPEN_FAILED:
                 case StreamerConstants.KSY_STREAMER_FILE_PUBLISHER_FORMAT_NOT_SUPPORTED:
                 case StreamerConstants.KSY_STREAMER_FILE_PUBLISHER_WRITE_FAILED:
-                    ToastUtils.showCenterToast("录制错误!");
+                    ToastUtils.showCenterToast("录制失败，请检查USB存储器");
                     stopRecord(false);
                     rollBackClipForError();
+                    startRecord();
                     break;
                 case StreamerConstants.KSY_STREAMER_VIDEO_ENCODER_ERROR_UNSUPPORTED:
                 case StreamerConstants.KSY_STREAMER_VIDEO_ENCODER_ERROR_UNKNOWN: {
-                    ToastUtils.showCenterToast("录制错误!");
                     handleEncodeError();
                     stopRecord(false);
                     rollBackClipForError();
-                    mMainHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            startRecord();
-                        }
-                    }, 3000);
+                    startRecord();
                 }
                 break;
                 default:

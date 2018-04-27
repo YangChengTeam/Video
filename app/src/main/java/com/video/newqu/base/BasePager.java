@@ -26,7 +26,7 @@ public abstract class BasePager <T extends ViewDataBinding>{
 
     protected T bindingView;
     private BasePagerBinding baseBindingView;
-    protected final Activity mContext;
+    protected  Activity mContext;
 
     public BasePager(Activity context){
         this.mContext=context;

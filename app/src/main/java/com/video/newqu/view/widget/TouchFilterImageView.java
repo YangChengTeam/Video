@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
@@ -43,6 +42,7 @@ public class TouchFilterImageView extends android.support.v7.widget.AppCompatIma
 
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
+
             return super.onSingleTapUp(e);
         }
 

@@ -9,6 +9,7 @@ import android.view.View;
 import com.video.newqu.R;
 import com.video.newqu.base.BaseDialog;
 import com.video.newqu.databinding.DialogProgressLayoutBinding;
+import com.video.newqu.util.CommonUtils;
 
 
 /**
@@ -39,7 +40,7 @@ public class LoadingProgressView extends BaseDialog<DialogProgressLayoutBinding>
     @Override
     public void initViews() {
         mAnimationDrawable= (AnimationDrawable) bindingView.ivLoadingIcon.getDrawable();
-        bindingView.finlishView.setMode(1);
+        bindingView.finlishView.setColor(Color.WHITE);
     }
 
 

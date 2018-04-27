@@ -371,7 +371,7 @@ public class VideoUploadTaskManager {
                         }
                         //上传成功
                         mUploadInfo.setUploadProgress(100);
-                        ApplicationManager.getInstance().getVideoUploadDB().deleteUploadVideoInfo(mUploadInfo);
+                        ApplicationManager.getInstance().getVideoUploadDB().deleteUploadVideoInfo(mUploadInfo);//delete upload hirstroy
                         if(null!=mVideoUploadListener) mVideoUploadListener.uploadSuccess(mUploadInfo,null!=request?result.getServerCallbackReturnBody():null);
                     }
 

@@ -58,7 +58,6 @@ import com.video.newqu.view.widget.GlideCircleTransform;
 import com.video.newqu.view.widget.VideoGroupRelativeLayout;
 import com.xinqu.videoplayer.full.WindowVideoPlayer;
 import com.xinqu.videoplayer.full.WindowVideoPlayerStandard;
-import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
@@ -86,16 +85,16 @@ import rx.functions.Action1;
 public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPlayLayoutBinding>implements TopicClickListener, VideoDetailsContract.View, ShareFinlishListener {
 
     private FollowVideoList.DataBean.ListsBean mVideoBean;
-    private final int mPoistion;//当前正在显示第几个Item
-    private final int mRootViewType;//跳转过来的界面类型
+    private int mPoistion;//当前正在显示第几个Item
+    private int mRootViewType;//跳转过来的界面类型
     private VideoDetailsPresenter mVideoDetailsPresenter;
     private ScaleAnimation mFollowScaleAnimation;
     //弹幕相关
     private DanmakuContext mDanmakuContext;
     private AcFunDanmakuParser mParser;
     private ConcurrentLinkedQueue<ComentList.DataBean.CommentListBean> mQueue;
-    private final int WHAT_DISPLAY_SINGLE_DANMAKU = 0xffa02;
-    private final int TIME_ADD = 1000;
+    private  final int WHAT_DISPLAY_SINGLE_DANMAKU = 0xffa02;
+    private  int TIME_ADD = 1000;
     private List<ComentList.DataBean.CommentListBean> mCommentList;
 
     /**
@@ -653,24 +652,24 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
      * 销毁和释放弹幕相关所有资源资源
      */
     public void releaseDanmaku() {
-        if(null!=bindingView){
-            if(null!=mDanmakuHandler){
+        if (null != bindingView) {
+            if (null != mDanmakuHandler) {
                 mDanmakuHandler.removeMessages(WHAT_DISPLAY_SINGLE_DANMAKU);
                 mDanmakuHandler.removeMessages(0);
             }
-            if(bindingView.svDanmaku.isPrepared()){
+            if (bindingView.svDanmaku.isPrepared()) {
                 bindingView.svDanmaku.stop();//停止弹幕
             }
             bindingView.svDanmaku.stop();
             bindingView.svDanmaku.release();//释放弹幕资源
-            if(null!=mQueue){
-                mQueue.clear();
-            }
-            if(null!=mParser) mParser.release();
-            if(null!=mCommentList) mCommentList.clear();
+            if (null != mQueue) mQueue.clear();
+            if (null != mParser) mParser.release();
+            if (null != mCommentList) mCommentList.clear();
             bindingView.svDanmaku.clearDanmakusOnScreen();
             bindingView.svDanmaku.clear();
-            mQueue=null;mParser=null;mCommentList=null;
+            mQueue = null;
+            mParser = null;
+            mCommentList = null;
             hideWorkControllerView();
         }
     }
@@ -679,14 +678,11 @@ public class VerticalVideoPlayeViewPager extends BasePager<VerticalPagerVideoPla
      * 销毁调用
      */
     public void onDestroy() {
-        if(null!=mVideoDetailsPresenter){
-            mVideoDetailsPresenter.detachView();
-        }
-        if(null!=mFollowScaleAnimation&&mFollowScaleAnimation.hasStarted()){
-            mFollowScaleAnimation.cancel();
-        }
+        if(null!=mVideoDetailsPresenter) mVideoDetailsPresenter.detachView();
+        if(null!=mFollowScaleAnimation&&mFollowScaleAnimation.hasStarted()) mFollowScaleAnimation.cancel();
         releaseDanmaku();
-        mVideoBean=null;mFollowScaleAnimation=null;bindingView=null;
+        WindowVideoPlayer.releaseAllVideos();
+        mVideoBean=null;mRootViewType=0;mVideoDetailsPresenter=null;mFollowScaleAnimation=null;bindingView=null;mContext=null;mDanmakuContext=null;
     }
 
     /**
