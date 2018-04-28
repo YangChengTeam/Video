@@ -217,7 +217,7 @@ public interface Constant {
     int FRAGMENT_TYPE_PHONE_BINDING = 0x11;//手机号码绑定
     int FRAGMENT_TYPE_PHONE_CHECKED = 0x12;//手机号码校验
     int FRAGMENT_TYPE_USER_DETAILS = 0x13;//用户中心
-
+    int FRAGMENT_TYPE_ABOUT = 0x14;//关于
     //设置中心
     int KEY_FRAGMENT_TYPE_SETTINGS = 0x1;
     //粉丝列表

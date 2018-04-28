@@ -88,13 +88,12 @@
                 android:id="@+id/swiper_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
-                android:layout_marginBottom="42dp">
+                android:background="@color/background_dark"
+                android:layout_marginBottom="43dp">
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyler_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/background_dark">
+                    android:layout_height="match_parent">
                 </android.support.v7.widget.RecyclerView>
             </com.video.newqu.view.refresh.SwipePullRefreshLayout>
         </LinearLayout>

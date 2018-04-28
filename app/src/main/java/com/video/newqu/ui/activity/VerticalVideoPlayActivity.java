@@ -162,7 +162,7 @@ public class VerticalVideoPlayActivity extends BaseActivity<ActivityVerticalVide
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        requstDrawStauBar(false);
+        requstDrawStauBar(true);
        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vertical_video_play);
         showToolBar(false);

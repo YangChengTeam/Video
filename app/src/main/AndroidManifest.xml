@@ -168,9 +168,6 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             android:screenOrientation="portrait"/>
         <!-- 关于 -->
-        <activity
-            android:name=".ui.activity.AppAboutActivity"
-            android:screenOrientation="portrait"/>
 
         <!-- 国家区号的选择 -->
         <activity

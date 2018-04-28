@@ -32,7 +32,6 @@ import com.video.newqu.helper.TagAliasOperatorHelper;
 import com.video.newqu.listener.OnUpdataStateListener;
 import com.video.newqu.manager.APKUpdataManager;
 import com.video.newqu.service.DownLoadService;
-import com.video.newqu.ui.activity.AppAboutActivity;
 import com.video.newqu.ui.activity.PhoneChangedActivity;
 import com.video.newqu.ui.activity.ContentFragmentActivity;
 import com.video.newqu.ui.dialog.BuildManagerDialog;
@@ -216,7 +215,7 @@ public class SettingFragment extends BaseFragment<FragmentSettingBinding,MainPre
                         break;
                     //关于我们
                     case R.id.re_above:
-                        AppAboutActivity.start(getActivity());
+                        startTargetActivity(Constant.FRAGMENT_TYPE_ABOUT,"关于",null,0);
                         break;
                     //注销登录
                     case R.id.tv_unlogin:

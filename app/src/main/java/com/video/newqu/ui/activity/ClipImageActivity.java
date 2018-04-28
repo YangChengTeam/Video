@@ -47,7 +47,7 @@ public class ClipImageActivity extends BaseActivity<ActivityClipImageBinding> im
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        requstDrawStauBar(false);
+        requstDrawStauBar(true);
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); // 防止锁屏
         setContentView(R.layout.activity_clip_image);

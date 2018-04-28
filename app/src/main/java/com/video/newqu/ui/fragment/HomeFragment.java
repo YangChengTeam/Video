@@ -110,42 +110,44 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding,MainPresenter
      * 初始化界面
      */
     private void initFragments() {
-        if(null==mFragmentList) mFragmentList=new ArrayList<>();
-        mFragmentList.clear();
-        mFragmentList.add(new HomeFollowVideoFragment());
-        mFragmentList.add(new HomeHotVideoFragment());
-        mFragmentList.add(new HomeTopicFragment());
-        List<String> titles=new ArrayList<>();
-        titles.add(getResources().getString(R.string.home_fragment_follow_title));
-        titles.add(getResources().getString(R.string.home_fragment_hot_title));
-        titles.add(getResources().getString(R.string.home_fragment_topic_title));
-        XinQuFragmentPagerAdapter myXinQuFragmentPagerAdapter =new XinQuFragmentPagerAdapter(getChildFragmentManager(),mFragmentList,titles);
-        bindingView.homeViewPager.setAdapter(myXinQuFragmentPagerAdapter);
-        bindingView.homeViewPager.setOffscreenPageLimit(3);
-        bindingView.tabLayout.setTabMode(TabLayout.MODE_FIXED);
-        bindingView.tabLayout.setupWithViewPager(bindingView.homeViewPager);
-        bindingView.homeViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        if(null!=getActivity()&&!getActivity().isFinishing()){
+            if(null==mFragmentList) mFragmentList=new ArrayList<>();
+            mFragmentList.clear();
+            mFragmentList.add(new HomeFollowVideoFragment());
+            mFragmentList.add(new HomeHotVideoFragment());
+            mFragmentList.add(new HomeTopicFragment());
+            List<String> titles=new ArrayList<>();
+            titles.add("关注");
+            titles.add("热门");
+            titles.add("话题");
+            XinQuFragmentPagerAdapter myXinQuFragmentPagerAdapter =new XinQuFragmentPagerAdapter(getChildFragmentManager(),mFragmentList,titles);
+            bindingView.homeViewPager.setAdapter(myXinQuFragmentPagerAdapter);
+            bindingView.homeViewPager.setOffscreenPageLimit(3);
+            bindingView.tabLayout.setTabMode(TabLayout.MODE_FIXED);
+            bindingView.tabLayout.setupWithViewPager(bindingView.homeViewPager);
+            bindingView.homeViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-            }
-            @Override
-            public void onPageSelected(int position) {
-                bindingView.homeViewPager.setScroll(position==2?false:true);
-                if(0==position){
-                    hideNewMessageDot();
                 }
-                if(2==position){
-                    MobclickAgent.onEvent(getActivity(), "click_topic");
+                @Override
+                public void onPageSelected(int position) {
+                    bindingView.homeViewPager.setScroll(position==2?false:true);
+                    if(0==position){
+                        hideNewMessageDot();
+                    }
+                    if(2==position){
+                        MobclickAgent.onEvent(getActivity(), "click_topic");
+                    }
                 }
-            }
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
+                @Override
+                public void onPageScrollStateChanged(int state) {
 
-            }
-        });
-        bindingView.homeViewPager.setCurrentItem(1);
+                }
+            });
+            bindingView.homeViewPager.setCurrentItem(1);
+        }
     }
 
 

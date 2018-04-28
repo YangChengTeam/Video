@@ -228,7 +228,7 @@ public class SplashActivity extends AppCompatActivity{
         if(SharedPreferencesUtil.getInstance().getBoolean(Constant.SETTING_FIRST_START)){
             clazz=MainActivity.class;
         }else{
-            clazz=MainActivity.class;
+            clazz=GuideActivity.class;
         }
         Intent intent=new Intent(SplashActivity.this,clazz);
         startActivity(intent);

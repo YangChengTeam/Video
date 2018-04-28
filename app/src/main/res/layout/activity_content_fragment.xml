@@ -1,49 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:orientation="vertical"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent">
-        <android.support.design.widget.AppBarLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:background="@color/white"
-            android:orientation="vertical">
-            <include layout="@layout/activity_statrbar_height_layout"></include>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/top_title_bar_height">
-                <ImageView
-                    android:id="@+id/iv_back"
-                    style="@style/Com_nav_menubar_back_style"
-                    android:src="@drawable/ban_nav_menu_back_selector_gray" />
-                <TextView
-                    android:id="@+id/tv_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:textColor="@color/common_h1"
-                    android:textSize="18sp"
-                    android:text=""/>
-                <ImageView
-                    android:id="@+id/iv_submit"
-                    style="@style/Com_nav_menubar_back_style"
-                    android:layout_alignParentRight="true"
-                    android:visibility="gone"
-                    android:src="@drawable/ban_nav_menu_submit_selector_gray"/>
-                <TextView
-                    android:id="@+id/tv_canel_history"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:textColor="@color/text_orgin_selector"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:visibility="gone"
-                    android:text="清空记录"
-                    android:background="?attr/selectableItemBackgroundBorderless"/>
-            </RelativeLayout>
-        </android.support.design.widget.AppBarLayout>
+<layout>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <FrameLayout
             android:id="@+id/frame_layout"
             android:layout_width="match_parent"

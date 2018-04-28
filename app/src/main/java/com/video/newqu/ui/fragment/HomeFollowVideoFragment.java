@@ -33,9 +33,6 @@ import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
 import com.video.newqu.view.layout.DataChangeView;
 import com.video.newqu.view.refresh.SwipePullRefreshLayout;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.Serializable;
@@ -108,7 +105,6 @@ public class HomeFollowVideoFragment extends BaseFragment<FragmentVideoFollowBin
         initAdapter();//初始化普通列表
         ApplicationManager.getInstance().addObserver(this);
     }
-
 
     /**
      * 初始化适配器

@@ -49,7 +49,6 @@ import com.video.newqu.ui.dialog.CommonMenuDialog;
 import com.video.newqu.ui.presenter.UserEditPresenter;
 import com.video.newqu.util.AndroidNFileUtils;
 import com.video.newqu.util.FileUtils;
-import com.video.newqu.util.Logger;
 import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
 import com.video.newqu.view.widget.GlideCircleTransform;

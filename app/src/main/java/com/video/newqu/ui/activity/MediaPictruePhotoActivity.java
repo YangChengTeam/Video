@@ -46,7 +46,7 @@ public class MediaPictruePhotoActivity extends BaseActivity<ActivityPictruePhoto
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        requstDrawStauBar(false);
+        requstDrawStauBar(true);
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); // 防止锁屏
         setContentView(R.layout.activity_pictrue_photo);

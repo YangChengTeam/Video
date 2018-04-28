@@ -109,7 +109,7 @@ public class AuthorDetailsActivity extends BaseActivity<ActivityAuthorDetailsBin
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        requstDrawStauBar(false);
+        requstDrawStauBar(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_author_details);
         showToolBar(false);

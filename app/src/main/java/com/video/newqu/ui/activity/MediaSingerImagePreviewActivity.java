@@ -115,7 +115,7 @@ public class MediaSingerImagePreviewActivity extends BaseActivity<ActivitySinger
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        requstDrawStauBar(false);
+        requstDrawStauBar(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_singer_preview_image);
         showToolBar(false);

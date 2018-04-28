@@ -60,7 +60,7 @@ public class MediaLocationVideoListActivity extends BaseActivity<ActivityMediaVi
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        requstDrawStauBar(false);
+        requstDrawStauBar(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_media_video_list);
         showToolBar(false);

@@ -23,6 +23,8 @@ import com.video.newqu.manager.ActivityCollectorManager;
 import com.video.newqu.manager.StatusBarManager;
 import com.video.newqu.ui.dialog.LoadingProgressView;
 import com.video.newqu.util.CommonUtils;
+import com.video.newqu.util.ScreenUtils;
+import com.video.newqu.util.SystemUtils;
 import com.video.newqu.util.Utils;
 import com.video.newqu.view.layout.SwipeBackLayout;
 
@@ -37,8 +39,8 @@ public abstract  class BaseActivity<SV extends ViewDataBinding> extends TopBaseA
     // 布局view
     protected SV bindingView;
     protected LoadingProgressView mLoadingProgressedView;
-    private boolean isDrawStauBar=true;//是否渲染状态栏？
-    private ActivityBaseBinding mBaseBinding;
+    private boolean isDrawStauBar=false;//是否全屏？如果不是全屏，则需要绘制顶部状态栏
+    protected ActivityBaseBinding mBaseBinding;
     private SwipeBackActivityHelper mHelper;
 
     protected <T extends View> T getView(int id) {
@@ -54,8 +56,8 @@ public abstract  class BaseActivity<SV extends ViewDataBinding> extends TopBaseA
         SwipeBackLayout swipeBackLayout = getSwipeBackLayout();
         swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
         swipeBackLayout.setScrollThresHold(0.8f);
-        //子类若不想绘制状态栏，由父类来绘制全屏
-        if(!isDrawStauBar){
+        //是否全屏显示
+        if(isDrawStauBar){
             //顶部透明
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getWindow();
@@ -77,25 +79,48 @@ public abstract  class BaseActivity<SV extends ViewDataBinding> extends TopBaseA
         FrameLayout mContainer = (FrameLayout) mBaseBinding.getRoot().findViewById(R.id.container);
         mContainer.addView(bindingView.getRoot());
         getWindow().setContentView(mBaseBinding.getRoot());
-        if(isDrawStauBar){
+        int minHeight=0;
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT){
+            minHeight= SystemUtils.getStatusBarHeight(this);
+            if(minHeight<=0){
+                minHeight= ScreenUtils.dpToPxInt(25);
+            }
+        }
+        mBaseBinding.groupViewStateBar.getLayoutParams().height=minHeight;
+        //子Activity若不想绘制全屏，那么就默认反转状态栏的
+        if(!isDrawStauBar){
             //6.0隐藏状态栏，使用反转颜色
-            mBaseBinding.viewStateBar.setVisibility(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M?View.GONE:View.VISIBLE);
+            mBaseBinding.groupViewStateBar.setVisibility(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M?View.GONE:View.VISIBLE);
             //反转颜色为白色
             StatusBarManager.getInstance().init(this,  CommonUtils.getColor(R.color.white), 0,true);
         }
-        mBaseBinding.groupBtnBack.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener onClickListener=new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                switch (v.getId()) {
+                    case R.id.group_menu:
+                        onMenuClick(v);
+                        break;
+                    case R.id.group_submit_title:
+                        onSubmitTitleClick(v);
+                        break;
+                    case R.id.group_btn_back:
+                        onBackPressed();
+                        break;
+                }
             }
-        });
+        };
+        mBaseBinding.groupBtnBack.setOnClickListener(onClickListener);
+        mBaseBinding.groupSubmitTitle.setOnClickListener(onClickListener);
+        mBaseBinding.groupMenu.setOnClickListener(onClickListener);
         initViews();
         initData();
     }
 
-
     public abstract void initViews();
     public abstract void initData();
+    protected void onMenuClick(View view){}
+    protected void onSubmitTitleClick(View view){}
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -127,7 +152,6 @@ public abstract  class BaseActivity<SV extends ViewDataBinding> extends TopBaseA
         getSwipeBackLayout().scrollToFinishActivity();
     }
 
-
     /**
      * 子类可以请求是否需要绘制状态栏
      * @param flag 默认true
@@ -143,13 +167,53 @@ public abstract  class BaseActivity<SV extends ViewDataBinding> extends TopBaseA
         if(null!=mBaseBinding) mBaseBinding.guoupAppBar.setVisibility(flag?View.VISIBLE:View.GONE);
     }
 
+    /**
+     * 切换Fragment
+     * @param id
+     * @param fragment
+     */
     public void replaceFragment(@IdRes int id, Fragment fragment) {
         getSupportFragmentManager().beginTransaction().replace(id, fragment).commitAllowingStateLoss();
     }
 
-
+    /**
+     * 设置标题
+     * @param title
+     */
     protected void setTitle(String title){
         if(null!=mBaseBinding) mBaseBinding.groupTitle.setText(title);
+    }
+
+    /**
+     * 设置副标题
+     * @param title
+     */
+    protected void setSubmitTitle(String title){
+        if(null!=mBaseBinding) mBaseBinding.groupSubmitTitle.setText(title);
+    }
+
+    /**
+     * 是否显示副标题
+     * @param flag
+     */
+    protected void showSubmitTitle(boolean flag){
+        if(null!=mBaseBinding) mBaseBinding.groupSubmitTitle.setVisibility(flag?View.VISIBLE:View.GONE);
+    }
+
+    /**
+     * 是否显示菜单
+     * @param flag
+     */
+    protected void showSubmitMenu(boolean flag){
+        if(null!=mBaseBinding) mBaseBinding.groupMenu.setVisibility(flag?View.VISIBLE:View.GONE);
+    }
+
+    /**
+     * 设置菜单图标
+     * @param res
+     */
+    protected void showSubmitMenuRes(int res){
+        if(null!=mBaseBinding) mBaseBinding.groupMenu.setImageResource(res);
     }
 
     /**
@@ -167,6 +231,7 @@ public abstract  class BaseActivity<SV extends ViewDataBinding> extends TopBaseA
             mLoadingProgressedView.show();
         }
     }
+
     /**
      * 显示进度框
      * @param message
@@ -181,6 +246,7 @@ public abstract  class BaseActivity<SV extends ViewDataBinding> extends TopBaseA
             mLoadingProgressedView.show();
         }
     }
+
     /**
      * 关闭进度框
      */
@@ -196,6 +262,7 @@ public abstract  class BaseActivity<SV extends ViewDataBinding> extends TopBaseA
 
         }
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

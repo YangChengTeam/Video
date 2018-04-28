@@ -40,6 +40,8 @@ import com.video.newqu.ui.fragment.SearchResultUserFragment;
 import com.video.newqu.ui.presenter.SearchPresenter;
 import com.video.newqu.util.CommonUtils;
 import com.video.newqu.util.InputTools;
+import com.video.newqu.util.ScreenUtils;
+import com.video.newqu.util.SystemUtils;
 import com.video.newqu.util.ToastUtils;
 import com.video.newqu.util.Utils;
 import com.video.newqu.view.layout.MyFragmentPagerAdapter;
@@ -75,7 +77,6 @@ public class SearchActivity extends BaseActivity<ActivitySearchBinding> implemen
     private boolean keyAutomatic=true;//是否是自动联想
     private ListPopupWindow mListPopupWindow;
 
-
     public SearchResultInfo.DataBean getSearchResultData() {
         return mSearchResultData;
     }
@@ -107,12 +108,21 @@ public class SearchActivity extends BaseActivity<ActivitySearchBinding> implemen
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        requstDrawStauBar(false);
+        requstDrawStauBar(true);
         super.onCreate(savedInstanceState);
         searchKey = getIntent().getStringExtra("key");
         setContentView(R.layout.activity_search);
         showToolBar(false);
-        findViewById(R.id.view_state_bar).setVisibility(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M?View.GONE:View.VISIBLE);
+        int minHeight=0;
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT){
+            minHeight= SystemUtils.getStatusBarHeight(this);
+            if(minHeight<=0){
+                minHeight= ScreenUtils.dpToPxInt(25);
+            }
+        }
+        View stateView = findViewById(R.id.view_state_bar);
+        stateView.getLayoutParams().height=minHeight;
+//        stateView.setVisibility(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M?View.GONE:View.VISIBLE);
         StatusBarManager.getInstance().init(this,  CommonUtils.getColor(R.color.white), 0,true);
         mSearchPresenter = new SearchPresenter(this);
         mSearchPresenter.attachView(this);

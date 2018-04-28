@@ -10,8 +10,8 @@ android {
         applicationId "com.video.newqu"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 30
-        versionName "2.1.8"
+        versionCode 31
+        versionName "2.1.9"
         //分包
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true

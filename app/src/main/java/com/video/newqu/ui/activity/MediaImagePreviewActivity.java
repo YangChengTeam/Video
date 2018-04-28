@@ -29,7 +29,7 @@ public class MediaImagePreviewActivity extends BaseActivity <ActivityPreviewImag
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        requstDrawStauBar(false);
+        requstDrawStauBar(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preview_image);
         showToolBar(false);

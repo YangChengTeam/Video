@@ -70,13 +70,8 @@ public class MediaMusicActivity extends BaseMusicActivity<ActivityRecordMusicBin
         mMediaMusicPresenter = new MediaMusicPresenter(MediaMusicActivity.this);
         mMediaMusicPresenter.attachView(MediaMusicActivity.this);
         WindowVideoPlayer.isWifiTips=false;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                initMenuAdapter();
-                initFeagment();
-            }
-        },Constant.POST_DELAYED_ADD_DATA_TIME);
+        initMenuAdapter();
+        initFeagment();
     }
 
     private void loadMenuData() {

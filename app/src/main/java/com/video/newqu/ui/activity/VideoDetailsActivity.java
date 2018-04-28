@@ -129,7 +129,7 @@ public class VideoDetailsActivity extends BaseActivity<ActivityVideoDetailsBindi
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        requstDrawStauBar(false);
+        requstDrawStauBar(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_details);
         showToolBar(false);

@@ -43,7 +43,7 @@ public class MediaScreenShortActivity extends BaseActivity<ActivityMediaScreensh
     private  boolean seetCursor=false;//默认减
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        requstDrawStauBar(false);
+        requstDrawStauBar(true);
         super.onCreate(savedInstanceState);
         initIntent();
         setContentView(R.layout.activity_media_screenshort);

@@ -53,7 +53,7 @@ public class MediaImageListActivity extends BaseActivity<ActivityVideoListBindin
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
-        requstDrawStauBar(false);
+        requstDrawStauBar(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_list);
         showToolBar(false);

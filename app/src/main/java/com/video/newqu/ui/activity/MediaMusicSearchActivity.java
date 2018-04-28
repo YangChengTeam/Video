@@ -67,7 +67,7 @@ public class MediaMusicSearchActivity extends BaseActivity<ActivityMediaMusicSea
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        requstDrawStauBar(false);
+        requstDrawStauBar(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_media_music_search);
         showToolBar(false);

@@ -9,9 +9,10 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:background="@color/white"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="visible">
             <Space
-                android:id="@+id/view_state_bar"
+                android:id="@+id/group_view_state_bar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/statusbar_view_height"/>
             <RelativeLayout
@@ -33,7 +34,25 @@
                     android:layout_marginLeft="60dp"
                     android:layout_marginRight="60dp"
                     android:textSize="18sp"
+                    android:text="--"
                     android:textColor="@color/common_h1"/>
+                <ImageView
+                    android:id="@+id/group_menu"
+                    style="@style/Com_nav_menubar_back_style"
+                    android:layout_alignParentRight="true"
+                    android:visibility="gone"
+                    android:src="@drawable/ban_nav_menu_submit_selector_gray"/>
+                <TextView
+                    android:id="@+id/group_submit_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:textColor="@color/text_orgin_selector"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:visibility="gone"
+                    android:text="清空记录"
+                    android:background="?attr/selectableItemBackgroundBorderless"/>
             </RelativeLayout>
         </android.support.design.widget.AppBarLayout>
         <FrameLayout

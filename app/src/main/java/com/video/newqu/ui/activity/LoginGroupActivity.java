@@ -101,7 +101,7 @@ public class LoginGroupActivity extends BaseActivity<ActivityLoginGroupBinding> 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        requstDrawStauBar(false);
+        requstDrawStauBar(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_group);
         showToolBar(false);
