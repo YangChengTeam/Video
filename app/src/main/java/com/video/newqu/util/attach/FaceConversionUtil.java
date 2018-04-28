@@ -12,7 +12,6 @@ import com.video.newqu.R;
 import com.video.newqu.bean.ChatEmoji;
 import com.video.newqu.util.FileUtils;
 import com.video.newqu.util.ScreenUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

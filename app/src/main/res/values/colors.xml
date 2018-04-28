@@ -38,7 +38,7 @@
     <color name="app_red_style">#FF4E5C</color>
     <color name="app_red_style_pressed">#DC555F</color>
     <color name="transparent">#00000000</color>
-    <color name="translucent">#99000000</color>
+    <color name="translucent">#80000000</color>
     <color name="qian_gray">#F0F0F0</color>
     <color name="gray">#FF999999</color>
     <color name="gray_qian">#FFCCCCCC</color>

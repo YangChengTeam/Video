@@ -6,7 +6,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
-
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.Utils;
 import com.danikula.videocache.HttpProxyCacheServer;
@@ -27,7 +26,6 @@ import com.video.newqu.util.ACache;
 import com.video.newqu.util.CommonDateParseUtil;
 import com.video.newqu.util.ContentCheckKey;
 import com.video.newqu.util.DateParseUtil;
-import com.video.newqu.util.Logger;
 import com.video.newqu.util.attach.FaceConversionUtil;
 import com.video.newqu.util.KSYAuthorPermissionsUtil;
 import com.video.newqu.util.SharedPreferencesUtil;
@@ -86,7 +84,8 @@ public class VideoApplication extends Application {
         mToday = Integer.parseInt(CommonDateParseUtil.getNowDay());
         int pid = android.os.Process.myPid();
         String pName = SystemUtils.getProcessName(getApplicationContext(),pid);
-        LogUtils.DEBUG=false;//网络请求日志
+        LogUtils.DEBUG=true;//网络请求日志
+
         if(!TextUtils.isEmpty(pName)){
             //主进程
             if(TextUtils.equals("com.video.newqu",pName)){
@@ -95,6 +94,8 @@ public class VideoApplication extends Application {
             //视频生产模块进程
             }else if(TextUtils.equals("com.video.newqu:xinqu_video_edit",pName)){
                 KSYHardwareDecodeWhiteList.getInstance().init(this);
+                //初始化表情包
+                FaceConversionUtil.getInstace().getFileText(getApplicationContext());
                 new KSYAuthorPermissionsUtil().init();
                 return;
             }
@@ -222,7 +223,7 @@ public class VideoApplication extends Application {
             JPushInterface.setAlias(VideoApplication.this, (int) System.currentTimeMillis(),"xinqu_id_"+userData.getId());//极光推送别名,后台需要以此别名进行消息推送
             Set<String> tags=new HashSet<>();
             //这个标签是针对设备的
-            tags.add("app_xinuq");//渠道标签
+            tags.add("app_service");//渠道标签
             tags.add(TextUtils.isEmpty(userData.getGender())?"男":userData.getGender());//性别标签
             JPushInterface.setTags(this, (int)System.currentTimeMillis(),tags);//极光推送标签
         //注销

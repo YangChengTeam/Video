@@ -28,6 +28,7 @@ import com.video.newqu.util.ScreenUtils;
 import com.video.newqu.util.SharedPreferencesUtil;
 import com.video.newqu.util.TextViewTopicSpan;
 import com.video.newqu.util.ToastUtils;
+import com.video.newqu.util.attach.FaceConversionUtil;
 import java.util.List;
 import static com.video.newqu.util.attach.FaceConversionUtil.getInstace;
 
@@ -199,7 +200,7 @@ public class InputKeyBoardDialog extends BaseDialog<DialogInputKeyboardLayoutBin
      */
     private void initEmotionData() {
         //表情集合
-        List<ChatEmoji> chatEmojis = getInstace().emojis;
+        List<ChatEmoji> chatEmojis = FaceConversionUtil.getInstace().emojis;
         mEmojiListAdapter = new EmojiListAdapter(getContext(),chatEmojis);
         if(null!=bindingView){
             bindingView.gridViewFace.setAdapter(mEmojiListAdapter);

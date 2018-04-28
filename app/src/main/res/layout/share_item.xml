@@ -17,7 +17,7 @@
             android:layout_marginTop="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_black2_selector"
+            android:textColor="@color/text_gray_tab_selector"
             android:textSize="13sp"
             android:text="QQ空间"/>
 </LinearLayout>

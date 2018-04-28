@@ -133,12 +133,13 @@ public class MineFragment extends BaseFragment<FragmentMineBinding,UserInfoPrese
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 int abs = Math.abs(verticalOffset);
-                float scale = (float) abs /( (int) (mReTopBarHeight / 1.1));
+                float scale = (float) abs /( (int) (mReTopBarHeight / 1.2));
                 float alpha =(scale * 255);
                 //用户信息图层网上滑动，所以是相反的透明度
                 float barViewAlpha = Utils.absVakue(255f, alpha)/255f;
                 //用户头像，登录View,用户资料View
                 bindingView.reUserDataView.setAlpha(barViewAlpha);//采坑，这里的透明度必须是1。0-0.0之间的float类型
+                bindingView.tvUserDesp.setAlpha(barViewAlpha);
             }
         });
         View.OnClickListener onClickListener=new View.OnClickListener() {

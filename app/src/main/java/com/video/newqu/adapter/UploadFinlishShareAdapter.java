@@ -23,15 +23,18 @@ public class UploadFinlishShareAdapter extends BaseQuickAdapter<ShareMenuItemInf
 
     @Override
     protected void convert(BaseViewHolder helper, ShareMenuItemInfo item) {
-        Glide.with(mContext)
-              .load(item.getItemLogo())
-              .error(R.drawable.error_big)
-              .crossFade()//渐变
-              .fitCenter()
-              .animate(R.anim.item_alpha_in)//加载中动画
-              .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存源资源和转换后的资源
-              .centerCrop()//中心点缩放
-              .skipMemoryCache(true)//跳过内存缓存
-              .into((ImageView) helper.getView(R.id.iv_item_icon));
+        if(null!=item){
+            helper.setText(R.id.tv_item_title,item.getItemName());
+            Glide.with(mContext)
+                    .load(item.getItemLogo())
+                    .error(R.drawable.error_big)
+                    .crossFade()//渐变
+                    .fitCenter()
+                    .animate(R.anim.item_alpha_in)//加载中动画
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存源资源和转换后的资源
+                    .centerCrop()//中心点缩放
+                    .skipMemoryCache(true)//跳过内存缓存
+                    .into((ImageView) helper.getView(R.id.iv_item_icon));
+        }
     }
 }

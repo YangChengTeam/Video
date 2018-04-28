@@ -331,7 +331,7 @@
             android:value="592526c9717c193093000c61"/>
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="app_xinuq"/>
+            android:value="app_service"/>
         <!--微信-->
         <activity
             android:name=".wxapi.WXEntryActivity"

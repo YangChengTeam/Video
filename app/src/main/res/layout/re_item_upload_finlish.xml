@@ -2,14 +2,23 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="match_parent"
+    android:layout_width="75dp"
     android:layout_height="wrap_content"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
-    android:gravity="center">
+    android:paddingTop="13dp"
+    android:paddingBottom="13dp"
+    android:gravity="center"
+    android:background="@drawable/item_comment_bg">
     <ImageView
         android:id="@+id/iv_item_icon"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
         android:src="@drawable/ic_share_wechat_normal"/>
+    <TextView
+        android:id="@+id/tv_item_title"
+        android:layout_marginTop="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_gray_tab_selector"
+        android:textSize="12sp"
+        android:text="QQ空间"/>
 </LinearLayout>

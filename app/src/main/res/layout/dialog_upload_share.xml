@@ -1,80 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-    <FrameLayout
+    <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <com.video.newqu.view.widget.RealtimeBlurView
-            android:id="@+id/content_bg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_fillet_background_white">
         <LinearLayout
-            android:id="@+id/bottom_sheet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_gravity="bottom">
-            <LinearLayout
+            android:gravity="center_horizontal"
+            android:padding="10dp">
+            <com.video.newqu.view.widget.FinlishView
+                android:id="@+id/finlish_view"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"/>
+            <TextView
+                android:id="@+id/tv_tips"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center_horizontal"
-                android:padding="10dp">
-                <com.video.newqu.view.widget.FinlishView
-                    android:id="@+id/finlish_view"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_margin="20dp"/>
-                <TextView
-                    android:id="@+id/tv_tips"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/record_text_color"
-                    android:gravity="center"
-                    android:textSize="18sp"
-                    android:text="作品上传成功"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="15dp"
-                android:padding="10dp">
-                <ImageView
-                    android:id="@+id/iv_cover"
-                    android:layout_width="39dp"
-                    android:layout_height="53dp"
-                    android:src="@drawable/iv_video_errror"
-                    android:layout_marginLeft="10dp"
-                    android:scaleType="centerCrop"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/common_h1"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center"
-                    android:lineSpacingMultiplier="1.2"
-                    android:text="点击下列图标，可将视频分享至您的好友"/>
-            </LinearLayout>
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyler_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp">
-            </android.support.v7.widget.RecyclerView>
-            <Button
-                android:id="@+id/btn_close"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/bt_re_gray_empty_selector"
-                android:text="关 闭"
-                android:textColor="@color/text_gray_tab_selector"
-                android:textSize="16sp"/>
+                android:textColor="@color/record_text_color"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:text="作品上传成功"/>
         </LinearLayout>
-    </FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+            <ImageView
+                android:id="@+id/iv_cover"
+                android:layout_width="39dp"
+                android:layout_height="53dp"
+                android:src="@drawable/iv_video_errror"
+                android:layout_marginLeft="10dp"
+                android:scaleType="centerCrop"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/common_h1"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:textSize="15sp"
+                android:lineSpacingMultiplier="1.2"
+                android:text="现在您可将视频分享至您的好友"/>
+        </LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </android.support.v7.widget.RecyclerView>
+        <include layout="@layout/item_space_6"></include>
+        <TextView
+            android:id="@+id/btn_close"
+            style="@style/DialogCancleText"
+            android:text="关 闭"/>
+    </LinearLayout>
 </layout>

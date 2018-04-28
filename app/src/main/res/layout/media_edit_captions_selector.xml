@@ -3,7 +3,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:background="@color/video_editback_color"
+                android:background="@drawable/bg_record_menu_view_shape"
                 android:clickable="true"
                 android:layout_gravity="bottom">
     <LinearLayout

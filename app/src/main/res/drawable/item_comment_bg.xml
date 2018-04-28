@@ -3,12 +3,12 @@
 
     <item android:state_enabled="false">
         <shape>
-            <solid android:color="@color/gray_qian" />
+            <solid android:color="@color/qian_gray" />
         </shape>
     </item>
     <item android:state_pressed="true">
         <shape>
-            <solid android:color="@color/gray_qian" />
+            <solid android:color="@color/qian_gray" />
         </shape>
     </item>
     <item android:state_pressed="false">

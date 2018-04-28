@@ -10,8 +10,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.FrameLayout;
 import com.video.newqu.R;
 import com.video.newqu.adapter.VideoDetailsMenuAdapter;
 import com.video.newqu.bean.VideoDetailsMenu;
@@ -24,24 +23,21 @@ import java.util.List;
  */
 public class CommonMenuDialog extends BottomSheetDialog {
 
-    private final Context context;
     private VideoDetailsMenuAdapter mVideoDetailsMenuAdapter;
 
     public CommonMenuDialog(Activity context) {
         super(context, R.style.CommendDialogStyle);
-        setContentView(R.layout.dialog_video_details_menu);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        this.context=context;
-        initLayoutParams();
-        initAdapter();
+        setContentView(R.layout.dialog_commend_menu);
+        initLayoutPrams();
+        initViews();
     }
 
-    private void initAdapter() {
-        RecyclerView recyerView = (RecyclerView) findViewById(R.id.recyer_view);
-        recyerView.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false));
-        recyerView.setHasFixedSize(true);
+    private void initViews() {
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
         mVideoDetailsMenuAdapter = new VideoDetailsMenuAdapter(null);
-        recyerView.setAdapter(mVideoDetailsMenuAdapter);
+        recyclerView.setAdapter(mVideoDetailsMenuAdapter);
         mVideoDetailsMenuAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -55,13 +51,28 @@ public class CommonMenuDialog extends BottomSheetDialog {
                 }
             }
         });
-        ((TextView) findViewById(R.id.tv_canel)).setOnClickListener(new View.OnClickListener() {
+
+        findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CommonMenuDialog.this.dismiss();
             }
         });
     }
+
+
+    protected void initLayoutPrams(){
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        WindowManager.LayoutParams attributes = window.getAttributes();//得到布局管理者
+        WindowManager systemService = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);//得到窗口管理者
+        DisplayMetrics displayMetrics=new DisplayMetrics();//创建设备屏幕的管理者
+        systemService.getDefaultDisplay().getMetrics(displayMetrics);//得到屏幕的宽高
+        attributes.height= FrameLayout.LayoutParams.WRAP_CONTENT;
+        attributes.width= systemService.getDefaultDisplay().getWidth();
+        attributes.gravity= Gravity.BOTTOM;
+    }
+
 
     public void  setData(List<VideoDetailsMenu> list){
         if(null!=mVideoDetailsMenuAdapter){
@@ -72,21 +83,8 @@ public class CommonMenuDialog extends BottomSheetDialog {
         void onItemClick(int itemID);
     }
     private OnItemClickListener mOnItemClickListener;
+
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
-    }
-    /**
-     * 设置Dialog显示在屏幕底部
-     */
-    private void initLayoutParams() {
-        Window window = getWindow();
-        WindowManager.LayoutParams attributes = window.getAttributes();//得到布局管理者
-        WindowManager systemService = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);//得到窗口管理者
-        DisplayMetrics displayMetrics=new DisplayMetrics();//创建设备屏幕的管理者
-        systemService.getDefaultDisplay().getMetrics(displayMetrics);//得到屏幕的宽高
-        int hight= LinearLayout.LayoutParams.WRAP_CONTENT;//取出布局的高度
-        attributes.height= hight;
-        attributes.width= systemService.getDefaultDisplay().getWidth();
-        attributes.gravity= Gravity.BOTTOM;
     }
 }

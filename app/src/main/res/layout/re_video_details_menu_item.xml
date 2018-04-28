@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="wrap_content"
+              android:background="@drawable/item_comment_bg">
     <TextView
         android:id="@+id/tv_item_name"
         android:layout_width="match_parent"
@@ -12,7 +13,6 @@
         android:textSize="15sp"
         android:textColor="@color/app_style"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/bt_dialog_bottom_selector"
         android:text="举报"/>
     <View
         android:id="@+id/view_line"

@@ -1,51 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout >
-    <RelativeLayout
+    <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.video.newqu.view.widget.RealtimeBlurView
-            android:id="@+id/content_bg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </com.video.newqu.view.widget.RealtimeBlurView>
-        <LinearLayout
-            android:id="@+id/bottom_sheet"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_fillet_background_white">
+        <TextView
+            android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="15dp"
-                android:textSize="17sp"
-                android:gravity="center_horizontal"
-                android:textColor="@color/coment_color"
-                android:text="分享到"/>
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyler_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp">
-            </android.support.v7.widget.RecyclerView>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/common_h3"/>
-            <TextView
-                android:id="@+id/tv_canel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="13dp"
-                android:textSize="17sp"
-                android:textColor="@color/text_black_selector"
-                android:gravity="center_horizontal"
-                android:background="@drawable/item_comment_bg"
-                android:clickable="true"
-                android:text="取消"/>
-        </LinearLayout>
-    </RelativeLayout>
+            android:padding="12dp"
+            android:textSize="17sp"
+            android:gravity="center_horizontal"
+            android:textColor="@color/coment_color"
+            android:text="分享到"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
+        </android.support.v7.widget.RecyclerView>
+        <include layout="@layout/item_space_6"></include>
+        <TextView
+            android:id="@+id/btn_close"
+            style="@style/DialogCancleText"
+            android:text="取消"/>
+    </LinearLayout>
 </layout>
