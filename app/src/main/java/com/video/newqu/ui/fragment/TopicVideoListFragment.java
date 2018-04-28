@@ -48,7 +48,6 @@ import java.util.Observer;
 
 public class TopicVideoListFragment extends BaseFragment<FragmentRecylerBinding,TopicVideoPresenter> implements  TopicVideoContract.View, Observer {
 
-    private static final String TAG = "TopicVideoListFragment";
     private int mPage=0;
     private String mTopicID;
     private TopicVideoListAdapter mVideoListAdapter;
@@ -348,7 +347,6 @@ public class TopicVideoListFragment extends BaseFragment<FragmentRecylerBinding,
                 ChangingViewEvent changingViewEvent= (ChangingViewEvent) arg;
                 if(Constant.FRAGMENT_TYPE_TOPIC_LIST==changingViewEvent.getFragmentType()&&null!=mVideoListAdapter&&null!=mGridLayoutManager){
                     mPage=changingViewEvent.getPage();
-                    Logger.d(TAG,"changingViewEvent.getPoistion()="+changingViewEvent.getPoistion()+",mPage="+mPage);
                     List<FollowVideoList.DataBean.ListsBean> listsBeanList = changingViewEvent.getListsBeanList();
                     if(null!=listsBeanList&&listsBeanList.size()>0){
                         List<TopicVideoList.DataBean.VideoListBean> data =new ArrayList<>();

@@ -32,6 +32,7 @@ import com.video.newqu.ui.fragment.MediaVideoLocationFragment;
 import com.video.newqu.util.CommonUtils;
 import com.video.newqu.util.ImageCache;
 import com.video.newqu.util.ScanWeixin;
+import com.video.newqu.util.ScreenUtils;
 import com.video.newqu.util.SharedPreferencesUtil;
 import com.video.newqu.util.SystemUtils;
 import org.greenrobot.eventbus.EventBus;
@@ -64,7 +65,16 @@ public class MediaLocationVideoListActivity extends BaseActivity<ActivityMediaVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_media_video_list);
         showToolBar(false);
-        findViewById(R.id.view_state_bar).setVisibility(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M?View.GONE:View.VISIBLE);
+        int minHeight=0;
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT){
+            minHeight= SystemUtils.getStatusBarHeight(this);
+            if(minHeight<=0){
+                minHeight= ScreenUtils.dpToPxInt(25);
+            }
+        }
+        View stateView = findViewById(R.id.view_state_bar);
+        stateView.getLayoutParams().height=minHeight;
+//        findViewById(R.id.view_state_bar).setVisibility(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M?View.GONE:View.VISIBLE);
         StatusBarManager.getInstance().init(this,  CommonUtils.getColor(R.color.white), 0,true);
         mMediaVideoLocationFragment = new MediaVideoLocationFragment();
         addReplaceFragment(mMediaVideoLocationFragment,"相册");

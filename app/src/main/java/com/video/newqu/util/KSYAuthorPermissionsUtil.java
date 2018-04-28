@@ -26,7 +26,6 @@ public class KSYAuthorPermissionsUtil {
                     AuthInfoManager.getInstance().addAuthResultListener(new AuthInfoManager.CheckAuthResultListener() {
                         @Override
                         public void onAuthResult(int i) {
-                            Logger.d("KSYAuthorPermissionsUtil","onAuthResult="+i);
                         }
                     });
                     //开始向KSServer申请鉴权
@@ -34,7 +33,7 @@ public class KSYAuthorPermissionsUtil {
                 }
             }
         }catch (Exception e){
-            Logger.d("KSYAuthorPermissionsUtil","onAuthResult="+e.getMessage());
+
         }
     }
 }

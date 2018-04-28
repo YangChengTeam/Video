@@ -588,7 +588,6 @@ public class VerticalAuthorDetailsFragment extends BaseFragment<ActivityAuthorDe
             bindingView.tvFollowCount.setText((TextUtils.isEmpty(mInfoBean.getFollows())?"0关注":mInfoBean.getFollows())+"关注");
             bindingView.userVideoCount.setText((TextUtils.isEmpty(mInfoBean.getVideo_count())?"0作品":mInfoBean.getVideo_count())+"作品");
             bindingView.ivUserSex.setImageResource(TextUtils.isEmpty(mInfoBean.getGender())?R.drawable.ic_sex_not_know:TextUtils.equals("女",mInfoBean.getGender())?R.drawable.iv_icon_sex_women:TextUtils.equals("男",mInfoBean.getGender())?R.drawable.iv_icon_sex_man:R.drawable.ic_sex_not_know);
-            Logger.d("用户中心","Birthday="+mInfoBean.getBirthday()+",Province="+mInfoBean.getProvince()+",City="+mInfoBean.getCity());
             if(!TextUtils.isEmpty(mInfoBean.getBirthday())&&mInfoBean.getBirthday().length()>0||!TextUtils.isEmpty(mInfoBean.getProvince())&&mInfoBean.getProvince().length()>0||!TextUtils.isEmpty(mInfoBean.getCity())&&mInfoBean.getCity().length()>0){
                 bindingView.tvUserLoadtion.setVisibility(View.VISIBLE);
                 String star="";

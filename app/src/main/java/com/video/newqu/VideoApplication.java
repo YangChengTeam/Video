@@ -86,7 +86,7 @@ public class VideoApplication extends Application {
         mToday = Integer.parseInt(CommonDateParseUtil.getNowDay());
         int pid = android.os.Process.myPid();
         String pName = SystemUtils.getProcessName(getApplicationContext(),pid);
-        LogUtils.DEBUG=true;//网络请求日志
+        LogUtils.DEBUG=false;//网络请求日志
         if(!TextUtils.isEmpty(pName)){
             //主进程
             if(TextUtils.equals("com.video.newqu",pName)){
@@ -94,7 +94,6 @@ public class VideoApplication extends Application {
                 return;
             //视频生产模块进程
             }else if(TextUtils.equals("com.video.newqu:xinqu_video_edit",pName)){
-                Logger.d("VideoApplication","视频模块进程初始化");
                 KSYHardwareDecodeWhiteList.getInstance().init(this);
                 new KSYAuthorPermissionsUtil().init();
                 return;
@@ -223,7 +222,7 @@ public class VideoApplication extends Application {
             JPushInterface.setAlias(VideoApplication.this, (int) System.currentTimeMillis(),"xinqu_id_"+userData.getId());//极光推送别名,后台需要以此别名进行消息推送
             Set<String> tags=new HashSet<>();
             //这个标签是针对设备的
-            tags.add("app_xinqu");//渠道标签
+            tags.add("app_xinuq");//渠道标签
             tags.add(TextUtils.isEmpty(userData.getGender())?"男":userData.getGender());//性别标签
             JPushInterface.setTags(this, (int)System.currentTimeMillis(),tags);//极光推送标签
         //注销

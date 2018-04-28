@@ -7,14 +7,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
         <android.support.design.widget.AppBarLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:background="@color/white"
             android:orientation="vertical">
             <include layout="@layout/activity_statrbar_height_layout"></include>
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/top_title_bar_height"
